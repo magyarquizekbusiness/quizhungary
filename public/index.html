@@ -844,7 +844,7 @@ let DQ=[];
 const DIFF_LABEL={easy:'Könnyű',medium:'Közepes',hard:'Nehéz'};
 const DIFF_CLASS={easy:'diff-easy',medium:'diff-medium',hard:'diff-hard'};
 
-let CU=null,CP=null,di=0,ds=0,tqi=0,tqs=0,tql=[],tqid='',tqDiff='medium',lbm='weekly',curDiff='all',tqTimer=null,tqSeconds=8;
+let CU=null,CP=null,di=0,ds=0,tqi=0,tqs=0,tql=[],tqid='',tqDiff='medium',lbm='weekly',tqTimer=null,tqSeconds=8;
 const aiCache={};
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
@@ -966,6 +966,7 @@ async function doForgot(){
 }
 
 async function doSignOut(){await sb.auth.signOut();toggleDrop(true);toast('Kijelentkeztél.','ok');}
+const signOut=doSignOut;
 
 function toggleDrop(fc){const d=document.getElementById('udrop');if(fc){d.classList.remove('show');return;}d.classList.toggle('show');}
 document.addEventListener('click',e=>{const m=document.querySelector('.user-menu');if(m&&!m.contains(e.target))document.getElementById('udrop')?.classList.remove('show');});
@@ -1048,8 +1049,7 @@ async function loadDailyQuestions(){
     try{DQ=JSON.parse(cached);return;}catch(e){}
   }
   // AI generálás
-  {
-    try{
+  try{
       const topics=['Történelem','Földrajz','Tudomány','Irodalom','Kultúra'];
       const randomTopic=topics[Math.floor(Math.random()*topics.length)];
       const res=await fetch('/api/quiz',{
@@ -1069,7 +1069,6 @@ async function loadDailyQuestions(){
         return;
       }
     }catch(err){console.warn('Napi AI fallback:',err.message);}
-  }
   // Fallback: véletlen 5 kérdés a pool-ból
   DQ=[...DQ_FALLBACK].sort(()=>Math.random()-0.5).slice(0,5);
   localStorage.setItem('qh_daily_qs',JSON.stringify(DQ));
@@ -1314,8 +1313,7 @@ async function openMarathon(){
   document.getElementById('mq-content').style.display='none';
   document.getElementById('mqov').classList.add('show');
 
-  {
-    try{
+  try{
       const res=await fetch('/api/quiz',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -1332,9 +1330,6 @@ async function openMarathon(){
       console.warn('Marathon AI fallback:',e.message);
       mqList=getMQFallback();
     }
-  } else {
-    mqList=getMQFallback();
-  }
 
   document.getElementById('mq-loading').style.display='none';
   document.getElementById('mq-content').style.display='block';
@@ -1482,6 +1477,219 @@ function shareMarathon(){
   const text=`🏆 ${mqScore}/${mqList.length} kérdést találtam el a QuizHungary Vegyes Maratonon!\nTe is próbáld ki: https://www.facebook.com/profile.php?id=61566558176381`;
   if(navigator.share){navigator.share({text}).catch(()=>fallbackShare(text));}
   else fallbackShare(text);
+}
+
+
+// ── RANDOM QUIZ ───────────────────────────────────────────────────────────────
+function openRandom(){
+  const t=TOPICS[Math.floor(Math.random()*TOPICS.length)];
+  const diffs=['easy','medium','hard'];
+  const d=diffs[Math.floor(Math.random()*diffs.length)];
+  toast(`🎲 Véletlen: ${t.icon} ${t.name} (${DIFF_LABEL[d]})`,'info');
+  setTimeout(()=>openTQ(t.id,d),700);
+}
+
+// ── LONG QUIZ (50 kérdés) ─────────────────────────────────────────────────────
+async function openLongQuiz(){
+  document.querySelector('#mqov .tqtit').textContent='⚡ Hosszú kvíz';
+  document.getElementById('mqr').className='qr';
+  document.getElementById('mq-timeout-info').style.display='none';
+  document.getElementById('mq-loading').style.display='flex';
+  document.getElementById('mq-loading').querySelector('.tq-loading-text').textContent='Hosszú kvíz generálása...';
+  document.getElementById('mq-loading').querySelector('.tq-loading-sub').textContent='Az AI 50 vegyes kérdést készít';
+  document.getElementById('mq-content').style.display='none';
+  document.getElementById('mqov').classList.add('show');
+  mqI=0;mqScore=0;mqTimeouts=0;
+
+  try{
+    const [r1,r2]=await Promise.all([
+      fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Generálj 25 VEGYES témájú magyar kvízkérdést. EGYETLEN helyes válasz! Max 10 szó, 3 option, tényszerű. CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]'})}),
+      fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Generálj 25 KÜLÖNBÖZŐ témájú magyar kvízkérdést (sport, zene, technika, természet, film). EGYETLEN helyes válasz! Max 10 szó, 3 option. CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]'})})
+    ]);
+    const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+    const parse=d=>{try{return JSON.parse((d.result||'').replace(/```json|```/g,'').trim()).filter(q=>q.q&&Array.isArray(q.o)&&q.o.length===3);}catch{return[];}};
+    const all=[...parse(d1),...parse(d2)];
+    mqList=all.length>=20?all:getMQFallback().concat(getMQFallback()).concat(getMQFallback()).slice(0,50);
+  }catch(e){
+    mqList=[...getMQFallback(),...getMQFallback(),...getMQFallback()].slice(0,50);
+  }
+  document.getElementById('mq-loading').style.display='none';
+  document.getElementById('mq-content').style.display='block';
+  mqLoadQ();
+}
+
+// ── MULTIPLAYER ───────────────────────────────────────────────────────────────
+let mpRoom=null,mpChannel=null,mpQuestions=[],mpI=0,mpMyScore=0,mpPlayers={},mpTimer=null,mpSeconds=8,mpIsHost=false;
+
+function openMultiplayer(){
+  if(!CU){toast('Bejelentkezés szükséges a párbajhoz!','err');openAuth();return;}
+  document.getElementById('mpov').classList.add('show');
+  document.getElementById('mp-lobby').style.display='block';
+  document.getElementById('mp-waiting').style.display='none';
+  document.getElementById('mp-game').style.display='none';
+  document.getElementById('mp-result').style.display='none';
+  document.getElementById('mp-err').className='aerr';
+  const sel=document.getElementById('mp-topic-sel');
+  sel.innerHTML='<option value="random">🎲 Véletlen</option>';
+  TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${t.icon} ${t.name}`;sel.appendChild(o);});
+}
+function closeMp(){
+  clearInterval(mpTimer);
+  if(mpChannel){sb.removeChannel(mpChannel);mpChannel=null;}
+  document.getElementById('mpov').classList.remove('show');
+}
+
+async function createRoom(){
+  if(!CU){toast('Bejelentkezés szükséges!','err');return;}
+  document.getElementById('mp-err').className='aerr';
+  const code=Math.random().toString(36).substring(2,8).toUpperCase();
+  const topicId=document.getElementById('mp-topic-sel').value;
+  const diff=document.getElementById('mp-diff-sel').value;
+  const t=topicId==='random'?TOPICS[Math.floor(Math.random()*TOPICS.length)]:TOPICS.find(x=>x.id===topicId);
+  mpRoom=code;mpIsHost=true;mpMyScore=0;mpI=0;mpPlayers={};
+  mpPlayers[CU.id]={name:CP?.username||CU.email.split('@')[0],score:0};
+  const qs=await generateAIQuestions(t.name,t.id+'_mp_'+diff,t.q,diff);
+  mpQuestions=[...qs].sort(()=>Math.random()-0.5);
+  subscribeRoom(code);
+  document.getElementById('mp-lobby').style.display='none';
+  document.getElementById('mp-waiting').style.display='block';
+  document.getElementById('mp-room-code').textContent=code;
+  document.getElementById('mp-start-btn').style.display='block';
+  renderMpPlayers();
+}
+
+async function joinRoom(){
+  const code=document.getElementById('mp-code-inp').value.trim().toUpperCase();
+  if(code.length!==6){const e=document.getElementById('mp-err');e.textContent='Adj meg egy 6 karakteres kódot!';e.className='aerr show';return;}
+  mpRoom=code;mpIsHost=false;mpMyScore=0;mpI=0;mpPlayers={};
+  mpPlayers[CU.id]={name:CP?.username||CU.email.split('@')[0],score:0};
+  subscribeRoom(code);
+  document.getElementById('mp-lobby').style.display='none';
+  document.getElementById('mp-waiting').style.display='block';
+  document.getElementById('mp-room-code').textContent=code;
+  document.getElementById('mp-start-btn').style.display='none';
+  renderMpPlayers();
+  mpChannel.send({type:'broadcast',event:'join',payload:{userId:CU.id,name:CP?.username||CU.email.split('@')[0]}});
+}
+
+function subscribeRoom(code){
+  if(mpChannel)sb.removeChannel(mpChannel);
+  mpChannel=sb.channel('room:'+code);
+  mpChannel
+    .on('broadcast',{event:'join'},({payload})=>{
+      mpPlayers[payload.userId]={name:payload.name,score:0};
+      renderMpPlayers();
+      if(mpIsHost)mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}});
+    })
+    .on('broadcast',{event:'players'},({payload})=>{
+      mpPlayers=payload.players||mpPlayers;
+      if(payload.questions&&!mpIsHost)mpQuestions=payload.questions;
+      renderMpPlayers();
+    })
+    .on('broadcast',{event:'start'},()=>{ document.getElementById('mp-waiting').style.display='none';document.getElementById('mp-game').style.display='block';mpLoadQ();})
+    .on('broadcast',{event:'score'},({payload})=>{if(mpPlayers[payload.userId])mpPlayers[payload.userId].score=payload.score;renderMpPlayers();})
+    .on('broadcast',{event:'finish'},()=>{showMpResult();})
+    .subscribe();
+  if(mpIsHost)setTimeout(()=>mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}}),500);
+}
+
+function renderMpPlayers(){
+  const el=document.getElementById('mp-players-inner');
+  el.innerHTML=Object.entries(mpPlayers).map(([id,p])=>`
+    <div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);">
+      <span>${p.name}${id===CU?.id?' (te)':''}</span>
+      <span style="color:var(--red);font-family:'Bebas Neue',sans-serif;">${p.score} pont</span>
+    </div>`).join('');
+}
+
+function startMpGame(){
+  mpChannel.send({type:'broadcast',event:'start',payload:{}});
+  document.getElementById('mp-waiting').style.display='none';
+  document.getElementById('mp-game').style.display='block';
+  mpLoadQ();
+}
+
+function mpLoadQ(){
+  clearInterval(mpTimer);
+  if(mpI>=mpQuestions.length){showMpResult();return;}
+  const q=mpQuestions[mpI];
+  document.getElementById('mp-qn').textContent=`${mpI+1} / ${mpQuestions.length}`;
+  document.getElementById('mppf').style.width=`${(mpI/mpQuestions.length)*100}%`;
+  document.getElementById('mp-qt').textContent=q.q;
+  const c=document.getElementById('mp-qo');c.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='qo';
+    b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;
+    b.onclick=()=>mpAns(i);c.appendChild(b);
+  });
+  document.getElementById('mp-fb').className='qfb';
+  document.getElementById('mp-nxt').className='btn-p qnxt';
+  startMpTimer();
+}
+
+function startMpTimer(){
+  mpSeconds=8;
+  const bar=document.getElementById('mp-timer-bar');
+  const num=document.getElementById('mp-timer-num');
+  const wrap=document.getElementById('mp-timer-wrap');
+  bar.style.transition='none';bar.style.width='100%';bar.style.background='var(--green)';
+  wrap.classList.remove('timer-danger');num.textContent=mpSeconds;num.style.color='var(--green)';
+  setTimeout(()=>{bar.style.transition='width 8s linear';bar.style.width='0%';},50);
+  mpTimer=setInterval(()=>{
+    mpSeconds--;num.textContent=mpSeconds;
+    if(mpSeconds<=3){wrap.classList.add('timer-danger');num.style.color='var(--red)';}
+    if(mpSeconds<=0){clearInterval(mpTimer);mpAutoNext();}
+  },1000);
+}
+
+function mpAutoNext(){
+  document.querySelectorAll('#mp-qo .qo').forEach(b=>b.disabled=true);
+  const q=mpQuestions[mpI];
+  document.querySelectorAll('#mp-qo .qo')[q.a].classList.add('correct');
+  const fb=document.getElementById('mp-fb');
+  fb.className='qfb bad show';fb.textContent=`⏱ Lejárt! Helyes: ${q.o[q.a]}`;
+  setTimeout(()=>{document.getElementById('mp-nxt').className='btn-p qnxt show';},800);
+}
+
+function mpAns(i){
+  clearInterval(mpTimer);
+  const q=mpQuestions[mpI];
+  document.querySelectorAll('#mp-qo .qo').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('mp-fb');
+  if(i===q.a){mpMyScore+=100;document.querySelectorAll('#mp-qo .qo')[i].classList.add('correct');fb.className='qfb good show';fb.textContent='✓ Helyes!';}
+  else{document.querySelectorAll('#mp-qo .qo')[i].classList.add('wrong');document.querySelectorAll('#mp-qo .qo')[q.a].classList.add('correct');fb.className='qfb bad show';fb.textContent=`✗ Helytelen. Helyes: ${q.o[q.a]}`;}
+  if(mpPlayers[CU.id])mpPlayers[CU.id].score=mpMyScore;
+  mpChannel?.send({type:'broadcast',event:'score',payload:{userId:CU.id,score:mpMyScore}});
+  setTimeout(()=>{document.getElementById('mp-nxt').className='btn-p qnxt show';},1200);
+}
+
+function mpNext(){mpI++;mpLoadQ();}
+
+async function showMpResult(){
+  clearInterval(mpTimer);
+  mpChannel?.send({type:'broadcast',event:'finish',payload:{}});
+  document.getElementById('mp-game').style.display='none';
+  document.getElementById('mp-result').style.display='block';
+  const sorted=Object.entries(mpPlayers).sort((a,b)=>b[1].score-a[1].score);
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('mp-scores-list').innerHTML=sorted.map(([id,p],i)=>`
+    <div style="display:flex;align-items:center;gap:1rem;padding:0.9rem 1rem;background:${id===CU?.id?'rgba(232,25,44,0.08)':'var(--bg3)'};border-radius:3px;margin-bottom:0.5rem;border:1px solid ${id===CU?.id?'var(--border-red)':'var(--border)'}">
+      <span style="font-size:1.5rem">${medals[i]||i+1+'.'}</span>
+      <span style="flex:1;font-weight:600">${p.name}${id===CU?.id?' (te)':''}</span>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--red)">${p.score}</span>
+    </div>`).join('');
+  if(CU)await saveScore('Párbaj',mpMyScore);
+  loadLB();
+}
+
+function copyRoomCode(){navigator.clipboard.writeText(mpRoom).then(()=>toast('Kód másolva: '+mpRoom,'ok'));}
+function shareRoomCode(){
+  const name=CP?.username||'Egy barátod';
+  const text=`${name} QuizHungary párbajra hív! 🎯
+Szobakód: ${mpRoom}
+Csatlakozz: https://quizhungary.vercel.app`;
+  if(navigator.share)navigator.share({text}).catch(()=>navigator.clipboard.writeText(text).then(()=>toast('Meghívó másolva!','ok')));
+  else navigator.clipboard.writeText(text).then(()=>toast('Meghívó másolva!','ok'));
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────

@@ -519,7 +519,6 @@ footer a{color:var(--red);text-decoration:none;}
           </div>
           <div class="timer-bar-bg"><div class="timer-bar-fill" id="tq-timer-bar"></div></div>
         </div>
-        <div class="qpb" style="margin-top:0.8rem;"><div class="qpf" id="tqpf" style="width:0%"></div></div>
         <div class="qq" id="tqt"></div>
         <div class="qos" id="tqo"></div>
         <div class="qfb" id="tqfb"></div>
@@ -594,7 +593,7 @@ footer a{color:var(--red);text-decoration:none;}
 </div>
 
 <!-- MULTIPLAYER MODAL -->
-<div class="overlay" id="mpov" onclick="if(event.target===this)closeMp()">
+<div class="overlay" id="mpov">
   <div class="mbox" style="max-width:500px">
     <button class="mcl" onclick="closeMp()">×</button>
     <div id="mp-lobby">
@@ -1164,7 +1163,7 @@ async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
     const res=await fetch('/api/quiz',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:`Generálj 5 magyar nyelvű kvízkérdést a következő témában: "${topicName}". Nehézség: ${diffMap[diff]||'közepes'}. SZIGORÚ SZABÁLYOK: 1) Minden kérdésnek EGYÉRTELMŰ, EGYETLEN helyes válasza legyen — ne legyen olyan kérdés ahol több válasz is helyes lehet! 2) A kérdés maximum 10 szó. 3) Pontosan 3 válaszlehetőség, 1 helyes. 4) A kérdések legyenek tényszerűek (évszámok, nevek, adatok). 5) Ne generálj ilyen kérdést: "Melyik hangszeren játszik a zenész?" — ez rossz, mert több válasz is helyes. Válaszolj CSAK JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`})
+      body:JSON.stringify({prompt:`Generálj 5 egyedi magyar kvízkérdést ebben a témában: "${topicName}". Nehézség: ${diffMap[diff]||'közepes'}. Szabályok: 1) Minden kérdésnek EGYETLEN objektíven helyes válasza legyen (pl. évszám, név, szám, konkrét adat). 2) Max 8 szó/kérdés. 3) Pontosan 3 válasz, 1 helyes, a többi hihetően rossz. 4) A 3 válasz NE legyen egymáshoz nagyon hasonló. 5) Nehéz szintnél kevésbé ismert tények, könnyűnél közismert dolgok. 6) Tilos: szubjektív kérdések, "melyik a legjobb", általánosítható kérdések. Válaszolj CSAK valid JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`})
     });
     if(!res.ok)throw new Error('API hiba '+res.status);
     const data=await res.json();
@@ -1192,9 +1191,10 @@ async function openTQ(id,diff){
   document.getElementById('tq-ai-badge').style.display='inline-flex';
   document.getElementById('tq-loading').style.display='none';
   document.getElementById('tq-quiz-content').style.display='block';
+  document.getElementById('tq-timer-wrap').style.display='block';
   tqLoad();
 }
-function closeTQ(){clearInterval(tqTimer);document.getElementById('tqov').classList.remove('show');}
+function closeTQ(){stopTQTimer();document.getElementById('tqov').classList.remove('show');}
 // tqovClick removed — use X button to close
 function tqLoad(){
   const q=tql[tqi];
@@ -1206,6 +1206,19 @@ function tqLoad(){
   document.getElementById('tqfb').className='qfb';
   document.getElementById('tqnxt').className='btn-p qnxt';
   startTQTimer();
+}
+
+function stopTQTimer(){
+  clearInterval(tqTimer);
+  // Freeze the bar at its current visual position
+  const bar=document.getElementById('tq-timer-bar');
+  if(bar){
+    const computed=getComputedStyle(bar).width;
+    const parent=bar.parentElement;
+    const pct=parent?Math.round(parseFloat(computed)/parseFloat(getComputedStyle(parent).width)*100):0;
+    bar.style.transition='none';
+    bar.style.width=pct+'%';
+  }
 }
 
 function startTQTimer(){
@@ -1253,7 +1266,7 @@ function tqTimeout(){
 }
 
 function tqAns(i){
-  clearInterval(tqTimer);
+  stopTQTimer();
   const q=tql[tqi];
   document.querySelectorAll('#tqo .qo').forEach(b=>b.disabled=true);
   const fb=document.getElementById('tqfb');
@@ -1264,7 +1277,13 @@ function tqAns(i){
 async function tqNext(){
   tqi++;
   if(tqi>=tql.length){
-    document.getElementById('tqo').innerHTML='';document.getElementById('tqfb').className='qfb';document.getElementById('tqnxt').className='btn-p qnxt';
+    stopTQTimer();
+    document.getElementById('tqo').innerHTML='';
+    document.getElementById('tqfb').className='qfb';
+    document.getElementById('tqnxt').className='btn-p qnxt';
+    document.getElementById('tq-quiz-content').style.display='none';
+    document.getElementById('tq-timer-wrap').style.display='none';
+    document.getElementById('tq-ai-badge').style.display='none';
     const r=document.getElementById('tqr');r.className='qr show';
     document.getElementById('tqrs').textContent=`${tqs}/${tql.length}`;
     const msgs=['Próbáld újra!','Egész jó!','Szép!','Kiváló!','Tökéletes!','Zseni!'];
@@ -1279,7 +1298,7 @@ async function tqNext(){
     loadLB();
   }else tqLoad();
 }
-function tqRestart(){clearInterval(tqTimer);tqi=0;tqs=0;tql=[...tql].sort(()=>Math.random()-0.5);document.getElementById('tqr').className='qr';tqLoad();}
+function tqRestart(){stopTQTimer();tqi=0;tqs=0;document.getElementById('tq-timer-wrap').style.display='block';tql=[...tql].sort(()=>Math.random()-0.5);document.getElementById('tqr').className='qr';tqLoad();}
 
 // ── SCORES & LEADERBOARD ───────────────────────────────────────────────────────
 async function saveScore(topic,pts){if(!CU)return;await sb.from('scores').insert({user_id:CU.id,topic,points:pts});}
@@ -1571,7 +1590,10 @@ async function joinRoom(){
   document.getElementById('mp-room-code').textContent=code;
   document.getElementById('mp-start-btn').style.display='none';
   renderMpPlayers();
-  mpChannel.send({type:'broadcast',event:'join',payload:{userId:CU.id,name:CP?.username||CU.email.split('@')[0]}});
+  // Small delay to ensure subscription is ready before broadcasting
+  setTimeout(()=>{
+    mpChannel.send({type:'broadcast',event:'join',payload:{userId:CU.id,name:CP?.username||CU.email.split('@')[0]}});
+  }, 500);
 }
 
 function subscribeRoom(code){
@@ -1579,20 +1601,39 @@ function subscribeRoom(code){
   mpChannel=sb.channel('room:'+code);
   mpChannel
     .on('broadcast',{event:'join'},({payload})=>{
-      mpPlayers[payload.userId]={name:payload.name,score:0};
+      if(!mpPlayers[payload.userId]){
+        mpPlayers[payload.userId]={name:payload.name,score:0};
+      }
       renderMpPlayers();
-      if(mpIsHost)mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}});
+      // Host broadcasts full player list + questions to everyone (including new joiner)
+      if(mpIsHost){
+        setTimeout(()=>{
+          mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}});
+        }, 200);
+      }
     })
     .on('broadcast',{event:'players'},({payload})=>{
       mpPlayers=payload.players||mpPlayers;
       if(payload.questions&&!mpIsHost)mpQuestions=payload.questions;
       renderMpPlayers();
     })
-    .on('broadcast',{event:'start'},()=>{ document.getElementById('mp-waiting').style.display='none';document.getElementById('mp-game').style.display='block';mpLoadQ();})
+    .on('broadcast',{event:'start'},({payload})=>{
+      mpI=0; mpMyScore=0;
+      if(payload.questions&&payload.questions.length>0)mpQuestions=payload.questions;
+      Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+      document.getElementById('mp-waiting').style.display='none';
+      document.getElementById('mp-game').style.display='block';
+      mpLoadQ();
+    })
     .on('broadcast',{event:'score'},({payload})=>{if(mpPlayers[payload.userId])mpPlayers[payload.userId].score=payload.score;renderMpPlayers();})
     .on('broadcast',{event:'finish'},()=>{showMpResult();})
     .subscribe();
-  if(mpIsHost)setTimeout(()=>mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}}),500);
+  if(mpIsHost){
+    setTimeout(()=>{
+      // Broadcast host's presence to any already-connected players
+      mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}});
+    },600);
+  }
 }
 
 function renderMpPlayers(){
@@ -1605,7 +1646,10 @@ function renderMpPlayers(){
 }
 
 function startMpGame(){
-  mpChannel.send({type:'broadcast',event:'start',payload:{}});
+  // Reset state before starting
+  mpI=0; mpMyScore=0;
+  Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+  mpChannel.send({type:'broadcast',event:'start',payload:{questions:mpQuestions}});
   document.getElementById('mp-waiting').style.display='none';
   document.getElementById('mp-game').style.display='block';
   mpLoadQ();

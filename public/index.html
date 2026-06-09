@@ -228,9 +228,9 @@ footer a{color:var(--red);text-decoration:none;}
 <nav>
   <span class="nav-logo" onclick="goTo('hero')"><span>QUIZ</span>HUNGARY</span>
   <div class="nav-links">
+    <a onclick="goTo('temak')" class="hmob">Témák</a>
     <a onclick="goTo('napi-kviz')" class="hmob">Napi kvíz</a>
     <a onclick="goTo('konyv')" class="hmob">Könyv</a>
-    <a onclick="goTo('temak')" class="hmob">Témák</a>
     <a onclick="goTo('rangsor')" class="hmob">Rangsor</a>
     <div id="nav-guest"><button class="btn-nav" onclick="openAuth()">Bejelentkezés</button></div>
     <div id="nav-user" style="display:none">
@@ -271,6 +271,40 @@ footer a{color:var(--red);text-decoration:none;}
     <div><span class="sn">20</span><span class="sl">Témakör</span></div>
     <div><span class="sn">1000+</span><span class="sl">Kérdés</span></div>
     <div><span class="sn" id="pcnt">—</span><span class="sl">Játékos</span></div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div id="temak" class="sw">
+  <div class="slbl">Kategóriák</div>
+  <div class="stit">Témakörök</div>
+  <div class="tg" id="tgrid"></div>
+  <!-- SPECIAL MODES -->
+  <div style="margin-top:1rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;">
+    <div class="tc" style="background:linear-gradient(135deg,rgba(232,25,44,0.15),rgba(10,10,10,0));border-color:var(--border-red);text-align:center;padding:2rem;" onclick="openMarathon()">
+      <span class="ti" style="font-size:2.5rem;">🏆</span>
+      <div class="tn" style="font-size:1.1rem;color:var(--red);">Vegyes Maraton</div>
+      <div class="tc2" style="margin-top:0.4rem;">20 kérdés · 8 mp/kérdés</div>
+      <div style="margin-top:0.8rem;"><span class="diff-badge diff-hard">Kihívás</span></div>
+    </div>
+    <div class="tc" style="background:linear-gradient(135deg,rgba(46,204,113,0.1),rgba(10,10,10,0));border-color:rgba(46,204,113,0.3);text-align:center;padding:2rem;" onclick="openRandom()">
+      <span class="ti" style="font-size:2.5rem;">🎲</span>
+      <div class="tn" style="font-size:1.1rem;color:var(--green);">Random kvíz</div>
+      <div class="tc2" style="margin-top:0.4rem;">Véletlen téma · meglepetés</div>
+      <div style="margin-top:0.8rem;"><span class="diff-badge diff-easy">Szerencse</span></div>
+    </div>
+    <div class="tc" style="background:linear-gradient(135deg,rgba(243,156,18,0.1),rgba(10,10,10,0));border-color:rgba(243,156,18,0.3);text-align:center;padding:2rem;" onclick="openLongQuiz()">
+      <span class="ti" style="font-size:2.5rem;">⚡</span>
+      <div class="tn" style="font-size:1.1rem;color:var(--orange);">Hosszú kvíz</div>
+      <div class="tc2" style="margin-top:0.4rem;">50 kérdés · 8 mp/kérdés</div>
+      <div style="margin-top:0.8rem;"><span class="diff-badge diff-medium">Kihívás</span></div>
+    </div>
+    <div class="tc" style="background:linear-gradient(135deg,rgba(74,144,217,0.1),rgba(10,10,10,0));border-color:rgba(74,144,217,0.3);text-align:center;padding:2rem;" onclick="openMultiplayer()">
+      <span class="ti" style="font-size:2.5rem;">⚔️</span>
+      <div class="tn" style="font-size:1.1rem;color:#4a90d9;">Párbaj</div>
+      <div class="tc2" style="margin-top:0.4rem;">Kihívd barátaidat!</div>
+      <div style="margin-top:0.8rem;"><span class="diff-badge" style="background:rgba(74,144,217,0.15);color:#4a90d9;border:1px solid rgba(74,144,217,0.3);">Multiplayer</span></div>
+    </div>
   </div>
 </div>
 
@@ -354,40 +388,6 @@ footer a{color:var(--red);text-decoration:none;}
   </div>
 </div>
 
-<!-- TOPICS -->
-<div id="temak" class="sw">
-  <div class="slbl">Kategóriák</div>
-  <div class="stit">Témakörök</div>
-  <div class="tg" id="tgrid"></div>
-  <!-- SPECIAL MODES -->
-  <div style="margin-top:1rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;">
-    <div class="tc" style="background:linear-gradient(135deg,rgba(232,25,44,0.15),rgba(10,10,10,0));border-color:var(--border-red);text-align:center;padding:2rem;" onclick="openMarathon()">
-      <span class="ti" style="font-size:2.5rem;">🏆</span>
-      <div class="tn" style="font-size:1.1rem;color:var(--red);">Vegyes Maraton</div>
-      <div class="tc2" style="margin-top:0.4rem;">20 kérdés · 8 mp/kérdés</div>
-      <div style="margin-top:0.8rem;"><span class="diff-badge diff-hard">Kihívás</span></div>
-    </div>
-    <div class="tc" style="background:linear-gradient(135deg,rgba(46,204,113,0.1),rgba(10,10,10,0));border-color:rgba(46,204,113,0.3);text-align:center;padding:2rem;" onclick="openRandom()">
-      <span class="ti" style="font-size:2.5rem;">🎲</span>
-      <div class="tn" style="font-size:1.1rem;color:var(--green);">Random kvíz</div>
-      <div class="tc2" style="margin-top:0.4rem;">Véletlen téma · meglepetés</div>
-      <div style="margin-top:0.8rem;"><span class="diff-badge diff-easy">Szerencse</span></div>
-    </div>
-    <div class="tc" style="background:linear-gradient(135deg,rgba(243,156,18,0.1),rgba(10,10,10,0));border-color:rgba(243,156,18,0.3);text-align:center;padding:2rem;" onclick="openLongQuiz()">
-      <span class="ti" style="font-size:2.5rem;">⚡</span>
-      <div class="tn" style="font-size:1.1rem;color:var(--orange);">Hosszú kvíz</div>
-      <div class="tc2" style="margin-top:0.4rem;">50 kérdés · 8 mp/kérdés</div>
-      <div style="margin-top:0.8rem;"><span class="diff-badge diff-medium">Kihívás</span></div>
-    </div>
-    <div class="tc" style="background:linear-gradient(135deg,rgba(74,144,217,0.1),rgba(10,10,10,0));border-color:rgba(74,144,217,0.3);text-align:center;padding:2rem;" onclick="openMultiplayer()">
-      <span class="ti" style="font-size:2.5rem;">⚔️</span>
-      <div class="tn" style="font-size:1.1rem;color:#4a90d9;">Párbaj</div>
-      <div class="tc2" style="margin-top:0.4rem;">Kihívd barátaidat!</div>
-      <div style="margin-top:0.8rem;"><span class="diff-badge" style="background:rgba(74,144,217,0.15);color:#4a90d9;border:1px solid rgba(74,144,217,0.3);">Multiplayer</span></div>
-    </div>
-  </div>
-</div>
-
 <!-- LEADERBOARD -->
 <div id="rangsor" class="sw">
   <div class="slbl">Verseny</div>
@@ -403,7 +403,6 @@ footer a{color:var(--red);text-decoration:none;}
     <div id="lbbody"><div class="lbempty">Töltés...</div></div>
   </div>
 </div>
-
 <footer>
   <span class="flogo"><span>QUIZ</span>HUNGARY</span>
   <p style="margin-bottom:1.2rem;">Kövess minket a közösségi médiában!</p>

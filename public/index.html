@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuizHungary – Teszteld a tudásod!</title>
+<title>QuizHungary</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23e8192c'/><text y='0.9em' font-size='75' text-anchor='middle' x='50'>🧠</text></svg>">
 <link rel="manifest" href="data:application/json,{}">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1163,7 +1164,7 @@ async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
     const res=await fetch('/api/quiz',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:`Generálj 5 egyedi magyar kvízkérdést ebben a témában: "${topicName}". Nehézség: ${diffMap[diff]||'közepes'}. Szabályok: 1) Minden kérdésnek EGYETLEN objektíven helyes válasza legyen (pl. évszám, név, szám, konkrét adat). 2) Max 8 szó/kérdés. 3) Pontosan 3 válasz, 1 helyes, a többi hihetően rossz. 4) A 3 válasz NE legyen egymáshoz nagyon hasonló. 5) Nehéz szintnél kevésbé ismert tények, könnyűnél közismert dolgok. 6) Tilos: szubjektív kérdések, "melyik a legjobb", általánosítható kérdések. Válaszolj CSAK valid JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`})
+      body:JSON.stringify({prompt:`Generálj 5 egyedi magyar kvízkérdést ebben a témában: "${topicName}". Nehézség: ${diffMap[diff]||'közepes'}. Szabályok: 1) EGYETLEN objektíven helyes válasz (évszám, név, szám, adat). 2) Max 8 szó/kérdés. 3) Természetes magyar szórend és fogalmazás — pl. "Mi a kávé alapja?" nem "Melyik ital a kávé alapja?". Használj "Mi", "Ki", "Hol", "Mikor", "Hány" kezdetű kérdéseket a "Melyik" helyett ahol lehet. 4) 3 válasz: 1 helyes, 2 hihetően rossz. 5) Nehéz = kevésbé ismert tény, könnyű = közismert. 6) Tilos szubjektív vagy általánosítható kérdés. Válaszolj CSAK valid JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`})
     });
     if(!res.ok)throw new Error('API hiba '+res.status);
     const data=await res.json();
@@ -1624,12 +1625,25 @@ function subscribeRoom(code){
       mpI=0; mpMyScore=0;
       if(payload.questions&&payload.questions.length>0)mpQuestions=payload.questions;
       Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+      // Hide ALL sections, show only game
+      document.getElementById('mp-lobby').style.display='none';
       document.getElementById('mp-waiting').style.display='none';
+      document.getElementById('mp-result').style.display='none';
       document.getElementById('mp-game').style.display='block';
       mpLoadQ();
     })
     .on('broadcast',{event:'score'},({payload})=>{if(mpPlayers[payload.userId])mpPlayers[payload.userId].score=payload.score;renderMpPlayers();})
     .on('broadcast',{event:'finish'},()=>{showMpResult();})
+    .on('broadcast',{event:'reset'},({payload})=>{
+      mpI=0; mpMyScore=0;
+      if(payload.players)mpPlayers=payload.players;
+      Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+      renderMpPlayers();
+      document.getElementById('mp-result').style.display='none';
+      document.getElementById('mp-waiting').style.display='block';
+      document.getElementById('mp-room-code').textContent=mpRoom;
+      document.getElementById('mp-start-btn').style.display='none';
+    })
     .subscribe();
   if(mpIsHost){
     setTimeout(()=>{
@@ -1653,7 +1667,10 @@ function startMpGame(){
   mpI=0; mpMyScore=0;
   Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
   mpChannel.send({type:'broadcast',event:'start',payload:{questions:mpQuestions}});
+  // Hide ALL lobby sections, show only game
+  document.getElementById('mp-lobby').style.display='none';
   document.getElementById('mp-waiting').style.display='none';
+  document.getElementById('mp-result').style.display='none';
   document.getElementById('mp-game').style.display='block';
   mpLoadQ();
 }
@@ -1697,6 +1714,8 @@ function mpAutoNext(){
   document.querySelectorAll('#mp-qo .qo')[q.a].classList.add('correct');
   const fb=document.getElementById('mp-fb');
   fb.className='qfb bad show';fb.textContent=`⏱ Lejárt! Helyes: ${q.o[q.a]}`;
+  // Broadcast score (unchanged, 0 added for this question)
+  mpChannel?.send({type:'broadcast',event:'score',payload:{userId:CU.id,score:mpMyScore}});
   setTimeout(()=>{document.getElementById('mp-nxt').className='btn-p qnxt show';},800);
 }
 
@@ -1705,14 +1724,28 @@ function mpAns(i){
   const q=mpQuestions[mpI];
   document.querySelectorAll('#mp-qo .qo').forEach(b=>b.disabled=true);
   const fb=document.getElementById('mp-fb');
-  if(i===q.a){mpMyScore+=100;document.querySelectorAll('#mp-qo .qo')[i].classList.add('correct');fb.className='qfb good show';fb.textContent='✓ Helyes!';}
-  else{document.querySelectorAll('#mp-qo .qo')[i].classList.add('wrong');document.querySelectorAll('#mp-qo .qo')[q.a].classList.add('correct');fb.className='qfb bad show';fb.textContent=`✗ Helytelen. Helyes: ${q.o[q.a]}`;}
+  if(i===q.a){
+    mpMyScore+=100;
+    document.querySelectorAll('#mp-qo .qo')[i].classList.add('correct');
+    fb.className='qfb good show';fb.textContent='✓ Helyes!';
+  } else {
+    document.querySelectorAll('#mp-qo .qo')[i].classList.add('wrong');
+    document.querySelectorAll('#mp-qo .qo')[q.a].classList.add('correct');
+    fb.className='qfb bad show';fb.textContent=`✗ Helytelen. Helyes: ${q.o[q.a]}`;
+  }
+  // Only broadcast score, NOT next question trigger
   if(mpPlayers[CU.id])mpPlayers[CU.id].score=mpMyScore;
   mpChannel?.send({type:'broadcast',event:'score',payload:{userId:CU.id,score:mpMyScore}});
-  setTimeout(()=>{document.getElementById('mp-nxt').className='btn-p qnxt show';},1200);
+  // Show next button after delay - player decides when to advance
+  setTimeout(()=>{
+    document.getElementById('mp-nxt').className='btn-p qnxt show';
+  },1200);
 }
 
-function mpNext(){mpI++;mpLoadQ();}
+function mpNext(){
+  mpI++;
+  mpLoadQ();
+}
 
 async function showMpResult(){
   clearInterval(mpTimer);
@@ -1731,6 +1764,26 @@ async function showMpResult(){
   loadLB();
 }
 
+async function mpRestart(){
+  // Reset scores and state, reuse same room and questions
+  mpI=0; mpMyScore=0;
+  Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+  renderMpPlayers();
+  document.getElementById('mp-result').style.display='none';
+  if(mpIsHost){
+    // Host shows waiting room again
+    document.getElementById('mp-waiting').style.display='block';
+    document.getElementById('mp-room-code').textContent=mpRoom;
+    document.getElementById('mp-start-btn').style.display='block';
+    // Broadcast reset to all players
+    mpChannel?.send({type:'broadcast',event:'reset',payload:{players:mpPlayers}});
+  } else {
+    // Guest waits for host to start
+    document.getElementById('mp-waiting').style.display='block';
+    document.getElementById('mp-room-code').textContent=mpRoom;
+    document.getElementById('mp-start-btn').style.display='none';
+  }
+}
 function copyRoomCode(){navigator.clipboard.writeText(mpRoom).then(()=>toast('Kód másolva: '+mpRoom,'ok'));}
 function shareRoomCode(){
   const name=CP?.username||'Egy barátod';

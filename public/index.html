@@ -1199,7 +1199,7 @@ function closeTQ(){stopTQTimer();document.getElementById('tqov').classList.remov
 function tqLoad(){
   const q=tql[tqi];
   document.getElementById('tqn').textContent=`${tqi+1} / ${tql.length}`;
-  document.getElementById('tqpf').style.width=`${(tqi/tql.length)*100}%`;
+  const _tqpf=document.getElementById('tqpf');if(_tqpf)_tqpf.style.width=`${(tqi/tql.length)*100}%`;
   document.getElementById('tqt').textContent=q.q;
   const c=document.getElementById('tqo');c.innerHTML='';
   q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qo';b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;b.onclick=()=>tqAns(i);c.appendChild(b);});
@@ -1298,7 +1298,10 @@ async function tqNext(){
     loadLB();
   }else tqLoad();
 }
-function tqRestart(){stopTQTimer();tqi=0;tqs=0;document.getElementById('tq-timer-wrap').style.display='block';tql=[...tql].sort(()=>Math.random()-0.5);document.getElementById('tqr').className='qr';tqLoad();}
+function tqRestart(){stopTQTimer();tqi=0;tqs=0;
+  document.getElementById('tq-quiz-content').style.display='block';
+  document.getElementById('tq-timer-wrap').style.display='block';
+  document.getElementById('tqr').className='qr';tql=[...tql].sort(()=>Math.random()-0.5);document.getElementById('tqr').className='qr';tqLoad();}
 
 // ── SCORES & LEADERBOARD ───────────────────────────────────────────────────────
 async function saveScore(topic,pts){if(!CU)return;await sb.from('scores').insert({user_id:CU.id,topic,points:pts});}

@@ -1678,36 +1678,20 @@ function subscribeRoom(code){
       if(mpPlayers[payload.userId])mpPlayers[payload.userId].score=payload.score;
       renderMpPlayers();
     })
-    .on('broadcast',{event:'finish'},()=>{showMpResult();})
     .on('broadcast',{event:'restart_vote'},({payload})=>{
       mpRestartVotes[payload.userId]=true;
       const total=Object.keys(mpPlayers).length;
       const votes=Object.keys(mpRestartVotes).length;
       const statusEl=document.getElementById('mp-restart-status');
       if(statusEl)statusEl.textContent=`${votes}/${total} játékos szeretne újra játszani...`;
-      // If all voted, go back to lobby
-      if(votes>=total){
-        mpRestartVotes={};
-        mpI=0;mpMyScore=0;
-        Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
-        document.getElementById('mp-result').style.display='none';
-        document.getElementById('mp-game').style.display='none';
-        if(mpIsHost){
-          document.getElementById('mp-lobby').style.display='block';
-          // Re-populate topic select
-          const sel=document.getElementById('mp-topic-sel');
-          sel.innerHTML='<option value="random">🎲 Véletlen</option>';
-          TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${t.icon} ${t.name}`;sel.appendChild(o);});
-        } else {
-          document.getElementById('mp-waiting').style.display='block';
-          document.getElementById('mp-room-code').textContent=mpRoom;
-          document.getElementById('mp-start-btn').style.display='none';
-          renderMpPlayers();
-          // Guest waits for host
-          const statusEl2=document.getElementById('mp-restart-status');
-          if(statusEl2)statusEl2.textContent='';
-        }
+      // If all voted, broadcast back_to_lobby
+      if(votes>=total && mpIsHost){
+        mpChannel?.send({type:'broadcast',event:'back_to_lobby',payload:{}});
+        goBackToLobby();
       }
+    })
+    .on('broadcast',{event:'back_to_lobby'},()=>{
+      if(!mpIsHost) goBackToLobbyGuest();
     })
     .subscribe();
   if(mpIsHost){
@@ -1715,6 +1699,36 @@ function subscribeRoom(code){
       mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions,maxPlayers:mpMaxPlayers,qCount:mpQCount}});
     },600);
   }
+}
+
+function goBackToLobby(){
+  // Host goes back to lobby settings
+  mpRestartVotes={};
+  mpI=0;mpMyScore=0;
+  Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+  document.getElementById('mp-result').style.display='none';
+  document.getElementById('mp-game').style.display='none';
+  document.getElementById('mp-waiting').style.display='none';
+  document.getElementById('mp-lobby').style.display='block';
+  const sel=document.getElementById('mp-topic-sel');
+  sel.innerHTML='<option value="random">🎲 Véletlen</option>';
+  TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${t.icon} ${t.name}`;sel.appendChild(o);});
+}
+
+function goBackToLobbyGuest(){
+  // Guest goes to waiting room
+  mpRestartVotes={};
+  mpI=0;mpMyScore=0;
+  Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+  document.getElementById('mp-result').style.display='none';
+  document.getElementById('mp-game').style.display='none';
+  document.getElementById('mp-lobby').style.display='none';
+  document.getElementById('mp-waiting').style.display='block';
+  document.getElementById('mp-room-code').textContent=mpRoom;
+  document.getElementById('mp-start-btn').style.display='none';
+  const statusEl=document.getElementById('mp-restart-status');
+  if(statusEl)statusEl.textContent='';
+  renderMpPlayers();
 }
 
 function renderMpPlayers(){
@@ -1825,7 +1839,7 @@ function mpNext(){mpI++;mpLoadQ();}
 
 async function showMpResult(){
   stopMpTimer();
-  mpChannel?.send({type:'broadcast',event:'finish',payload:{}});
+  // Don't broadcast 'finish' - each player reaches result independently via mpI >= mpQuestions.length
   document.getElementById('mp-game').style.display='none';
   document.getElementById('mp-result').style.display='block';
   document.getElementById('mp-restart-status').textContent='';
@@ -1842,7 +1856,7 @@ async function showMpResult(){
 }
 
 function mpVoteRestart(){
-  // Mark this player's vote and broadcast
+  if(mpRestartVotes[CU.id])return; // already voted
   mpRestartVotes[CU.id]=true;
   const btn=document.getElementById('mp-restart-btn');
   if(btn){btn.disabled=true;btn.textContent='✓ Szavaztam';}
@@ -1851,6 +1865,11 @@ function mpVoteRestart(){
   const statusEl=document.getElementById('mp-restart-status');
   if(statusEl)statusEl.textContent=`${votes}/${total} játékos szeretne újra játszani...`;
   mpChannel?.send({type:'broadcast',event:'restart_vote',payload:{userId:CU.id}});
+  // If I'm the only player or all voted already
+  if(votes>=total && mpIsHost){
+    mpChannel?.send({type:'broadcast',event:'back_to_lobby',payload:{}});
+    goBackToLobby();
+  }
 }
 
 function copyRoomCode(){navigator.clipboard.writeText(mpRoom).then(()=>toast('Kód másolva: '+mpRoom,'ok'));}

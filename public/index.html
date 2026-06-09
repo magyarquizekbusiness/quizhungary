@@ -601,20 +601,40 @@ footer a{color:var(--red);text-decoration:none;}
       <div class="msub">Kihívd barátaidat ugyanazokkal a kérdésekkel!</div>
       <div class="aerr" id="mp-err"></div>
       <div class="aok" id="mp-ok"></div>
-      <!-- Létrehozás -->
       <div id="mp-create-section">
-        <div style="margin-bottom:1.2rem;">
-          <span class="flbl">Téma választása</span>
+        <div style="margin-bottom:1rem;">
+          <span class="flbl">Téma</span>
           <select id="mp-topic-sel" class="finp" style="cursor:pointer;">
             <option value="random">🎲 Véletlen</option>
           </select>
         </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;">
+          <div>
+            <span class="flbl">Nehézség</span>
+            <select id="mp-diff-sel" class="finp" style="cursor:pointer;">
+              <option value="easy">🟢 Könnyű</option>
+              <option value="medium" selected>🟡 Közepes</option>
+              <option value="hard">🔴 Nehéz</option>
+            </select>
+          </div>
+          <div>
+            <span class="flbl">Kérdések száma</span>
+            <select id="mp-qcount-sel" class="finp" style="cursor:pointer;">
+              <option value="5" selected>5 kérdés</option>
+              <option value="10">10 kérdés</option>
+              <option value="15">15 kérdés</option>
+              <option value="20">20 kérdés</option>
+            </select>
+          </div>
+        </div>
         <div style="margin-bottom:1.2rem;">
-          <span class="flbl">Nehézség</span>
-          <select id="mp-diff-sel" class="finp" style="cursor:pointer;">
-            <option value="easy">🟢 Könnyű</option>
-            <option value="medium" selected>🟡 Közepes</option>
-            <option value="hard">🔴 Nehéz</option>
+          <span class="flbl">Max játékosok</span>
+          <select id="mp-maxplayers-sel" class="finp" style="cursor:pointer;">
+            <option value="2" selected>2 játékos</option>
+            <option value="3">3 játékos</option>
+            <option value="4">4 játékos</option>
+            <option value="6">6 játékos</option>
+            <option value="10">10 játékos</option>
           </select>
         </div>
         <button class="btn-p" style="width:100%;margin-bottom:1rem" onclick="createRoom()">Szoba létrehozása →</button>
@@ -633,8 +653,12 @@ footer a{color:var(--red);text-decoration:none;}
       <div style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Küldd el ezt a kódot a barátodnak!</div>
       <button class="btn-p" style="width:100%;margin-bottom:0.75rem" onclick="copyRoomCode()">📋 Kód másolása</button>
       <button class="share-btn" style="width:100%;justify-content:center;margin-bottom:1rem" onclick="shareRoomCode()">Meghívó megosztása</button>
+      <div id="mp-settings-summary" style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem;letter-spacing:1px;"></div>
       <div id="mp-players-list" style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1rem;margin-bottom:1rem;text-align:left;">
-        <div style="font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.5rem;">Játékosok</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+          <div style="font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);">Játékosok</div>
+          <div id="mp-player-count" style="font-size:0.72rem;color:var(--red);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;"></div>
+        </div>
         <div id="mp-players-inner"></div>
       </div>
       <button class="btn-p" id="mp-start-btn" style="width:100%;display:none" onclick="startMpGame()">Játék indítása! →</button>
@@ -1543,7 +1567,7 @@ async function openLongQuiz(){
 }
 
 // ── MULTIPLAYER ───────────────────────────────────────────────────────────────
-let mpRoom=null,mpChannel=null,mpQuestions=[],mpI=0,mpMyScore=0,mpPlayers={},mpTimer=null,mpSeconds=8,mpIsHost=false;
+let mpRoom=null,mpChannel=null,mpQuestions=[],mpI=0,mpMyScore=0,mpPlayers={},mpTimer=null,mpSeconds=8,mpIsHost=false,mpMaxPlayers=2,mpQCount=5,mpRestartVotes={};
 
 function openMultiplayer(){
   if(!CU){toast('Bejelentkezés szükséges a párbajhoz!','err');openAuth();return;}
@@ -1557,6 +1581,7 @@ function openMultiplayer(){
   sel.innerHTML='<option value="random">🎲 Véletlen</option>';
   TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${t.icon} ${t.name}`;sel.appendChild(o);});
 }
+
 function closeMp(){
   clearInterval(mpTimer);
   if(mpChannel){sb.removeChannel(mpChannel);mpChannel=null;}
@@ -1569,23 +1594,43 @@ async function createRoom(){
   const code=Math.random().toString(36).substring(2,8).toUpperCase();
   const topicId=document.getElementById('mp-topic-sel').value;
   const diff=document.getElementById('mp-diff-sel').value;
+  mpMaxPlayers=parseInt(document.getElementById('mp-maxplayers-sel').value)||2;
+  mpQCount=parseInt(document.getElementById('mp-qcount-sel').value)||5;
   const t=topicId==='random'?TOPICS[Math.floor(Math.random()*TOPICS.length)]:TOPICS.find(x=>x.id===topicId);
-  mpRoom=code;mpIsHost=true;mpMyScore=0;mpI=0;mpPlayers={};
+  mpRoom=code;mpIsHost=true;mpMyScore=0;mpI=0;mpPlayers={};mpRestartVotes={};
   mpPlayers[CU.id]={name:CP?.username||CU.email.split('@')[0],score:0};
-  const qs=await generateAIQuestions(t.name,t.id+'_mp_'+diff,t.q,diff);
-  mpQuestions=[...qs].sort(()=>Math.random()-0.5);
+  // Generate questions based on qcount
+  const baseQs=await generateAIQuestions(t.name,t.id+'_mp_'+diff,t.q,diff);
+  // If more than 5 needed, generate more
+  if(mpQCount>5){
+    try{
+      const extra=await fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Generálj ${mpQCount} egyedi magyar kvízkérdést ebben a témában: "${t.name}". CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]`})});
+      const ed=await extra.json();
+      const eq=JSON.parse((ed.result||'').replace(/```json|```/g,'').trim()).filter(q=>q.q&&Array.isArray(q.o)&&q.o.length===3);
+      mpQuestions=eq.length>=mpQCount?eq.slice(0,mpQCount):[...baseQs,...eq].slice(0,mpQCount);
+    }catch{mpQuestions=[...baseQs].slice(0,mpQCount);}
+  } else {
+    mpQuestions=[...baseQs].sort(()=>Math.random()-0.5).slice(0,mpQCount);
+  }
   subscribeRoom(code);
   document.getElementById('mp-lobby').style.display='none';
   document.getElementById('mp-waiting').style.display='block';
   document.getElementById('mp-room-code').textContent=code;
   document.getElementById('mp-start-btn').style.display='block';
   renderMpPlayers();
+  updateMpSettings();
+}
+
+function updateMpSettings(){
+  // Show settings summary in waiting room
+  const el=document.getElementById('mp-settings-summary');
+  if(el)el.textContent=`${mpQCount} kérdés · max ${mpMaxPlayers} játékos`;
 }
 
 async function joinRoom(){
   const code=document.getElementById('mp-code-inp').value.trim().toUpperCase();
   if(code.length!==6){const e=document.getElementById('mp-err');e.textContent='Adj meg egy 6 karakteres kódot!';e.className='aerr show';return;}
-  mpRoom=code;mpIsHost=false;mpMyScore=0;mpI=0;mpPlayers={};
+  mpRoom=code;mpIsHost=false;mpMyScore=0;mpI=0;mpPlayers={};mpRestartVotes={};
   mpPlayers[CU.id]={name:CP?.username||CU.email.split('@')[0],score:0};
   subscribeRoom(code);
   document.getElementById('mp-lobby').style.display='none';
@@ -1593,10 +1638,9 @@ async function joinRoom(){
   document.getElementById('mp-room-code').textContent=code;
   document.getElementById('mp-start-btn').style.display='none';
   renderMpPlayers();
-  // Small delay to ensure subscription is ready before broadcasting
   setTimeout(()=>{
     mpChannel.send({type:'broadcast',event:'join',payload:{userId:CU.id,name:CP?.username||CU.email.split('@')[0]}});
-  }, 500);
+  },500);
 }
 
 function subscribeRoom(code){
@@ -1604,69 +1648,98 @@ function subscribeRoom(code){
   mpChannel=sb.channel('room:'+code);
   mpChannel
     .on('broadcast',{event:'join'},({payload})=>{
-      if(!mpPlayers[payload.userId]){
-        mpPlayers[payload.userId]={name:payload.name,score:0};
-      }
+      if(!mpPlayers[payload.userId])mpPlayers[payload.userId]={name:payload.name,score:0};
       renderMpPlayers();
-      // Host broadcasts full player list + questions to everyone (including new joiner)
       if(mpIsHost){
         setTimeout(()=>{
-          mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}});
-        }, 200);
+          mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions,maxPlayers:mpMaxPlayers,qCount:mpQCount}});
+        },200);
       }
     })
     .on('broadcast',{event:'players'},({payload})=>{
       mpPlayers=payload.players||mpPlayers;
       if(payload.questions&&!mpIsHost)mpQuestions=payload.questions;
+      if(payload.maxPlayers)mpMaxPlayers=payload.maxPlayers;
+      if(payload.qCount)mpQCount=payload.qCount;
       renderMpPlayers();
+      updateMpSettings();
     })
     .on('broadcast',{event:'start'},({payload})=>{
-      mpI=0; mpMyScore=0;
+      mpI=0;mpMyScore=0;mpRestartVotes={};
       if(payload.questions&&payload.questions.length>0)mpQuestions=payload.questions;
       Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
-      // Hide ALL sections, show only game
       document.getElementById('mp-lobby').style.display='none';
       document.getElementById('mp-waiting').style.display='none';
       document.getElementById('mp-result').style.display='none';
       document.getElementById('mp-game').style.display='block';
       mpLoadQ();
     })
-    .on('broadcast',{event:'score'},({payload})=>{if(mpPlayers[payload.userId])mpPlayers[payload.userId].score=payload.score;renderMpPlayers();})
-    .on('broadcast',{event:'finish'},()=>{showMpResult();})
-    .on('broadcast',{event:'reset'},({payload})=>{
-      mpI=0; mpMyScore=0;
-      if(payload.players)mpPlayers=payload.players;
-      Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+    .on('broadcast',{event:'score'},({payload})=>{
+      if(mpPlayers[payload.userId])mpPlayers[payload.userId].score=payload.score;
       renderMpPlayers();
-      document.getElementById('mp-result').style.display='none';
-      document.getElementById('mp-waiting').style.display='block';
-      document.getElementById('mp-room-code').textContent=mpRoom;
-      document.getElementById('mp-start-btn').style.display='none';
+    })
+    .on('broadcast',{event:'finish'},()=>{showMpResult();})
+    .on('broadcast',{event:'restart_vote'},({payload})=>{
+      mpRestartVotes[payload.userId]=true;
+      const total=Object.keys(mpPlayers).length;
+      const votes=Object.keys(mpRestartVotes).length;
+      const statusEl=document.getElementById('mp-restart-status');
+      if(statusEl)statusEl.textContent=`${votes}/${total} játékos szeretne újra játszani...`;
+      // If all voted, go back to lobby
+      if(votes>=total){
+        mpRestartVotes={};
+        mpI=0;mpMyScore=0;
+        Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+        document.getElementById('mp-result').style.display='none';
+        document.getElementById('mp-game').style.display='none';
+        if(mpIsHost){
+          document.getElementById('mp-lobby').style.display='block';
+          // Re-populate topic select
+          const sel=document.getElementById('mp-topic-sel');
+          sel.innerHTML='<option value="random">🎲 Véletlen</option>';
+          TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${t.icon} ${t.name}`;sel.appendChild(o);});
+        } else {
+          document.getElementById('mp-waiting').style.display='block';
+          document.getElementById('mp-room-code').textContent=mpRoom;
+          document.getElementById('mp-start-btn').style.display='none';
+          renderMpPlayers();
+          // Guest waits for host
+          const statusEl2=document.getElementById('mp-restart-status');
+          if(statusEl2)statusEl2.textContent='';
+        }
+      }
     })
     .subscribe();
   if(mpIsHost){
     setTimeout(()=>{
-      // Broadcast host's presence to any already-connected players
-      mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions}});
+      mpChannel.send({type:'broadcast',event:'players',payload:{players:mpPlayers,questions:mpQuestions,maxPlayers:mpMaxPlayers,qCount:mpQCount}});
     },600);
   }
 }
 
 function renderMpPlayers(){
   const el=document.getElementById('mp-players-inner');
+  if(!el)return;
+  const total=Object.keys(mpPlayers).length;
   el.innerHTML=Object.entries(mpPlayers).map(([id,p])=>`
     <div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);">
       <span>${p.name}${id===CU?.id?' (te)':''}</span>
       <span style="color:var(--red);font-family:'Bebas Neue',sans-serif;">${p.score} pont</span>
     </div>`).join('');
+  // Update player count badge
+  const badge=document.getElementById('mp-player-count');
+  if(badge)badge.textContent=`${total}/${mpMaxPlayers} játékos`;
+  // Show start button only if host and enough players
+  if(mpIsHost){
+    const btn=document.getElementById('mp-start-btn');
+    if(btn)btn.style.display=total>=2?'block':'none';
+  }
 }
 
 function startMpGame(){
-  // Reset state before starting
-  mpI=0; mpMyScore=0;
+  mpI=0;mpMyScore=0;mpRestartVotes={};
   Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
   mpChannel.send({type:'broadcast',event:'start',payload:{questions:mpQuestions}});
-  // Hide ALL lobby sections, show only game
   document.getElementById('mp-lobby').style.display='none';
   document.getElementById('mp-waiting').style.display='none';
   document.getElementById('mp-result').style.display='none';
@@ -1707,19 +1780,30 @@ function startMpTimer(){
   },1000);
 }
 
+function stopMpTimer(){
+  clearInterval(mpTimer);
+  const bar=document.getElementById('mp-timer-bar');
+  if(bar){
+    const computed=getComputedStyle(bar).width;
+    const parent=bar.parentElement;
+    const pct=parent?Math.round(parseFloat(computed)/parseFloat(getComputedStyle(parent).width)*100):0;
+    bar.style.transition='none';
+    bar.style.width=pct+'%';
+  }
+}
+
 function mpAutoNext(){
   document.querySelectorAll('#mp-qo .qo').forEach(b=>b.disabled=true);
   const q=mpQuestions[mpI];
   document.querySelectorAll('#mp-qo .qo')[q.a].classList.add('correct');
   const fb=document.getElementById('mp-fb');
   fb.className='qfb bad show';fb.textContent=`⏱ Lejárt! Helyes: ${q.o[q.a]}`;
-  // Broadcast score (unchanged, 0 added for this question)
   mpChannel?.send({type:'broadcast',event:'score',payload:{userId:CU.id,score:mpMyScore}});
   setTimeout(()=>{document.getElementById('mp-nxt').className='btn-p qnxt show';},800);
 }
 
 function mpAns(i){
-  clearInterval(mpTimer);
+  stopMpTimer();
   const q=mpQuestions[mpI];
   document.querySelectorAll('#mp-qo .qo').forEach(b=>b.disabled=true);
   const fb=document.getElementById('mp-fb');
@@ -1732,25 +1816,19 @@ function mpAns(i){
     document.querySelectorAll('#mp-qo .qo')[q.a].classList.add('correct');
     fb.className='qfb bad show';fb.textContent=`✗ Helytelen. Helyes: ${q.o[q.a]}`;
   }
-  // Only broadcast score, NOT next question trigger
   if(mpPlayers[CU.id])mpPlayers[CU.id].score=mpMyScore;
   mpChannel?.send({type:'broadcast',event:'score',payload:{userId:CU.id,score:mpMyScore}});
-  // Show next button after delay - player decides when to advance
-  setTimeout(()=>{
-    document.getElementById('mp-nxt').className='btn-p qnxt show';
-  },1200);
+  setTimeout(()=>{document.getElementById('mp-nxt').className='btn-p qnxt show';},1200);
 }
 
-function mpNext(){
-  mpI++;
-  mpLoadQ();
-}
+function mpNext(){mpI++;mpLoadQ();}
 
 async function showMpResult(){
-  clearInterval(mpTimer);
+  stopMpTimer();
   mpChannel?.send({type:'broadcast',event:'finish',payload:{}});
   document.getElementById('mp-game').style.display='none';
   document.getElementById('mp-result').style.display='block';
+  document.getElementById('mp-restart-status').textContent='';
   const sorted=Object.entries(mpPlayers).sort((a,b)=>b[1].score-a[1].score);
   const medals=['🥇','🥈','🥉'];
   document.getElementById('mp-scores-list').innerHTML=sorted.map(([id,p],i)=>`
@@ -1763,26 +1841,18 @@ async function showMpResult(){
   loadLB();
 }
 
-async function mpRestart(){
-  // Reset scores and state, reuse same room and questions
-  mpI=0; mpMyScore=0;
-  Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
-  renderMpPlayers();
-  document.getElementById('mp-result').style.display='none';
-  if(mpIsHost){
-    // Host shows waiting room again
-    document.getElementById('mp-waiting').style.display='block';
-    document.getElementById('mp-room-code').textContent=mpRoom;
-    document.getElementById('mp-start-btn').style.display='block';
-    // Broadcast reset to all players
-    mpChannel?.send({type:'broadcast',event:'reset',payload:{players:mpPlayers}});
-  } else {
-    // Guest waits for host to start
-    document.getElementById('mp-waiting').style.display='block';
-    document.getElementById('mp-room-code').textContent=mpRoom;
-    document.getElementById('mp-start-btn').style.display='none';
-  }
+function mpVoteRestart(){
+  // Mark this player's vote and broadcast
+  mpRestartVotes[CU.id]=true;
+  const btn=document.getElementById('mp-restart-btn');
+  if(btn){btn.disabled=true;btn.textContent='✓ Szavaztam';}
+  const total=Object.keys(mpPlayers).length;
+  const votes=Object.keys(mpRestartVotes).length;
+  const statusEl=document.getElementById('mp-restart-status');
+  if(statusEl)statusEl.textContent=`${votes}/${total} játékos szeretne újra játszani...`;
+  mpChannel?.send({type:'broadcast',event:'restart_vote',payload:{userId:CU.id}});
 }
+
 function copyRoomCode(){navigator.clipboard.writeText(mpRoom).then(()=>toast('Kód másolva: '+mpRoom,'ok'));}
 function shareRoomCode(){
   const name=CP?.username||'Egy barátod';

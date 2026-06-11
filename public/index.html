@@ -220,6 +220,7 @@ footer a{color:var(--red);text-decoration:none;}
 .timer-danger .timer-num{color:var(--red);}
 </style>
 <!-- Google AdSense -->
+<meta name="google-adsense-account" content="ca-pub-2298331244671294">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2298331244671294" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -683,8 +684,9 @@ footer a{color:var(--red);text-decoration:none;}
     <div id="mp-result" style="display:none">
       <div class="mtit">🏁 Eredmény</div>
       <div id="mp-scores-list" style="margin:1.5rem 0;"></div>
-      <button class="btn-p" style="width:100%;margin-bottom:0.5rem" onclick="createRoom()">Újra!</button>
-      <button class="btn-o" style="width:100%" onclick="closeMp()">Bezár</button>
+      <div id="mp-restart-status" style="font-size:0.85rem;color:var(--text-dim);margin-bottom:0.75rem;text-align:center;"></div>
+      <button class="btn-p" id="mp-restart-btn" style="width:100%;margin-bottom:0.5rem" onclick="mpVoteRestart()">🔄 Újra játszom</button>
+      <button class="btn-o" style="width:100%" onclick="closeMp()">Kilépés</button>
     </div>
   </div>
 </div>
@@ -1843,6 +1845,8 @@ async function showMpResult(){
   document.getElementById('mp-game').style.display='none';
   document.getElementById('mp-result').style.display='block';
   document.getElementById('mp-restart-status').textContent='';
+  const mpBtn=document.getElementById('mp-restart-btn');
+  if(mpBtn){mpBtn.disabled=false;mpBtn.textContent='🔄 Újra játszom';}
   const sorted=Object.entries(mpPlayers).sort((a,b)=>b[1].score-a[1].score);
   const medals=['🥇','🥈','🥉'];
   document.getElementById('mp-scores-list').innerHTML=sorted.map(([id,p],i)=>`

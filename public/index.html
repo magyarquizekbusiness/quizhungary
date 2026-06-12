@@ -1679,6 +1679,10 @@ function subscribeRoom(code){
     .on('broadcast',{event:'score'},({payload})=>{
       if(mpPlayers[payload.userId])mpPlayers[payload.userId].score=payload.score;
       renderMpPlayers();
+      // Ha az eredmény képernyő látható, frissítsük azt is élőben
+      if(document.getElementById('mp-result').style.display==='block'){
+        renderMpResultList();
+      }
     })
     .on('broadcast',{event:'restart_vote'},({payload})=>{
       mpRestartVotes[payload.userId]=true;
@@ -1704,17 +1708,19 @@ function subscribeRoom(code){
 }
 
 function goBackToLobby(){
-  // Host goes back to lobby settings
+  // Host also goes back to WAITING room - keeps room code, stays host
   mpRestartVotes={};
   mpI=0;mpMyScore=0;
   Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
   document.getElementById('mp-result').style.display='none';
   document.getElementById('mp-game').style.display='none';
-  document.getElementById('mp-waiting').style.display='none';
-  document.getElementById('mp-lobby').style.display='block';
-  const sel=document.getElementById('mp-topic-sel');
-  sel.innerHTML='<option value="random">🎲 Véletlen</option>';
-  TOPICS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${t.icon} ${t.name}`;sel.appendChild(o);});
+  document.getElementById('mp-lobby').style.display='none';
+  document.getElementById('mp-waiting').style.display='block';
+  document.getElementById('mp-room-code').textContent=mpRoom;
+  document.getElementById('mp-start-btn').style.display='block';
+  const statusEl=document.getElementById('mp-restart-status');
+  if(statusEl)statusEl.textContent='';
+  renderMpPlayers();
 }
 
 function goBackToLobbyGuest(){
@@ -1839,14 +1845,7 @@ function mpAns(i){
 
 function mpNext(){mpI++;mpLoadQ();}
 
-async function showMpResult(){
-  stopMpTimer();
-  // Don't broadcast 'finish' - each player reaches result independently via mpI >= mpQuestions.length
-  document.getElementById('mp-game').style.display='none';
-  document.getElementById('mp-result').style.display='block';
-  document.getElementById('mp-restart-status').textContent='';
-  const mpBtn=document.getElementById('mp-restart-btn');
-  if(mpBtn){mpBtn.disabled=false;mpBtn.textContent='🔄 Újra játszom';}
+function renderMpResultList(){
   const sorted=Object.entries(mpPlayers).sort((a,b)=>b[1].score-a[1].score);
   const medals=['🥇','🥈','🥉'];
   document.getElementById('mp-scores-list').innerHTML=sorted.map(([id,p],i)=>`
@@ -1855,6 +1854,16 @@ async function showMpResult(){
       <span style="flex:1;font-weight:600">${p.name}${id===CU?.id?' (te)':''}</span>
       <span style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--red)">${p.score}</span>
     </div>`).join('');
+}
+
+async function showMpResult(){
+  stopMpTimer();
+  document.getElementById('mp-game').style.display='none';
+  document.getElementById('mp-result').style.display='block';
+  document.getElementById('mp-restart-status').textContent='';
+  const mpBtn=document.getElementById('mp-restart-btn');
+  if(mpBtn){mpBtn.disabled=false;mpBtn.textContent='🔄 Újra játszom';}
+  renderMpResultList();
   if(CU)await saveScore('Párbaj',mpMyScore);
   loadLB();
 }

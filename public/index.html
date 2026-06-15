@@ -1361,6 +1361,7 @@ async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
 
 async function openTQ(id,diff){
   const t=TOPICS.find(x=>x.id===id);
+  if(!t){console.error('Téma nem található:',id);toast('Hiba: téma nem található','err');return;}
   if(t.premium&&!isPremium()){showPremium();return;}
   const d=diff||'medium';
   tqid=id;tqDiff=d;tqi=0;tqs=0;

@@ -218,6 +218,20 @@ footer a{color:var(--red);text-decoration:none;}
 .timer-num{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;margin-bottom:0.4rem;transition:color 0.3s;}
 .timer-danger .timer-bar-fill{background:var(--red)!important;}
 .timer-danger .timer-num{color:var(--red);}
+
+/* PREMIUM */
+.premium-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;padding:0.15rem 0.45rem;border-radius:2px;background:linear-gradient(135deg,#f5c518,#e8a000);color:#000;font-weight:700;margin-top:0.4rem;}
+.tc.locked{position:relative;}
+.tc.locked::before{content:'🔒';position:absolute;top:0.6rem;right:0.6rem;font-size:1rem;z-index:2;opacity:0.85;}
+.tc.locked{opacity:0.7;}
+.tc.locked .ti{filter:grayscale(0.6);}
+.premium-hero{background:linear-gradient(135deg,rgba(245,197,24,0.08),rgba(10,10,10,0));border:1px solid rgba(245,197,24,0.3);border-radius:4px;padding:2rem;margin-bottom:2rem;text-align:center;position:relative;overflow:hidden;}
+.premium-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f5c518,#e8a000);}
+.premium-price{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--gold);line-height:1;}
+.premium-feat{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0;font-size:0.95rem;color:var(--text-muted);text-align:left;}
+.btn-gold{background:linear-gradient(135deg,#f5c518,#e8a000);color:#000;border:none;padding:0.9rem 2rem;font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;font-weight:700;transition:transform 0.15s,box-shadow 0.2s;width:100%;}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(245,197,24,0.3);}
+.premium-active-badge{display:inline-flex;align-items:center;gap:0.4rem;background:linear-gradient(135deg,rgba(245,197,24,0.2),rgba(245,197,24,0.05));border:1px solid rgba(245,197,24,0.4);border-radius:2px;padding:0.2rem 0.6rem;font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--gold);}
 </style>
 <!-- Google AdSense -->
 <meta name="google-adsense-account" content="ca-pub-2298331244671294">
@@ -245,6 +259,7 @@ footer a{color:var(--red);text-decoration:none;}
           <div class="udlabel" id="udlbl"></div>
           <div class="uddiv"></div>
           <button class="udi" onclick="openProfile();toggleDrop(true)">👤 Profilom</button>
+          <button class="udi" onclick="showPremium();toggleDrop(true)">✨ Premium</button>
           <button class="udi" onclick="goTo('rangsor');toggleDrop(true)">🏆 Ranglista</button>
           <div class="uddiv"></div>
           <button class="udi danger" onclick="doSignOut()">Kijelentkezés</button>
@@ -702,6 +717,27 @@ footer a{color:var(--red);text-decoration:none;}
     AdSense banner (728×90) — Add meg a Google AdSense kódodat
   </div>
 </div>
+
+<!-- PREMIUM MODAL -->
+<div class="overlay" id="premov" onclick="if(event.target===this)closePremium()">
+  <div class="mbox" style="max-width:460px">
+    <button class="mcl" onclick="closePremium()">×</button>
+    <div class="premium-hero">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">✨</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;">QuizHungary Premium</div>
+      <div style="margin:1rem 0;"><span class="premium-price">2 499 Ft</span><span style="color:var(--text-muted);font-size:0.9rem;">/hó</span></div>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <div class="premium-feat">✅ <span>20 extra prémium témakör feloldása</span></div>
+      <div class="premium-feat">✅ <span>Több mint 1000 új kérdés</span></div>
+      <div class="premium-feat">✅ <span>Hozzáférés minden jövőbeli témához</span></div>
+      <div class="premium-feat">✅ <span>Bármikor lemondható</span></div>
+    </div>
+    <div class="aerr" id="prem-err"></div>
+    <button class="btn-gold" onclick="startCheckout()" id="prem-btn">Előfizetek →</button>
+    <div style="text-align:center;font-size:0.75rem;color:var(--text-dim);margin-top:1rem;">Biztonságos fizetés Stripe-on keresztül 🔒</div>
+  </div>
+</div>
 <div class="toast" id="tst"></div>
 
 <script>
@@ -851,7 +887,108 @@ const TOPICS=[
     {q:'Melyik évben járt ember a Holdon először?',o:['1965','1969','1972'],a:1},
     {q:'Hány km/s a fény sebessége?',o:['200 000','300 000','400 000'],a:1},
   ]},
-];
+,
+  // ── PRÉMIUM TÉMÁK ──
+  {id:'urtudomany',name:'Űrtudomány',icon:'🌌',diff:'hard',premium:true,q:[
+    {q:'Mi a galaxisunk neve?',o:['Androméda','Tejútrendszer','Triangulum'],a:1},
+    {q:'Hány bolygó van a Naprendszerben?',o:['7','8','9'],a:1},
+    {q:'Mi a legközelebbi csillag a Naphoz?',o:['Szíriusz','Proxima Centauri','Vega'],a:1},
+  ]},
+  {id:'mitologia',name:'Mitológia',icon:'⚡',diff:'medium',premium:true,q:[
+    {q:'Ki a görög főisten?',o:['Poszeidón','Zeusz','Hadész'],a:1},
+    {q:'Ki a háború római istene?',o:['Mars','Apolló','Merkúr'],a:0},
+    {q:'Hány feladata volt Héraklésznek?',o:['10','12','14'],a:1},
+  ]},
+  {id:'programozas',name:'Programozás',icon:'💾',diff:'hard',premium:true,q:[
+    {q:'Mit jelent a HTML rövidítés?',o:['HyperText Markup Language','High Tech Modern Language','Home Tool Markup Language'],a:0},
+    {q:'Melyik nyelv a Python kígyó?',o:['Java','Python','Ruby'],a:1},
+    {q:'Mi a bináris számrendszer alapja?',o:['2','8','10'],a:0},
+  ]},
+  {id:'gasztronomia',name:'Gasztronómia',icon:'👨‍🍳',diff:'medium',premium:true,q:[
+    {q:'Melyik ország nemzeti étele a paella?',o:['Olaszország','Spanyolország','Portugália'],a:1},
+    {q:'Miből készül a wasabi?',o:['Tormából','Mustárból','Gyömbérből'],a:0},
+    {q:'Melyik fűszer a legdrágább?',o:['Vanília','Sáfrány','Kardamom'],a:1},
+  ]},
+  {id:'epiteszet',name:'Építészet',icon:'🏛️',diff:'hard',premium:true,q:[
+    {q:'Melyik városban van az Eiffel-torony?',o:['London','Párizs','Róma'],a:1},
+    {q:'Ki tervezte a Sagrada Famíliát?',o:['Gaudí','Le Corbusier','Niemeyer'],a:0},
+    {q:'Hány éve épült a Colosseum kb.?',o:['1000','2000','3000'],a:1},
+  ]},
+  {id:'orvostudomany',name:'Orvostudomány',icon:'⚕️',diff:'hard',premium:true,q:[
+    {q:'Hány foga van egy felnőttnek?',o:['28','32','36'],a:1},
+    {q:'Melyik szerv szűri a vért?',o:['Máj','Vese','Tüdő'],a:1},
+    {q:'Mi a szív fő funkciója?',o:['Vér pumpálása','Emésztés','Légzés'],a:0},
+  ]},
+  {id:'jog',name:'Jog',icon:'⚖️',diff:'hard',premium:true,q:[
+    {q:'Hány évig tart egy elnöki ciklus az USA-ban?',o:['4','5','6'],a:0},
+    {q:'Mi az alkotmány?',o:['Alaptörvény','Rendelet','Szerződés'],a:0},
+    {q:'Hol van a Nemzetközi Bíróság?',o:['Genf','Hága','Brüsszel'],a:1},
+  ]},
+  {id:'gazdasag',name:'Gazdaság',icon:'📈',diff:'hard',premium:true,q:[
+    {q:'Mi az EU közös valutája?',o:['Font','Euró','Dollár'],a:1},
+    {q:'Mit jelent a GDP?',o:['Bruttó hazai termék','Globális dollár','Gazdasági pénz'],a:0},
+    {q:'Melyik a világ legértékesebb cége 2025-ben?',o:['Apple','Nvidia','Microsoft'],a:1},
+  ]},
+  {id:'pszichologia',name:'Pszichológia',icon:'🧠',diff:'medium',premium:true,q:[
+    {q:'Ki a pszichoanalízis atyja?',o:['Jung','Freud','Pavlov'],a:1},
+    {q:'Hány alapérzelmet különböztetünk meg?',o:['4','6','8'],a:1},
+    {q:'Mi az IQ teszt mértékegysége?',o:['Pont','Intelligenciahányados','Százalék'],a:1},
+  ]},
+  {id:'nyelvek',name:'Nyelvek',icon:'🗣️',diff:'medium',premium:true,q:[
+    {q:'Hány hivatalos nyelv van az ENSZ-ben?',o:['4','6','8'],a:1},
+    {q:'Melyik a legtöbbet beszélt nyelv?',o:['Angol','Kínai','Spanyol'],a:1},
+    {q:'Hány betű van a magyar ábécében?',o:['40','44','48'],a:1},
+  ]},
+  {id:'tenger',name:'Tengerek',icon:'🌊',diff:'medium',premium:true,q:[
+    {q:'Mi a legmélyebb óceáni árok?',o:['Mariana-árok','Tonga-árok','Java-árok'],a:0},
+    {q:'Melyik a legnagyobb tenger?',o:['Karib','Földközi','Dél-kínai'],a:2},
+    {q:'Hány százaléka víz a Földnek?',o:['51%','71%','91%'],a:1},
+  ]},
+  {id:'felfedezok',name:'Felfedezők',icon:'🧭',diff:'hard',premium:true,q:[
+    {q:'Ki fedezte fel Amerikát 1492-ben?',o:['Magellán','Kolumbusz','Cook'],a:1},
+    {q:'Ki ért elsőként a Déli-sarkra?',o:['Amundsen','Scott','Shackleton'],a:0},
+    {q:'Ki kerülte meg elsőként a Földet?',o:['Vasco da Gama','Magellán expedíció','Drake'],a:1},
+  ]},
+  {id:'talalmanyok',name:'Találmányok',icon:'💡',diff:'medium',premium:true,q:[
+    {q:'Ki találta fel az izzót?',o:['Tesla','Edison','Bell'],a:1},
+    {q:'Ki találta fel a telefont?',o:['Bell','Marconi','Morse'],a:0},
+    {q:'Melyik évben találták fel az internetet kb.?',o:['1969','1989','1999'],a:0},
+  ]},
+  {id:'divat',name:'Divat',icon:'👗',diff:'easy',premium:true,q:[
+    {q:'Melyik város a divat fővárosa?',o:['London','Párizs','New York'],a:1},
+    {q:'Ki alapította a Chanel márkát?',o:['Coco Chanel','Dior','Versace'],a:0},
+    {q:'Milyen anyagból van a farmer?',o:['Pamut','Denim','Selyem'],a:1},
+  ]},
+  {id:'jatekok',name:'Videojátékok',icon:'🎮',diff:'medium',premium:true,q:[
+    {q:'Melyik a legtöbbet eladott videojáték?',o:['Tetris','Minecraft','GTA V'],a:1},
+    {q:'Ki a Mario készítője?',o:['Sega','Nintendo','Sony'],a:1},
+    {q:'Melyik évben jelent meg a Pong?',o:['1972','1982','1992'],a:0},
+  ]},
+  {id:'tanc',name:'Tánc',icon:'💃',diff:'easy',premium:true,q:[
+    {q:'Honnan származik a tangó?',o:['Spanyolország','Argentína','Brazília'],a:1},
+    {q:'Hány alaplépése van a keringőnek?',o:['3','4','5'],a:0},
+    {q:'Melyik ország tánca a flamenco?',o:['Olaszország','Spanyolország','Portugália'],a:1},
+  ]},
+  {id:'fegyverek',name:'Hadtörténet',icon:'🛡️',diff:'hard',premium:true,q:[
+    {q:'Melyik évben ért véget a 2. világháború?',o:['1943','1945','1947'],a:1},
+    {q:'Ki volt Róma leghíresebb hadvezére?',o:['Julius Caesar','Néró','Augustus'],a:0},
+    {q:'Melyik csatát vesztette el Napóleon 1815-ben?',o:['Austerlitz','Waterloo','Lipcse'],a:1},
+  ]},
+  {id:'novenyek',name:'Növények',icon:'🌿',diff:'medium',premium:true,q:[
+    {q:'Mi a fotoszintézis fő terméke?',o:['Oxigén','Nitrogén','Szén'],a:0},
+    {q:'Melyik a legmagasabb fafajta?',o:['Tölgy','Mamutfenyő','Nyír'],a:1},
+    {q:'Hány szirma van egy lóherének általában?',o:['3','4','5'],a:0},
+  ]},
+  {id:'asvanyok',name:'Ásványok',icon:'💎',diff:'hard',premium:true,q:[
+    {q:'Mi a legkeményebb ásvány?',o:['Kvarc','Gyémánt','Korund'],a:1},
+    {q:'Milyen színű a smaragd?',o:['Piros','Zöld','Kék'],a:1},
+    {q:'Miből áll a grafit és a gyémánt?',o:['Szén','Szilícium','Vas'],a:0},
+  ]},
+  {id:'kommunikacio',name:'Média',icon:'📡',diff:'medium',premium:true,q:[
+    {q:'Melyik évben indult a YouTube?',o:['2003','2005','2007'],a:1},
+    {q:'Ki alapította a Facebookot?',o:['Bill Gates','Mark Zuckerberg','Steve Jobs'],a:1},
+    {q:'Mit jelent a "www"?',o:['World Wide Web','Web World Wide','Wide Web World'],a:0},
+  ]}];
 
 // Fallback napi kérdések (ha az AI nem elérhető)
 const DQ_FALLBACK=[
@@ -884,11 +1021,12 @@ async function init(){
   dLoad();
 
   const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();}
+  if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();renderTopics();}
   else{navGuest();loadLB();loadPC();}
+  checkPaymentRedirect();
 
   sb.auth.onAuthStateChange(async(event,ses)=>{
-    if(event==='SIGNED_IN'&&ses?.user){CU=ses.user;await loadP();navUser();loadLB();loadPC();}
+    if(event==='SIGNED_IN'&&ses?.user){CU=ses.user;await loadP();navUser();loadLB();loadPC();renderTopics();}
     else if(event==='SIGNED_OUT'){CU=null;CP=null;navGuest();loadLB();}
   });
 }
@@ -909,6 +1047,10 @@ function navUser(){
   if(s>0){
     document.getElementById('nav-streak').style.display='inline-flex';
     document.getElementById('nav-streak-num').textContent=s;
+  }
+  // Premium badge in dropdown label
+  if(isPremium()){
+    document.getElementById('udlbl').innerHTML=n+' <span class="premium-active-badge">✨ Premium</span>';
   }
 }
 function navGuest(){document.getElementById('nav-guest').style.display='flex';document.getElementById('nav-user').style.display='none';}
@@ -1168,17 +1310,29 @@ function fallbackShare(text){
 
 // ── TOPICS ─────────────────────────────────────────────────────────────────────
 function renderTopics(){
-  document.getElementById('tgrid').innerHTML=TOPICS.map(t=>`
-    <div class="tc">
+  document.getElementById('tgrid').innerHTML=TOPICS.map(t=>{
+    const locked=t.premium&&!isPremium();
+    if(locked){
+      return `<div class="tc locked" onclick="showPremium()">
+        <span class="ti">${t.icon}</span>
+        <div class="tn">${t.name}</div>
+        <span class="premium-badge">✨ Premium</span>
+      </div>`;
+    }
+    return `<div class="tc">
       <span class="ti">${t.icon}</span>
       <div class="tn">${t.name}</div>
+      ${t.premium?'<span class="premium-badge">✨ Premium</span>':''}
       <div style="display:flex;gap:0.4rem;justify-content:center;margin-top:0.6rem;flex-wrap:wrap;">
         <button class="diff-badge diff-easy" style="cursor:pointer;padding:0.25rem 0.6rem;" onclick="event.stopPropagation();openTQ('${t.id}','easy')">🟢 Könnyű</button>
         <button class="diff-badge diff-medium" style="cursor:pointer;padding:0.25rem 0.6rem;" onclick="event.stopPropagation();openTQ('${t.id}','medium')">🟡 Közepes</button>
         <button class="diff-badge diff-hard" style="cursor:pointer;padding:0.25rem 0.6rem;" onclick="event.stopPropagation();openTQ('${t.id}','hard')">🔴 Nehéz</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
+
+function isPremium(){ return CP?.is_premium===true; }
 
 // ── AI QUESTIONS ───────────────────────────────────────────────────────────────
 async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
@@ -1203,6 +1357,7 @@ async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
 
 async function openTQ(id,diff){
   const t=TOPICS.find(x=>x.id===id);
+  if(t.premium&&!isPremium()){showPremium();return;}
   const d=diff||'medium';
   tqid=id;tqDiff=d;tqi=0;tqs=0;
   document.getElementById('tqtit').textContent=`${t.icon} ${t.name}`;
@@ -1893,6 +2048,49 @@ Szobakód: ${mpRoom}
 Csatlakozz: https://quizhungary.vercel.app`;
   if(navigator.share)navigator.share({text}).catch(()=>navigator.clipboard.writeText(text).then(()=>toast('Meghívó másolva!','ok')));
   else navigator.clipboard.writeText(text).then(()=>toast('Meghívó másolva!','ok'));
+}
+
+
+// ── PREMIUM / STRIPE ──────────────────────────────────────────────────────────
+function showPremium(){
+  if(!CU){toast('Jelentkezz be az előfizetéshez!','info');openAuth();return;}
+  document.getElementById('prem-err').className='aerr';
+  document.getElementById('premov').classList.add('show');
+}
+function closePremium(){document.getElementById('premov').classList.remove('show');}
+
+async function startCheckout(){
+  if(!CU){openAuth();return;}
+  const btn=document.getElementById('prem-btn');
+  btn.disabled=true;btn.textContent='Átirányítás...';
+  try{
+    const res=await fetch('/api/create-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({userId:CU.id,email:CU.email})
+    });
+    const data=await res.json();
+    if(data.url){window.location.href=data.url;}
+    else throw new Error(data.error||'Hiba');
+  }catch(e){
+    const err=document.getElementById('prem-err');
+    err.textContent='Hiba történt: '+e.message;err.className='aerr show';
+    btn.disabled=false;btn.textContent='Előfizetek →';
+  }
+}
+
+// Check payment redirect on load
+function checkPaymentRedirect(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('payment')==='success'){
+    toast('🎉 Sikeres előfizetés! A prémium témák hamarosan elérhetők.','ok');
+    // Reload profile after a moment to get updated premium status
+    setTimeout(async()=>{if(CU){await loadP();renderTopics();navUser();}},2000);
+    window.history.replaceState({},'',window.location.pathname);
+  } else if(params.get('payment')==='cancel'){
+    toast('Az előfizetés megszakadt.','info');
+    window.history.replaceState({},'',window.location.pathname);
+  }
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────

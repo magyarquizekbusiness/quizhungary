@@ -505,6 +505,13 @@ footer a{color:var(--red);text-decoration:none;}
       <div class="best-topic-lbl" style="margin-bottom:0.5rem">Jelenlegi streak</div>
       <div style="display:flex;align-items:center;gap:0.5rem;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--orange)">🔥 <span id="prof-streak">0</span> nap</div>
     </div>
+    <div id="prof-premium-wrap" style="margin-bottom:1rem;display:none;background:linear-gradient(135deg,rgba(245,197,24,0.08),rgba(10,10,10,0));border:1px solid rgba(245,197,24,0.3);border-radius:4px;padding:1rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <span class="premium-active-badge">✨ Premium aktív</span>
+      </div>
+      <div id="prof-premium-end" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.8rem;"></div>
+      <button class="btn-o" style="width:100%;font-size:0.85rem;" onclick="openCustomerPortal()">Előfizetés kezelése / Lemondás</button>
+    </div>
     <button class="btn-p" style="width:100%" onclick="closePov()">Bezár</button>
   </div>
 </div>
@@ -1153,6 +1160,18 @@ async function openProfile(){
   if(streak>0){
     document.getElementById('prof-streak-wrap').style.display='block';
     document.getElementById('prof-streak').textContent=streak;
+  }
+  // Premium info
+  if(isPremium()){
+    document.getElementById('prof-premium-wrap').style.display='block';
+    if(CP?.subscription_end){
+      const end=new Date(CP.subscription_end);
+      document.getElementById('prof-premium-end').textContent='Megújul: '+end.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'});
+    } else {
+      document.getElementById('prof-premium-end').textContent='Aktív havi előfizetés';
+    }
+  } else {
+    document.getElementById('prof-premium-wrap').style.display='none';
   }
   try{
     const{data}=await sb.from('scores').select('topic,points').eq('user_id',CU.id);
@@ -2084,6 +2103,20 @@ function showPremium(){
   document.getElementById('premov').classList.add('show');
 }
 function closePremium(){document.getElementById('premov').classList.remove('show');}
+
+async function openCustomerPortal(){
+  if(!CU)return;
+  try{
+    const res=await fetch('/api/customer-portal',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({userId:CU.id})
+    });
+    const data=await res.json();
+    if(data.url){window.location.href=data.url;}
+    else throw new Error(data.error||'Hiba');
+  }catch(e){toast('Hiba: '+e.message,'err');}
+}
 
 async function startCheckout(){
   if(!PREMIUM_ENABLED){toast('A prémium még nem elérhető.','info');return;}

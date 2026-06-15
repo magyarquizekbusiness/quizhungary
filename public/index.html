@@ -744,6 +744,8 @@ footer a{color:var(--red);text-decoration:none;}
 const SURL='https://biooqabaubndamtnprha.supabase.co';
 const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpb29xYWJhdWJuZGFtdG5wcmhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTA5MzcsImV4cCI6MjA5NjQyNjkzN30.7yjkyPrOOo70ZkAUZkkvf0duTDe_y4zJj2x4r7pydzU';
 const sb=supabase.createClient(SURL,SKEY);
+// ⚠️ PRÉMIUM KAPCSOLÓ: false = kikapcsolva (teszteléshez), true = élesben
+const PREMIUM_ENABLED=false;
 // OpenAI kérések a Vercel proxy-n keresztül mennek — nincs szükség kulcsra itt
 
 const TOPICS=[
@@ -1051,6 +1053,8 @@ function navUser(){
   // Premium badge in dropdown label
   if(isPremium()){
     document.getElementById('udlbl').innerHTML=n+' <span class="premium-active-badge">✨ Premium</span>';
+  } else {
+    document.getElementById('udlbl').textContent=n;
   }
 }
 function navGuest(){document.getElementById('nav-guest').style.display='flex';document.getElementById('nav-user').style.display='none';}
@@ -2053,6 +2057,15 @@ Csatlakozz: https://quizhungary.vercel.app`;
 
 // ── PREMIUM / STRIPE ──────────────────────────────────────────────────────────
 function showPremium(){
+  // Ha már aktív előfizető, ne a fizetési modalt mutassuk
+  if(isPremium()){
+    toast('✨ Már aktív Premium előfizetésed van!','ok');
+    return;
+  }
+  if(!PREMIUM_ENABLED){
+    toast('✨ A prémium hamarosan elérhető lesz!','info');
+    return;
+  }
   if(!CU){toast('Jelentkezz be az előfizetéshez!','info');openAuth();return;}
   document.getElementById('prem-err').className='aerr';
   document.getElementById('premov').classList.add('show');
@@ -2060,6 +2073,7 @@ function showPremium(){
 function closePremium(){document.getElementById('premov').classList.remove('show');}
 
 async function startCheckout(){
+  if(!PREMIUM_ENABLED){toast('A prémium még nem elérhető.','info');return;}
   if(!CU){openAuth();return;}
   const btn=document.getElementById('prem-btn');
   btn.disabled=true;btn.textContent='Átirányítás...';

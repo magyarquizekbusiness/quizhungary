@@ -52,11 +52,16 @@ export default async function handler(req, res) {
         // Subscription renewed — keep premium active
         const invoice = event.data.object;
         const customerId = invoice.customer;
+        // Get period end from the invoice line item
+        let periodEnd = null;
+        try {
+          const lineEnd = invoice.lines?.data?.[0]?.period?.end;
+          if (lineEnd) periodEnd = new Date(lineEnd * 1000).toISOString();
+        } catch (e) {}
         if (customerId) {
-          await supabase.from('profiles').update({
-            is_premium: true,
-            subscription_status: 'active'
-          }).eq('stripe_customer_id', customerId);
+          const update = { is_premium: true, subscription_status: 'active' };
+          if (periodEnd) update.subscription_end = periodEnd;
+          await supabase.from('profiles').update(update).eq('stripe_customer_id', customerId);
         }
         break;
       }
@@ -65,11 +70,12 @@ export default async function handler(req, res) {
         const sub = event.data.object;
         const customerId = sub.customer;
         const isActive = sub.status === 'active' || sub.status === 'trialing';
+        const update = { is_premium: isActive, subscription_status: sub.status };
+        if (sub.current_period_end) {
+          update.subscription_end = new Date(sub.current_period_end * 1000).toISOString();
+        }
         if (customerId) {
-          await supabase.from('profiles').update({
-            is_premium: isActive,
-            subscription_status: sub.status
-          }).eq('stripe_customer_id', customerId);
+          await supabase.from('profiles').update(update).eq('stripe_customer_id', customerId);
         }
         break;
       }

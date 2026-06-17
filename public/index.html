@@ -1023,15 +1023,16 @@ const aiCache={};
 async function init(){
   document.getElementById('tdate').textContent=new Date().toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'});
   renderTopics(); renderStreak();
-  // Napi kérdések betöltése (AI vagy cache)
-  document.getElementById('dqt').textContent='Kérdések betöltése...';
-  await loadDailyQuestions();
-  dLoad();
 
+  // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
   if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();renderTopics();}
   else{navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
+
+  // UTÁNA a lassú napi kérdés betöltés (nem blokkolja a bejelentkezést)
+  document.getElementById('dqt').textContent='Kérdések betöltése...';
+  loadDailyQuestions().then(()=>dLoad());
 
   sb.auth.onAuthStateChange(async(event,ses)=>{
     if(event==='SIGNED_IN'&&ses?.user){CU=ses.user;await loadP();navUser();loadLB();loadPC();renderTopics();}

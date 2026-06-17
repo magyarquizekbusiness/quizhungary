@@ -260,6 +260,7 @@ footer a{color:var(--red);text-decoration:none;}
           <div class="uddiv"></div>
           <button class="udi" onclick="openProfile();toggleDrop(true)">👤 Profilom</button>
           <button class="udi" onclick="showPremium();toggleDrop(true)">✨ Premium</button>
+          <button class="udi" id="admin-menu-item" style="display:none" onclick="openAdmin();toggleDrop(true)">🔐 Admin</button>
           <button class="udi" onclick="goTo('rangsor');toggleDrop(true)">🏆 Ranglista</button>
           <div class="uddiv"></div>
           <button class="udi danger" onclick="doSignOut()">Kijelentkezés</button>
@@ -745,6 +746,48 @@ footer a{color:var(--red);text-decoration:none;}
     <div style="text-align:center;font-size:0.75rem;color:var(--text-dim);margin-top:1rem;">Biztonságos fizetés Stripe-on keresztül 🔒</div>
   </div>
 </div>
+
+<!-- ADMIN MODAL -->
+<div class="overlay" id="adminov" onclick="if(event.target===this)closeAdmin()">
+  <div class="mbox" style="max-width:900px;max-height:90vh;">
+    <button class="mcl" onclick="closeAdmin()">×</button>
+    <div class="mtit">🔐 Admin Panel</div>
+    <div class="msub">QuizHungary statisztikák és felhasználók</div>
+    <div id="admin-loading" class="tq-loading" style="display:none"><div class="tq-spinner"></div><div class="tq-loading-text">Adatok betöltése...</div></div>
+    <div id="admin-content" style="display:none">
+      <!-- Stat cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1.5rem;">
+        <div class="stat-card"><span class="stat-card-num" id="adm-users">0</span><span class="stat-card-lbl">Felhasználó</span></div>
+        <div class="stat-card"><span class="stat-card-num" id="adm-premium" style="color:var(--gold)">0</span><span class="stat-card-lbl">Előfizető</span></div>
+        <div class="stat-card"><span class="stat-card-num" id="adm-revenue" style="color:var(--green)">0</span><span class="stat-card-lbl">Havi bevétel (Ft)</span></div>
+        <div class="stat-card"><span class="stat-card-num" id="adm-games">0</span><span class="stat-card-lbl">Játszott kvíz</span></div>
+        <div class="stat-card"><span class="stat-card-num" id="adm-new">0</span><span class="stat-card-lbl">Új (7 nap)</span></div>
+      </div>
+      <!-- Top topics -->
+      <div style="margin-bottom:1.5rem;">
+        <div class="best-topic-lbl" style="margin-bottom:0.75rem;">Legnépszerűbb témák</div>
+        <div id="adm-topics" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+      </div>
+      <!-- Users table -->
+      <div class="best-topic-lbl" style="margin-bottom:0.75rem;">Felhasználók (<span id="adm-user-count">0</span>)</div>
+      <div style="max-height:350px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+          <thead style="position:sticky;top:0;background:var(--bg3);">
+            <tr style="text-align:left;color:var(--text-muted);">
+              <th style="padding:0.6rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.7rem;">Név</th>
+              <th style="padding:0.6rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.7rem;">Email</th>
+              <th style="padding:0.6rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.7rem;">Premium</th>
+              <th style="padding:0.6rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.7rem;">Kvíz</th>
+              <th style="padding:0.6rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.7rem;">Pont</th>
+            </tr>
+          </thead>
+          <tbody id="adm-users-table"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="admin-error" style="display:none;color:#ff6b7a;padding:1rem;text-align:center;"></div>
+  </div>
+</div>
 <div class="toast" id="tst"></div>
 
 <script>
@@ -1062,6 +1105,12 @@ function navUser(){
     document.getElementById('udlbl').innerHTML=n+' <span class="premium-active-badge">✨ Premium</span>';
   } else {
     document.getElementById('udlbl').textContent=n;
+  }
+  // Admin menü csak adminoknak
+  if(CP?.is_admin===true){
+    document.getElementById('admin-menu-item').style.display='block';
+  } else {
+    document.getElementById('admin-menu-item').style.display='none';
   }
 }
 function navGuest(){document.getElementById('nav-guest').style.display='flex';document.getElementById('nav-user').style.display='none';}
@@ -2153,6 +2202,52 @@ function checkPaymentRedirect(){
     window.history.replaceState({},'',window.location.pathname);
   }
 }
+
+
+// ── ADMIN ─────────────────────────────────────────────────────────────────────
+async function openAdmin(){
+  if(!CU||CP?.is_admin!==true){toast('Hozzáférés megtagadva','err');return;}
+  document.getElementById('adminov').classList.add('show');
+  document.getElementById('admin-loading').style.display='flex';
+  document.getElementById('admin-content').style.display='none';
+  document.getElementById('admin-error').style.display='none';
+  try{
+    const res=await fetch('/api/admin-stats',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({userId:CU.id})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Hiba');
+    // Stat kártyák
+    document.getElementById('adm-users').textContent=data.stats.totalUsers;
+    document.getElementById('adm-premium').textContent=data.stats.premiumUsers;
+    document.getElementById('adm-revenue').textContent=data.stats.monthlyRevenue.toLocaleString('hu-HU');
+    document.getElementById('adm-games').textContent=data.stats.totalGames;
+    document.getElementById('adm-new').textContent=data.stats.newThisWeek;
+    // Top témák
+    document.getElementById('adm-topics').innerHTML=data.topTopics.map(([t,c])=>
+      `<span style="background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:0.3rem 0.7rem;font-size:0.8rem;">${t} <span style="color:var(--red);font-weight:600;">${c}</span></span>`
+    ).join('')||'<span style="color:var(--text-dim)">Még nincs adat</span>';
+    // Felhasználók tábla
+    document.getElementById('adm-user-count').textContent=data.users.length;
+    document.getElementById('adm-users-table').innerHTML=data.users.map(u=>`
+      <tr style="border-top:1px solid var(--border);">
+        <td style="padding:0.6rem;font-weight:500;">${u.username||'—'}</td>
+        <td style="padding:0.6rem;color:var(--text-muted);font-size:0.78rem;">${u.email}</td>
+        <td style="padding:0.6rem;">${u.is_premium?'<span style="color:var(--gold)">✨ Igen</span>':'<span style="color:var(--text-dim)">Nem</span>'}</td>
+        <td style="padding:0.6rem;">${u.games}</td>
+        <td style="padding:0.6rem;color:var(--red);font-weight:600;">${u.points.toLocaleString('hu-HU')}</td>
+      </tr>`).join('');
+    document.getElementById('admin-loading').style.display='none';
+    document.getElementById('admin-content').style.display='block';
+  }catch(e){
+    document.getElementById('admin-loading').style.display='none';
+    const err=document.getElementById('admin-error');
+    err.textContent='Hiba: '+e.message;err.style.display='block';
+  }
+}
+function closeAdmin(){document.getElementById('adminov').classList.remove('show');}
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────
 function togglePw(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.style.opacity=i.type==='text'?'1':'0.5';}

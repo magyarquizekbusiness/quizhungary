@@ -1078,7 +1078,7 @@ async function init(){
   loadDailyQuestions().then(()=>dLoad());
 
   sb.auth.onAuthStateChange(async(event,ses)=>{
-    if(event==='SIGNED_IN'&&ses?.user){CU=ses.user;await loadP();navUser();loadLB();loadPC();renderTopics();}
+    if(event==='SIGNED_IN'&&ses?.user){CU=ses.user;await loadP();navUser();loadLB();loadPC();renderTopics();di=0;ds=0;document.getElementById('dqa').style.display='block';document.getElementById('dqr').className='qr';dLoad();}
     else if(event==='SIGNED_OUT'){CU=null;CP=null;navGuest();loadLB();}
   });
 }
@@ -1317,6 +1317,13 @@ async function loadDailyQuestions(){
 }
 
 function dLoad(){
+  if(di===0&&!CU){
+    document.getElementById('dqa').style.display='none';
+    const r=document.getElementById('dqr');r.className='qr show';
+    document.getElementById('drs').textContent='🔒';
+    document.getElementById('drm').textContent='A napi kvíz játékához jelentkezz be!';
+    return;
+  }
   if(di===0&&dAlreadyPlayed()){
     document.getElementById('dqa').style.display='none';
     const r=document.getElementById('dqr');r.className='qr show';
@@ -1428,6 +1435,7 @@ async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
 }
 
 async function openTQ(id,diff){
+  if(!CU){toast('Játékhoz jelentkezz be!','info');openAuth('reg');return;}
   const t=TOPICS.find(x=>x.id===id);
   if(!t){console.error('Téma nem található:',id);toast('Hiba: téma nem található','err');return;}
   if(t.premium&&!isPremium()){showPremium();return;}
@@ -1598,6 +1606,7 @@ function setLb(m,el){lbm=m;document.querySelectorAll('.lbtab').forEach(t=>t.clas
 let mqList=[],mqI=0,mqScore=0,mqTimeouts=0,mqTimer=null,mqSeconds=8;
 
 async function openMarathon(){
+  if(!CU){toast('Játékhoz jelentkezz be!','info');openAuth('reg');return;}
   mqI=0;mqScore=0;mqTimeouts=0;
   document.getElementById('mqr').className='qr';
   document.getElementById('mq-loading').style.display='flex';
@@ -1773,6 +1782,7 @@ function shareMarathon(){
 
 // ── RANDOM QUIZ ───────────────────────────────────────────────────────────────
 function openRandom(){
+  if(!CU){toast('Játékhoz jelentkezz be!','info');openAuth('reg');return;}
   const t=TOPICS[Math.floor(Math.random()*TOPICS.length)];
   const diffs=['easy','medium','hard'];
   const d=diffs[Math.floor(Math.random()*diffs.length)];
@@ -1782,6 +1792,7 @@ function openRandom(){
 
 // ── LONG QUIZ (50 kérdés) ─────────────────────────────────────────────────────
 async function openLongQuiz(){
+  if(!CU){toast('Játékhoz jelentkezz be!','info');openAuth('reg');return;}
   document.querySelector('#mqov .tqtit').textContent='⚡ Hosszú kvíz';
   document.getElementById('mqr').className='qr';
   document.getElementById('mq-timeout-info').style.display='none';

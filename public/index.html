@@ -240,6 +240,33 @@ footer a{color:var(--red);text-decoration:none;}
 .cookie-text a{color:var(--red);cursor:pointer;text-decoration:underline;}
 .cookie-actions{display:flex;gap:0.6rem;flex-shrink:0;}
 @media(max-width:560px){.cookie-banner{flex-direction:column;align-items:stretch;}.cookie-actions{justify-content:stretch;}.cookie-actions button{flex:1;}}
+
+/* FRIENDS & CHAT */
+.friends-tabs{display:flex;gap:0.5rem;margin-bottom:1.2rem;border-bottom:1px solid var(--border);}
+.friends-tab{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;padding:0.5rem 1rem;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:2px solid transparent;transition:all 0.15s;position:relative;}
+.friends-tab.active{color:var(--red);border-bottom-color:var(--red);}
+.friends-tab .badge-count{position:absolute;top:0.2rem;right:0.2rem;background:var(--red);color:#fff;font-size:0.6rem;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;}
+.friend-row{display:flex;align-items:center;gap:0.8rem;padding:0.8rem;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.friend-row:hover{background:var(--bg3);}
+.friend-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#fff;flex-shrink:0;cursor:pointer;}
+.friend-info{flex:1;min-width:0;cursor:pointer;}
+.friend-name{font-weight:600;font-size:0.95rem;}
+.friend-meta{font-size:0.75rem;color:var(--text-dim);}
+.friend-btn{padding:0.4rem 0.8rem;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;border-radius:3px;cursor:pointer;border:none;transition:all 0.15s;white-space:nowrap;}
+.fb-accept{background:var(--green);color:#fff;}
+.fb-decline{background:var(--bg4);color:var(--text-muted);}
+.fb-add{background:var(--red);color:#fff;}
+.fb-chat{background:rgba(74,144,217,0.15);color:#4a90d9;border:1px solid rgba(74,144,217,0.3);}
+.fb-pending{background:var(--bg4);color:var(--text-dim);cursor:default;}
+.chat-messages{height:300px;overflow-y:auto;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:4px;margin-bottom:0.8rem;display:flex;flex-direction:column;gap:0.5rem;}
+.chat-msg{max-width:75%;padding:0.5rem 0.8rem;border-radius:10px;font-size:0.9rem;line-height:1.4;word-wrap:break-word;}
+.chat-msg.sent{align-self:flex-end;background:var(--red);color:#fff;border-bottom-right-radius:2px;}
+.chat-msg.received{align-self:flex-start;background:var(--bg3);color:var(--text);border-bottom-left-radius:2px;}
+.chat-msg-time{font-size:0.62rem;opacity:0.6;margin-top:0.2rem;}
+.chat-input-row{display:flex;gap:0.5rem;}
+.search-result{display:flex;align-items:center;gap:0.8rem;padding:0.7rem;border:1px solid var(--border);border-radius:3px;margin-bottom:0.5rem;}
+.nav-friends-btn{position:relative;background:none;border:none;cursor:pointer;font-size:1.2rem;padding:0;display:flex;align-items:center;}
+.nav-friends-dot{position:absolute;top:-2px;right:-2px;background:var(--red);width:9px;height:9px;border-radius:50%;border:2px solid var(--bg);}
 </style>
 <!-- Google AdSense -->
 <meta name="google-adsense-account" content="ca-pub-2298331244671294">
@@ -258,6 +285,7 @@ footer a{color:var(--red);text-decoration:none;}
     <div id="nav-guest"><button class="btn-nav" onclick="openAuth()">Bejelentkezés</button></div>
     <div id="nav-user" style="display:none">
       <div class="user-menu">
+        <button class="nav-friends-btn" onclick="openFriends()" title="Barátok" style="margin-right:0.8rem;">👥<span class="nav-friends-dot" id="friends-dot" style="display:none"></span></button>
         <div style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;" onclick="toggleDrop()">
           <div class="nav-avatar" id="nava">?</div>
           <span class="nav-uname hmob" id="navu"></span>
@@ -821,6 +849,62 @@ footer a{color:var(--red);text-decoration:none;}
     <button class="btn-p" style="padding:0.6rem 1.4rem;" onclick="acceptCookies()">Elfogadom</button>
   </div>
 </div>
+
+<!-- FRIENDS MODAL -->
+<div class="overlay" id="friendsov" onclick="if(event.target===this)closeFriends()">
+  <div class="mbox" style="max-width:520px;max-height:88vh;">
+    <button class="mcl" onclick="closeFriends()">×</button>
+    <div class="mtit">👥 Barátok</div>
+    <div class="friends-tabs">
+      <button class="friends-tab active" onclick="friendsTab('list',this)">Barátaim</button>
+      <button class="friends-tab" onclick="friendsTab('requests',this)">Kérelmek<span class="badge-count" id="req-badge" style="display:none">0</span></button>
+      <button class="friends-tab" onclick="friendsTab('search',this)">Keresés</button>
+    </div>
+    <div id="friends-list-tab">
+      <div id="friends-list"><div class="lbempty">Töltés...</div></div>
+    </div>
+    <div id="friends-requests-tab" style="display:none">
+      <div id="friends-requests"><div class="lbempty">Töltés...</div></div>
+    </div>
+    <div id="friends-search-tab" style="display:none">
+      <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+        <input class="finp" type="text" id="friend-search-input" placeholder="Felhasználónév keresése..." style="flex:1;" onkeydown="if(event.key==='Enter')searchUsers()">
+        <button class="btn-p" onclick="searchUsers()">Keresés</button>
+      </div>
+      <div id="friends-search-results"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE VIEW MODAL (other players) -->
+<div class="overlay" id="pvov" onclick="if(event.target===this)closePV()">
+  <div class="mbox" style="max-width:420px">
+    <button class="mcl" onclick="closePV()">×</button>
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div id="pv-avatar" style="width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#fff;margin:0 auto 1rem;"></div>
+      <div class="mtit" id="pv-name" style="font-size:1.8rem;"></div>
+      <div id="pv-premium" style="display:none;margin-top:0.3rem;"><span class="premium-active-badge">✨ Premium</span></div>
+    </div>
+    <div class="profile-grid" id="pv-stats"></div>
+    <div id="pv-actions" style="margin-top:1rem;"></div>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div class="overlay" id="chatov" onclick="if(event.target===this)closeChat()">
+  <div class="mbox" style="max-width:480px">
+    <button class="mcl" onclick="closeChat()">×</button>
+    <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;">
+      <div id="chat-av" class="friend-av" style="cursor:default;"></div>
+      <div class="mtit" id="chat-name" style="font-size:1.5rem;"></div>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-row">
+      <input class="finp" type="text" id="chat-input" placeholder="Írj üzenetet..." style="flex:1;" onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="btn-p" onclick="sendMessage()">Küldés</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="tst"></div>
 
 <script>
@@ -1102,7 +1186,7 @@ async function init(){
 
   // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();renderTopics();}
+  if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();}
   else{navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
   checkCookieConsent();
@@ -1624,10 +1708,10 @@ async function loadLB(){
     const me=CU&&row.id===CU.id;
     const init=row.username.slice(0,2).toUpperCase();
     const bg=row.avatar_color||'#e8192c';
-    return `<div class="lbr${me?' me':''}">
+    return `<div class="lbr${me?' me':''}" style="cursor:pointer" onclick="viewProfile('${row.id}')">
       <div class="lbrank ${rc[i]||'o'}">${med[i]||i+1}</div>
       <div class="lbav" style="background:${bg};color:#fff">${init}</div>
-      <div class="lbname">${row.username}${me?' (te)':''}</div>
+      <div class="lbname">${row.username}${me?' (te)':''}${row.is_premium?' ✨':''}</div>
       <div style="text-align:right"><div class="lbsc">${row.total_points}</div><div class="lbpt">pont</div></div>
     </div>`;
   }).join('');
@@ -2367,6 +2451,205 @@ function acceptCookies(){
 function declineCookies(){
   localStorage.setItem('qh_cookie_consent','essential');
   document.getElementById('cookie-banner').classList.remove('show');
+}
+
+
+// ── BARÁTOK & CHAT ────────────────────────────────────────────────────────────
+let friendsCache=[],chatPartner=null,chatChannel=null;
+
+function openFriends(){
+  if(!CU){toast('Jelentkezz be a barátok funkcióhoz!','info');openAuth('reg');return;}
+  document.getElementById('friendsov').classList.add('show');
+  friendsTab('list',document.querySelector('.friends-tab'));
+  loadFriends();
+  loadRequests();
+}
+function closeFriends(){document.getElementById('friendsov').classList.remove('show');}
+
+function friendsTab(tab,el){
+  document.querySelectorAll('.friends-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('friends-list-tab').style.display=tab==='list'?'block':'none';
+  document.getElementById('friends-requests-tab').style.display=tab==='requests'?'block':'none';
+  document.getElementById('friends-search-tab').style.display=tab==='search'?'block':'none';
+  if(tab==='list')loadFriends();
+  if(tab==='requests')loadRequests();
+}
+
+async function loadFriends(){
+  const{data}=await sb.from('friendships').select('*').eq('status','accepted');
+  const el=document.getElementById('friends-list');
+  if(!data||!data.length){el.innerHTML='<div class="lbempty">Még nincsenek barátaid. Keress játékosokat!</div>';return;}
+  // Get friend profiles
+  const friendIds=data.map(f=>f.requester_id===CU.id?f.addressee_id:f.requester_id);
+  const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',friendIds);
+  friendsCache=profiles||[];
+  el.innerHTML=(profiles||[]).map(p=>`
+    <div class="friend-row">
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${p.username.slice(0,2).toUpperCase()}</div>
+      <div class="friend-info" onclick="viewProfile('${p.id}')">
+        <div class="friend-name">${p.username}${p.is_premium?' ✨':''}</div>
+        <div class="friend-meta">Barát</div>
+      </div>
+      <button class="friend-btn fb-chat" onclick="openChat('${p.id}','${p.username.replace(/'/g,"")}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>
+    </div>`).join('');
+}
+
+async function loadRequests(){
+  const{data}=await sb.from('friendships').select('*').eq('addressee_id',CU.id).eq('status','pending');
+  const el=document.getElementById('friends-requests');
+  const badge=document.getElementById('req-badge');
+  const navDot=document.getElementById('friends-dot');
+  if(!data||!data.length){
+    el.innerHTML='<div class="lbempty">Nincsenek függőben lévő kérelmek.</div>';
+    badge.style.display='none';navDot.style.display='none';
+    return;
+  }
+  badge.style.display='flex';badge.textContent=data.length;
+  navDot.style.display='block';
+  const reqIds=data.map(f=>f.requester_id);
+  const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color').in('id',reqIds);
+  const pmap={};(profiles||[]).forEach(p=>pmap[p.id]=p);
+  el.innerHTML=data.map(f=>{
+    const p=pmap[f.requester_id];if(!p)return'';
+    return `<div class="friend-row">
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}">${p.username.slice(0,2).toUpperCase()}</div>
+      <div class="friend-info"><div class="friend-name">${p.username}</div><div class="friend-meta">Barátnak jelölt</div></div>
+      <div style="display:flex;gap:0.4rem;">
+        <button class="friend-btn fb-accept" onclick="respondRequest(${f.id},'accepted')">Elfogad</button>
+        <button class="friend-btn fb-decline" onclick="respondRequest(${f.id},'declined')">Elutasít</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function respondRequest(id,status){
+  if(status==='accepted'){
+    await sb.from('friendships').update({status:'accepted'}).eq('id',id);
+    toast('Barátkérelem elfogadva! 🎉','ok');
+  } else {
+    await sb.from('friendships').delete().eq('id',id);
+    toast('Kérelem elutasítva.','info');
+  }
+  loadRequests();loadFriends();
+}
+
+async function searchUsers(){
+  const q=document.getElementById('friend-search-input').value.trim();
+  if(!q){return;}
+  const{data}=await sb.from('profiles').select('id,username,avatar_color,is_premium').ilike('username','%'+q+'%').neq('id',CU.id).limit(20);
+  const el=document.getElementById('friends-search-results');
+  if(!data||!data.length){el.innerHTML='<div class="lbempty">Nincs találat.</div>';return;}
+  // Check existing friendships
+  const{data:existing}=await sb.from('friendships').select('*');
+  el.innerHTML=data.map(p=>{
+    const rel=(existing||[]).find(f=>(f.requester_id===CU.id&&f.addressee_id===p.id)||(f.addressee_id===CU.id&&f.requester_id===p.id));
+    let btn;
+    if(rel&&rel.status==='accepted')btn='<button class="friend-btn fb-pending">✓ Barát</button>';
+    else if(rel&&rel.status==='pending')btn='<button class="friend-btn fb-pending">Függőben</button>';
+    else btn=`<button class="friend-btn fb-add" onclick="addFriend('${p.id}',this)">+ Bejelölés</button>`;
+    return `<div class="search-result">
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${p.username.slice(0,2).toUpperCase()}</div>
+      <div class="friend-info" onclick="viewProfile('${p.id}')"><div class="friend-name">${p.username}${p.is_premium?' ✨':''}</div></div>
+      ${btn}
+    </div>`;
+  }).join('');
+}
+
+async function addFriend(id,btn){
+  const{error}=await sb.from('friendships').insert({requester_id:CU.id,addressee_id:id,status:'pending'});
+  if(error){toast('Hiba: '+error.message,'err');return;}
+  if(btn){btn.outerHTML='<button class="friend-btn fb-pending">Függőben</button>';}
+  toast('Barátkérelem elküldve!','ok');
+}
+
+async function viewProfile(id){
+  const{data:p}=await sb.from('profiles').select('*').eq('id',id).single();
+  if(!p)return;
+  document.getElementById('pv-avatar').style.background=p.avatar_color||'#e8192c';
+  document.getElementById('pv-avatar').textContent=p.username.slice(0,2).toUpperCase();
+  document.getElementById('pv-name').textContent=p.username;
+  document.getElementById('pv-premium').style.display=p.is_premium?'block':'none';
+  // Stats
+  const{data:scores}=await sb.from('scores').select('points,topic').eq('user_id',id);
+  const total=(scores||[]).reduce((s,r)=>s+r.points,0);
+  const games=(scores||[]).length;
+  document.getElementById('pv-stats').innerHTML=`
+    <div class="stat-card"><span class="stat-card-num">${total.toLocaleString('hu-HU')}</span><span class="stat-card-lbl">Összpont</span></div>
+    <div class="stat-card"><span class="stat-card-num">${games}</span><span class="stat-card-lbl">Játszott kvíz</span></div>`;
+  // Action button (add friend / chat / already friend)
+  const actEl=document.getElementById('pv-actions');
+  if(id===CU.id){actEl.innerHTML='';}
+  else{
+    const{data:existing}=await sb.from('friendships').select('*');
+    const rel=(existing||[]).find(f=>(f.requester_id===CU.id&&f.addressee_id===id)||(f.addressee_id===CU.id&&f.requester_id===id));
+    if(rel&&rel.status==='accepted'){
+      actEl.innerHTML=`<button class="btn-p" style="width:100%" onclick="closePV();openChat('${id}','${p.username.replace(/'/g,"")}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>`;
+    } else if(rel&&rel.status==='pending'){
+      actEl.innerHTML='<button class="btn-o" style="width:100%" disabled>Kérelem függőben</button>';
+    } else {
+      actEl.innerHTML=`<button class="btn-p" style="width:100%" onclick="addFriend('${id}');closePV();">+ Barátnak jelölés</button>`;
+    }
+  }
+  document.getElementById('pvov').classList.add('show');
+}
+function closePV(){document.getElementById('pvov').classList.remove('show');}
+
+async function openChat(partnerId,partnerName,partnerColor){
+  chatPartner={id:partnerId,name:partnerName,color:partnerColor};
+  document.getElementById('chat-name').textContent=partnerName;
+  document.getElementById('chat-av').style.background=partnerColor;
+  document.getElementById('chat-av').textContent=partnerName.slice(0,2).toUpperCase();
+  document.getElementById('chatov').classList.add('show');
+  await loadMessages();
+  // Subscribe to realtime
+  if(chatChannel)sb.removeChannel(chatChannel);
+  chatChannel=sb.channel('chat:'+[CU.id,partnerId].sort().join('-'))
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},payload=>{
+      const m=payload.new;
+      if((m.sender_id===partnerId&&m.receiver_id===CU.id)||(m.sender_id===CU.id&&m.receiver_id===partnerId)){
+        loadMessages();
+      }
+    }).subscribe();
+}
+function closeChat(){
+  if(chatChannel){sb.removeChannel(chatChannel);chatChannel=null;}
+  document.getElementById('chatov').classList.remove('show');
+}
+
+async function loadMessages(){
+  if(!chatPartner)return;
+  const{data}=await sb.from('messages').select('*')
+    .or(`and(sender_id.eq.${CU.id},receiver_id.eq.${chatPartner.id}),and(sender_id.eq.${chatPartner.id},receiver_id.eq.${CU.id})`)
+    .order('created_at',{ascending:true}).limit(100);
+  const el=document.getElementById('chat-messages');
+  el.innerHTML=(data||[]).map(m=>{
+    const sent=m.sender_id===CU.id;
+    const time=new Date(m.created_at).toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="chat-msg ${sent?'sent':'received'}">${escapeHtml(m.content)}<div class="chat-msg-time">${time}</div></div>`;
+  }).join('')||'<div style="text-align:center;color:var(--text-dim);font-size:0.85rem;margin:auto;">Még nincs üzenet. Köszönj be! 👋</div>';
+  el.scrollTop=el.scrollHeight;
+}
+
+async function sendMessage(){
+  const input=document.getElementById('chat-input');
+  const text=input.value.trim();
+  if(!text||!chatPartner)return;
+  input.value='';
+  const{error}=await sb.from('messages').insert({sender_id:CU.id,receiver_id:chatPartner.id,content:text});
+  if(error){toast('Hiba: '+error.message,'err');return;}
+  loadMessages();
+}
+
+function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+// Check for pending requests on load (nav dot)
+async function checkFriendRequests(){
+  if(!CU)return;
+  const{data}=await sb.from('friendships').select('id').eq('addressee_id',CU.id).eq('status','pending');
+  const navDot=document.getElementById('friends-dot');
+  if(data&&data.length>0){navDot.style.display='block';}
+  else{navDot.style.display='none';}
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────

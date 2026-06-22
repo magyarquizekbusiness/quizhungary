@@ -265,7 +265,8 @@ footer a{color:var(--red);text-decoration:none;}
 .chat-msg-time{font-size:0.62rem;opacity:0.6;margin-top:0.2rem;}
 .chat-input-row{display:flex;gap:0.5rem;}
 .search-result{display:flex;align-items:center;gap:0.8rem;padding:0.7rem;border:1px solid var(--border);border-radius:3px;margin-bottom:0.5rem;}
-.nav-friends-btn{position:relative;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;transition:color 0.15s;}
+.nav-friends-btn{position:relative;background:none;border:none;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center;height:32px;width:28px;transition:color 0.15s;vertical-align:middle;}
+.nav-friends-btn svg{display:block;}
 .nav-friends-btn:hover{color:var(--red)!important;}
 .nav-friends-dot{position:absolute;top:-2px;right:-2px;background:var(--red);width:9px;height:9px;border-radius:50%;border:2px solid var(--bg);}
 </style>
@@ -284,11 +285,11 @@ footer a{color:var(--red);text-decoration:none;}
     <a onclick="goTo('konyv')" class="hmob">Könyv</a>
     <a onclick="goTo('rangsor')" class="hmob">Rangsor</a>
     <div id="nav-guest"><button class="btn-nav" onclick="openAuth()">Bejelentkezés</button></div>
-    <div id="nav-user" style="display:none">
+    <div id="nav-user" style="display:flex;align-items:center;gap:0.9rem;">
+      <button class="nav-friends-btn" onclick="openFriends()" title="Barátok" style="color:var(--text-muted);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span class="nav-friends-dot" id="friends-dot" style="display:none"></span></button>
       <div class="user-menu">
-        <button class="nav-friends-btn" onclick="openFriends()" title="Barátok" style="margin-right:0.9rem;color:var(--text-muted);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-          <span class="nav-friends-dot" id="friends-dot" style="display:none"></span></button>
         <div style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;" onclick="toggleDrop()">
           <div class="nav-avatar" id="nava">?</div>
           <span class="nav-uname hmob" id="navu"></span>
@@ -902,7 +903,9 @@ footer a{color:var(--red);text-decoration:none;}
       <div class="mtit" id="chat-name" style="font-size:1.5rem;"></div>
     </div>
     <div class="chat-messages" id="chat-messages"></div>
+    <div id="emoji-picker" style="display:none;flex-wrap:wrap;gap:0.3rem;padding:0.6rem;background:var(--bg3);border:1px solid var(--border);border-radius:4px;margin-bottom:0.5rem;max-height:140px;overflow-y:auto;"></div>
     <div class="chat-input-row">
+      <button class="btn-o" style="padding:0.6rem 0.8rem;" onclick="toggleEmojiPicker()" title="Emoji">😊</button>
       <input class="finp" type="text" id="chat-input" placeholder="Írj üzenetet..." style="flex:1;" onkeydown="if(event.key==='Enter')sendMessage()">
       <button class="btn-p" onclick="sendMessage()">Küldés</button>
     </div>
@@ -2617,6 +2620,7 @@ async function openChat(partnerId,partnerName,partnerColor){
 }
 function closeChat(){
   if(chatChannel){sb.removeChannel(chatChannel);chatChannel=null;}
+  document.getElementById('emoji-picker').style.display='none';
   document.getElementById('chatov').classList.remove('show');
 }
 
@@ -2639,6 +2643,7 @@ async function sendMessage(){
   const text=input.value.trim();
   if(!text||!chatPartner)return;
   input.value='';
+  document.getElementById('emoji-picker').style.display='none';
   const{error}=await sb.from('messages').insert({sender_id:CU.id,receiver_id:chatPartner.id,content:text});
   if(error){toast('Hiba: '+error.message,'err');return;}
   loadMessages();
@@ -2653,6 +2658,26 @@ async function checkFriendRequests(){
   const navDot=document.getElementById('friends-dot');
   if(data&&data.length>0){navDot.style.display='block';}
   else{navDot.style.display='none';}
+}
+
+
+const CHAT_EMOJIS=['😀','😂','🤣','😊','😍','🥰','😎','🤔','😅','😉','🙃','😋','😛','🤩','🥳','😇','🤗','🤭','😴','😢','😭','😤','😡','🥺','😱','🤯','😬','🙄','😏','💀','👀','🔥','💯','✨','🎉','❤️','💔','👍','👎','👏','🙏','💪','🤝','👋','🤙','🧠','🏆','🎯','⚡','💡','🎮','🍀','💩','😈','🤡'];
+
+function toggleEmojiPicker(){
+  const p=document.getElementById('emoji-picker');
+  if(p.style.display==='none'||!p.style.display){
+    if(!p.innerHTML){
+      p.innerHTML=CHAT_EMOJIS.map(e=>`<span style="cursor:pointer;font-size:1.3rem;padding:0.2rem;border-radius:4px;transition:background 0.1s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='none'" onclick="insertEmoji('${e}')">${e}</span>`).join('');
+    }
+    p.style.display='flex';
+  } else {
+    p.style.display='none';
+  }
+}
+function insertEmoji(e){
+  const input=document.getElementById('chat-input');
+  input.value+=e;
+  input.focus();
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────

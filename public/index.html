@@ -265,7 +265,8 @@ footer a{color:var(--red);text-decoration:none;}
 .chat-msg-time{font-size:0.62rem;opacity:0.6;margin-top:0.2rem;}
 .chat-input-row{display:flex;gap:0.5rem;}
 .search-result{display:flex;align-items:center;gap:0.8rem;padding:0.7rem;border:1px solid var(--border);border-radius:3px;margin-bottom:0.5rem;}
-.nav-friends-btn{position:relative;background:none;border:none;cursor:pointer;font-size:1.2rem;padding:0;display:flex;align-items:center;}
+.nav-friends-btn{position:relative;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;transition:color 0.15s;}
+.nav-friends-btn:hover{color:var(--red)!important;}
 .nav-friends-dot{position:absolute;top:-2px;right:-2px;background:var(--red);width:9px;height:9px;border-radius:50%;border:2px solid var(--bg);}
 </style>
 <!-- Google AdSense -->
@@ -285,7 +286,9 @@ footer a{color:var(--red);text-decoration:none;}
     <div id="nav-guest"><button class="btn-nav" onclick="openAuth()">Bejelentkezés</button></div>
     <div id="nav-user" style="display:none">
       <div class="user-menu">
-        <button class="nav-friends-btn" onclick="openFriends()" title="Barátok" style="margin-right:0.8rem;">👥<span class="nav-friends-dot" id="friends-dot" style="display:none"></span></button>
+        <button class="nav-friends-btn" onclick="openFriends()" title="Barátok" style="margin-right:0.9rem;color:var(--text-muted);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          <span class="nav-friends-dot" id="friends-dot" style="display:none"></span></button>
         <div style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;" onclick="toggleDrop()">
           <div class="nav-avatar" id="nava">?</div>
           <span class="nav-uname hmob" id="navu"></span>

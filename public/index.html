@@ -723,7 +723,8 @@ footer a{color:var(--red);text-decoration:none;}
       <div id="mp-room-code" style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--red);letter-spacing:8px;margin:0.5rem 0;"></div>
       <div style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">Küldd el ezt a kódot a barátodnak!</div>
       <button class="btn-p" style="width:100%;margin-bottom:0.75rem" onclick="copyRoomCode()">📋 Kód másolása</button>
-      <button class="share-btn" style="width:100%;justify-content:center;margin-bottom:1rem" onclick="shareRoomCode()">Meghívó megosztása</button>
+      <button class="share-btn" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="shareRoomCode()">Meghívó megosztása</button>
+      <button class="btn-p" style="width:100%;margin-bottom:1rem;background:rgba(74,144,217,0.15);color:#4a90d9;border:1px solid rgba(74,144,217,0.3);" onclick="openInviteFriends()">👥 Barát meghívása</button>
       <div id="mp-settings-summary" style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem;letter-spacing:1px;"></div>
       <div id="mp-players-list" style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1rem;margin-bottom:1rem;text-align:left;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
@@ -909,6 +910,16 @@ footer a{color:var(--red);text-decoration:none;}
       <input class="finp" type="text" id="chat-input" placeholder="Írj üzenetet..." style="flex:1;" onkeydown="if(event.key==='Enter')sendMessage()">
       <button class="btn-p" onclick="sendMessage()">Küldés</button>
     </div>
+  </div>
+</div>
+
+<!-- INVITE FRIENDS MODAL -->
+<div class="overlay" id="inviteov" onclick="if(event.target===this)closeInviteFriends()">
+  <div class="mbox" style="max-width:440px;max-height:80vh;">
+    <button class="mcl" onclick="closeInviteFriends()">×</button>
+    <div class="mtit">👥 Barát meghívása</div>
+    <div class="msub">Küldj párbaj meghívót a barátaidnak!</div>
+    <div id="invite-friends-list" style="margin-top:1rem;"><div class="lbempty">Töltés...</div></div>
   </div>
 </div>
 <div class="toast" id="tst"></div>
@@ -2633,6 +2644,15 @@ async function loadMessages(){
   el.innerHTML=(data||[]).map(m=>{
     const sent=m.sender_id===CU.id;
     const time=new Date(m.created_at).toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});
+    // Párbaj meghívó felismerése
+    const duelMatch=m.content.match(/kóddal: ([A-Z0-9]{6})/);
+    if(duelMatch&&!sent){
+      const code=duelMatch[1];
+      return `<div class="chat-msg received" style="background:rgba(74,144,217,0.15);border:1px solid rgba(74,144,217,0.3);">
+        ⚔️ <strong>Párbaj meghívó!</strong><br>Szobakód: <strong style="letter-spacing:2px;">${code}</strong>
+        <button class="btn-p" style="width:100%;margin-top:0.5rem;padding:0.4rem;font-size:0.8rem;" onclick="joinDuelFromChat('${code}')">Csatlakozom! →</button>
+        <div class="chat-msg-time">${time}</div></div>`;
+    }
     return `<div class="chat-msg ${sent?'sent':'received'}">${escapeHtml(m.content)}<div class="chat-msg-time">${time}</div></div>`;
   }).join('')||'<div style="text-align:center;color:var(--text-dim);font-size:0.85rem;margin:auto;">Még nincs üzenet. Köszönj be! 👋</div>';
   el.scrollTop=el.scrollHeight;
@@ -2647,6 +2667,18 @@ async function sendMessage(){
   const{error}=await sb.from('messages').insert({sender_id:CU.id,receiver_id:chatPartner.id,content:text});
   if(error){toast('Hiba: '+error.message,'err');return;}
   loadMessages();
+}
+
+function joinDuelFromChat(code){
+  closeChat();
+  closeFriends();
+  if(!CU){toast('Jelentkezz be!','info');return;}
+  // Open multiplayer and join the room
+  openMultiplayer();
+  setTimeout(()=>{
+    document.getElementById('mp-code-inp').value=code;
+    joinRoom();
+  },300);
 }
 
 function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
@@ -2678,6 +2710,39 @@ function insertEmoji(e){
   const input=document.getElementById('chat-input');
   input.value+=e;
   input.focus();
+}
+
+
+// ── PÁRBAJ BARÁT MEGHÍVÁS ─────────────────────────────────────────────────────
+async function openInviteFriends(){
+  if(!CU||!mpRoom){return;}
+  document.getElementById('inviteov').classList.add('show');
+  const el=document.getElementById('invite-friends-list');
+  el.innerHTML='<div class="lbempty">Töltés...</div>';
+  // Load accepted friends
+  const{data}=await sb.from('friendships').select('*').eq('status','accepted');
+  if(!data||!data.length){el.innerHTML='<div class="lbempty">Még nincsenek barátaid. Adj hozzá barátokat a 👥 menüből!</div>';return;}
+  const friendIds=data.map(f=>f.requester_id===CU.id?f.addressee_id:f.requester_id);
+  const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',friendIds);
+  el.innerHTML=(profiles||[]).map(p=>`
+    <div class="friend-row">
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'};cursor:default;">${p.username.slice(0,2).toUpperCase()}</div>
+      <div class="friend-info" style="cursor:default;">
+        <div class="friend-name">${p.username}${p.is_premium?' ✨':''}</div>
+      </div>
+      <button class="friend-btn fb-add" id="inv-${p.id}" onclick="sendDuelInvite('${p.id}',this)">⚔️ Meghívás</button>
+    </div>`).join('');
+}
+function closeInviteFriends(){document.getElementById('inviteov').classList.remove('show');}
+
+async function sendDuelInvite(friendId,btn){
+  if(!mpRoom){toast('Nincs aktív szoba!','err');return;}
+  const myName=CP?.username||'Egy barátod';
+  const inviteMsg=`⚔️ ${myName} párbajra hív! Csatlakozz a szobához ezzel a kóddal: ${mpRoom} — Nyisd meg a Párbaj módot és írd be a kódot!`;
+  const{error}=await sb.from('messages').insert({sender_id:CU.id,receiver_id:friendId,content:inviteMsg});
+  if(error){toast('Hiba: '+error.message,'err');return;}
+  if(btn){btn.outerHTML='<button class="friend-btn fb-pending">✓ Elküldve</button>';}
+  toast('Meghívó elküldve! 📨','ok');
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────

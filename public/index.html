@@ -2644,10 +2644,19 @@ async function loadMessages(){
   el.innerHTML=(data||[]).map(m=>{
     const sent=m.sender_id===CU.id;
     const time=new Date(m.created_at).toLocaleTimeString('hu-HU',{hour:'2-digit',minute:'2-digit'});
-    // Párbaj meghívó felismerése
-    const duelMatch=m.content.match(/kóddal: ([A-Z0-9]{6})/);
-    if(duelMatch&&!sent){
-      const code=duelMatch[1];
+    // Párbaj meghívó felismerése — ⚔️ vagy 'párbaj' szó + 6 karakteres kód
+    const isDuelInvite=m.content.includes('⚔️')||m.content.toLowerCase().includes('párbaj');
+    const codeMatch=m.content.match(/([A-Z0-9]{6})/);
+    if(isDuelInvite&&codeMatch){
+      const duelMatch=codeMatch;
+      const code=duelMatch[1].toUpperCase();
+      if(sent){
+        // Saját elküldött meghívó
+        return `<div class="chat-msg sent" style="background:rgba(74,144,217,0.25);">
+          ⚔️ Párbaj meghívó elküldve<br>Kód: <strong style="letter-spacing:2px;">${code}</strong>
+          <div class="chat-msg-time">${time}</div></div>`;
+      }
+      // Kapott meghívó - csatlakozás gombbal
       return `<div class="chat-msg received" style="background:rgba(74,144,217,0.15);border:1px solid rgba(74,144,217,0.3);">
         ⚔️ <strong>Párbaj meghívó!</strong><br>Szobakód: <strong style="letter-spacing:2px;">${code}</strong>
         <button class="btn-p" style="width:100%;margin-top:0.5rem;padding:0.4rem;font-size:0.8rem;" onclick="joinDuelFromChat('${code}')">Csatlakozom! →</button>

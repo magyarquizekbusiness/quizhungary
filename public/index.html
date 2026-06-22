@@ -441,6 +441,13 @@ footer a{color:var(--red);text-decoration:none;}
       Instagram
     </a>
   </div>
+  <div style="display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;font-size:0.8rem;">
+    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('about')">Rólunk</span>
+    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('faq')">GYIK</span>
+    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('privacy')">Adatvédelem</span>
+    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('terms')">Felhasználási feltételek</span>
+    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('contact')">Kapcsolat</span>
+  </div>
   <p style="font-size:0.72rem">© 2025 QuizHungary – Minden jog fenntartva</p>
 </footer>
 
@@ -786,6 +793,15 @@ footer a{color:var(--red);text-decoration:none;}
       </div>
     </div>
     <div id="admin-error" style="display:none;color:#ff6b7a;padding:1rem;text-align:center;"></div>
+  </div>
+</div>
+
+<!-- INFO MODAL (legal/about/faq) -->
+<div class="overlay" id="infoov" onclick="if(event.target===this)closeInfo()">
+  <div class="mbox" style="max-width:640px;max-height:88vh;">
+    <button class="mcl" onclick="closeInfo()">×</button>
+    <div class="mtit" id="info-title" style="font-size:1.8rem;"></div>
+    <div id="info-body" style="margin-top:1rem;font-size:0.92rem;line-height:1.7;color:var(--text-muted);"></div>
   </div>
 </div>
 <div class="toast" id="tst"></div>
@@ -2259,6 +2275,65 @@ async function openAdmin(){
   }
 }
 function closeAdmin(){document.getElementById('adminov').classList.remove('show');}
+
+
+// ── INFO / LEGAL OLDALAK ──────────────────────────────────────────────────────
+const INFO_CONTENT={
+  about:{title:'Rólunk',body:`
+    <p>A <strong>QuizHungary</strong> Magyarország szórakoztató kvízoldala, ahol játékos formában tesztelheted és bővítheted tudásodat a legkülönfélébb témakörökben.</p>
+    <p style="margin-top:1rem;">Célunk, hogy mindenki találjon kedvére való kihívást – legyen szó történelemről, földrajzról, tudományról, filmről vagy sportról. Több mint 40 témakörben kínálunk kérdéseket, három nehézségi szinten, és minden kvíz friss, mesterséges intelligencia által generált kérdésekkel várja a játékosokat.</p>
+    <p style="margin-top:1rem;">Funkcióink között megtalálható a napi kvíz, a vegyes maraton, a hosszú kvíz, valamint a barátok elleni párbaj mód is. Gyűjts pontokat, építsd a streakedet, és kerülj fel a ranglista élére!</p>
+    <p style="margin-top:1rem;">Kövess minket a közösségi médiában a legfrissebb kvízekért és újdonságokért!</p>
+  `},
+  faq:{title:'Gyakori kérdések',body:`
+    <p><strong>Ingyenes a játék?</strong><br>Igen, a legtöbb témakör teljesen ingyenesen játszható regisztráció után. A prémium előfizetés további 20 témakört old fel.</p>
+    <p style="margin-top:1rem;"><strong>Miért kell regisztrálni?</strong><br>A regisztráció lehetővé teszi a pontjaid mentését, a ranglistára kerülést és a streakek követését.</p>
+    <p style="margin-top:1rem;"><strong>Hogyan működik a pontozás?</strong><br>A pontok a nehézségi szinttől függenek: könnyű 60, közepes 100, nehéz 160 pont kérdésenként. Ha minden kérdést eltalálsz, +10% bónuszt kapsz!</p>
+    <p style="margin-top:1rem;"><strong>Mi a prémium előfizetés?</strong><br>Havi 2 499 Ft-ért feloldhatsz 20 extra témakört és több mint 1000 új kérdést. Bármikor lemondható.</p>
+    <p style="margin-top:1rem;"><strong>Hogyan mondhatom le az előfizetést?</strong><br>A profilodban az "Előfizetés kezelése" gombra kattintva bármikor lemondhatod. A hozzáférés a fizetési időszak végéig megmarad.</p>
+    <p style="margin-top:1rem;"><strong>Honnan származnak a kérdések?</strong><br>A kérdéseket mesterséges intelligencia generálja, így minden játék egyedi és változatos.</p>
+  `},
+  privacy:{title:'Adatvédelmi tájékoztató',body:`
+    <p>Utolsó frissítés: 2025</p>
+    <p style="margin-top:1rem;">A QuizHungary ("mi") elkötelezett a felhasználók személyes adatainak védelme mellett. Ez a tájékoztató bemutatja, milyen adatokat gyűjtünk és hogyan kezeljük azokat.</p>
+    <p style="margin-top:1rem;"><strong>Milyen adatokat gyűjtünk?</strong><br>Regisztrációkor a felhasználónevet, e-mail címet és jelszót tároljuk. A játék során keletkező pontszámokat és statisztikákat szintén rögzítjük a ranglista és a profil működéséhez.</p>
+    <p style="margin-top:1rem;"><strong>Hogyan használjuk fel az adatokat?</strong><br>Az adatokat kizárólag a szolgáltatás működtetéséhez használjuk: bejelentkezés, pontkövetés, ranglista, előfizetés-kezelés. Az adataidat nem adjuk el harmadik félnek.</p>
+    <p style="margin-top:1rem;"><strong>Sütik (cookie-k)</strong><br>Az oldal sütiket használ a bejelentkezés fenntartásához és a felhasználói élmény javításához. Hirdetési partnereink (pl. Google AdSense) szintén használhatnak sütiket a releváns hirdetések megjelenítéséhez.</p>
+    <p style="margin-top:1rem;"><strong>Fizetési adatok</strong><br>Az előfizetések kezelését a Stripe biztosítja. Bankkártyaadataidat soha nem tároljuk, azokat közvetlenül a Stripe kezeli biztonságosan.</p>
+    <p style="margin-top:1rem;"><strong>Adataid törlése</strong><br>Bármikor kérheted fiókod és adataid törlését a kapcsolati elérhetőségeinken keresztül.</p>
+    <p style="margin-top:1rem;"><strong>Harmadik felek</strong><br>Szolgáltatásunk a következő partnereket használja: Supabase (adattárolás), Stripe (fizetés), Google AdSense (hirdetések), OpenAI (kérdésgenerálás).</p>
+  `},
+  terms:{title:'Felhasználási feltételek',body:`
+    <p>Utolsó frissítés: 2025</p>
+    <p style="margin-top:1rem;">A QuizHungary használatával elfogadod az alábbi feltételeket.</p>
+    <p style="margin-top:1rem;"><strong>A szolgáltatás használata</strong><br>A QuizHungary szórakoztató és oktatási célú kvízoldal. A szolgáltatást a saját felelősségedre használod. Tilos a szolgáltatás visszaélésszerű használata, automatizált hozzáférés vagy bármilyen károkozó tevékenység.</p>
+    <p style="margin-top:1rem;"><strong>Fiók</strong><br>A regisztrációkor valós adatokat kell megadnod. Felelős vagy a fiókod biztonságáért és a jelszavad titokban tartásáért.</p>
+    <p style="margin-top:1rem;"><strong>Prémium előfizetés</strong><br>A prémium előfizetés havi díjas, automatikusan megújul. Bármikor lemondható, ekkor a hozzáférés a már kifizetett időszak végéig marad érvényben. A díjak forintban értendők.</p>
+    <p style="margin-top:1rem;"><strong>Tartalom</strong><br>A kérdéseket mesterséges intelligencia generálja, ezért előfordulhatnak pontatlanságok. A tartalom kizárólag szórakoztató célt szolgál.</p>
+    <p style="margin-top:1rem;"><strong>Felelősség</strong><br>A szolgáltatást "ahogy van" formában nyújtjuk. Nem vállalunk felelősséget a szolgáltatás esetleges hibáiból eredő károkért.</p>
+    <p style="margin-top:1rem;"><strong>Módosítások</strong><br>Fenntartjuk a jogot a feltételek és a szolgáltatás bármikori módosítására.</p>
+  `},
+  contact:{title:'Kapcsolat',body:`
+    <p>Bármilyen kérdés, észrevétel vagy probléma esetén fordulj hozzánk bizalommal!</p>
+    <p style="margin-top:1rem;"><strong>Közösségi média:</strong></p>
+    <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.75rem;">
+      <a href="https://www.facebook.com/profile.php?id=61566558176381" target="_blank" style="color:#4a90d9;text-decoration:none;">📘 Facebook – QuizHungary</a>
+      <a href="https://www.youtube.com/channel/UCS2d7S0eexmAlmGM9aPkb-Q" target="_blank" style="color:#ff4444;text-decoration:none;">▶️ YouTube</a>
+      <a href="https://www.tiktok.com/@magyar.quizek8" target="_blank" style="color:#ee1d52;text-decoration:none;">🎵 TikTok</a>
+      <a href="https://www.instagram.com/magyarquizek/" target="_blank" style="color:#e1306c;text-decoration:none;">📷 Instagram</a>
+    </div>
+    <p style="margin-top:1.2rem;">Üzenetedre igyekszünk a lehető leghamarabb válaszolni. A leggyorsabb elérhetőségünk jelenleg a Facebook oldalunk.</p>
+  `}
+};
+
+function openInfo(key){
+  const c=INFO_CONTENT[key];
+  if(!c)return;
+  document.getElementById('info-title').textContent=c.title;
+  document.getElementById('info-body').innerHTML=c.body;
+  document.getElementById('infoov').classList.add('show');
+}
+function closeInfo(){document.getElementById('infoov').classList.remove('show');}
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────
 function togglePw(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.style.opacity=i.type==='text'?'1':'0.5';}

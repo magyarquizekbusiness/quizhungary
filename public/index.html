@@ -527,6 +527,10 @@ footer a{color:var(--red);text-decoration:none;}
           <button type="button" onclick="togglePw('rp',this)" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:1rem;padding:0;line-height:1;">👁</button>
         </div>
       </div>
+      <label style="display:flex;align-items:flex-start;gap:0.5rem;cursor:pointer;font-size:0.82rem;color:var(--text-muted);line-height:1.4;">
+        <input type="checkbox" id="r-reminders" style="margin-top:0.15rem;cursor:pointer;accent-color:var(--red);">
+        <span>Szeretnék emlékeztető e-maileket kapni, hogy ne felejtsem el játszani és megmaradjon a streakem. (Bármikor leiratkozhatsz.)</span>
+      </label>
       <button class="btn-p" style="width:100%;margin-top:0.5rem" onclick="doReg()">Regisztráció →</button>
     </div>
     <!-- Forgot password -->
@@ -560,6 +564,10 @@ footer a{color:var(--red);text-decoration:none;}
       <div id="prof-premium-end" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.8rem;"></div>
       <button class="btn-o" style="width:100%;font-size:0.85rem;" onclick="openCustomerPortal()">Előfizetés kezelése / Lemondás</button>
     </div>
+    <label style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;cursor:pointer;font-size:0.88rem;color:var(--text-muted);margin-bottom:1rem;padding:0.8rem;background:var(--bg3);border-radius:4px;">
+      <span>📧 Emlékeztető e-mailek</span>
+      <input type="checkbox" id="prof-reminders" style="cursor:pointer;accent-color:var(--red);width:18px;height:18px;" onchange="toggleReminders(this.checked)">
+    </label>
     <button class="btn-p" style="width:100%" onclick="closePov()">Bezár</button>
   </div>
 </div>
@@ -1308,11 +1316,14 @@ async function doReg(){
   const p=document.getElementById('rp').value;
   if(!u||!e||!p){aErr('Töltsd ki az összes mezőt!');return;}
   if(p.length<6){aErr('A jelszó legalább 6 karakter!');return;}
+  const wantsReminders=document.getElementById('r-reminders')?.checked||false;
   const{data,error}=await sb.auth.signUp({email:e,password:p,options:{data:{username:u}}});
   if(error){aErr(error.message);return;}
   if(data?.session){
     CU=data.session.user;
     await new Promise(r=>setTimeout(r,700));
+    // Beleegyezés mentése
+    if(wantsReminders){await sb.from('profiles').update({email_reminders:true}).eq('id',CU.id);}
     await loadP();navUser();closeAuth();loadLB();loadPC();
     toast('Üdv, '+u+'! Sikeresen regisztráltál 🎉','ok');
   } else {
@@ -1358,6 +1369,9 @@ async function openProfile(){
   } else {
     document.getElementById('prof-premium-wrap').style.display='none';
   }
+  // Email emlékeztető kapcsoló állapota
+  const remCb=document.getElementById('prof-reminders');
+  if(remCb)remCb.checked=CP?.email_reminders===true;
   try{
     const{data}=await sb.from('scores').select('topic,points').eq('user_id',CU.id);
     if(data&&data.length){
@@ -1714,7 +1728,7 @@ function tqRestart(){stopTQTimer();tqi=0;tqs=0;
   document.getElementById('tqr').className='qr';tql=[...tql].sort(()=>Math.random()-0.5);document.getElementById('tqr').className='qr';tqLoad();}
 
 // ── SCORES & LEADERBOARD ───────────────────────────────────────────────────────
-async function saveScore(topic,pts){if(!CU)return;await sb.from('scores').insert({user_id:CU.id,topic,points:pts});}
+async function saveScore(topic,pts){if(!CU)return;await sb.from('scores').insert({user_id:CU.id,topic,points:pts});await sb.from('profiles').update({last_played_date:new Date().toISOString().split('T')[0]}).eq('id',CU.id);}
 async function loadLB(){
   const view=lbm==='weekly'?'leaderboard_weekly':'leaderboard';
   const{data,error}=await sb.from(view).select('*').limit(10);
@@ -2299,6 +2313,13 @@ function showPremium(){
   document.getElementById('premov').classList.add('show');
 }
 function closePremium(){document.getElementById('premov').classList.remove('show');}
+
+async function toggleReminders(enabled){
+  if(!CU)return;
+  await sb.from('profiles').update({email_reminders:enabled}).eq('id',CU.id);
+  if(CP)CP.email_reminders=enabled;
+  toast(enabled?'Emlékeztetők bekapcsolva 📧':'Emlékeztetők kikapcsolva','ok');
+}
 
 async function openCustomerPortal(){
   if(!CU)return;

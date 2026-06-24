@@ -2277,7 +2277,7 @@ function shareRoomCode(){
   const name=CP?.username||'Egy barátod';
   const text=`${name} QuizHungary párbajra hív! 🎯
 Szobakód: ${mpRoom}
-Csatlakozz: https://quizhungary.vercel.app`;
+Csatlakozz: https://quizhungary.com`;
   if(navigator.share)navigator.share({text}).catch(()=>navigator.clipboard.writeText(text).then(()=>toast('Meghívó másolva!','ok')));
   else navigator.clipboard.writeText(text).then(()=>toast('Meghívó másolva!','ok'));
 }
@@ -2434,6 +2434,7 @@ const INFO_CONTENT={
   `},
   contact:{title:'Kapcsolat',body:`
     <p>Bármilyen kérdés, észrevétel vagy probléma esetén fordulj hozzánk bizalommal!</p>
+    <p style="margin-top:1rem;"><strong>E-mail:</strong><br><a href="mailto:info@quizhungary.com" style="color:var(--red);text-decoration:none;">info@quizhungary.com</a></p>
     <p style="margin-top:1rem;"><strong>Közösségi média:</strong></p>
     <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.75rem;">
       <a href="https://www.facebook.com/profile.php?id=61566558176381" target="_blank" style="color:#4a90d9;text-decoration:none;">📘 Facebook – QuizHungary</a>

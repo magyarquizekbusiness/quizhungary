@@ -6,9 +6,18 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  // Biztonság: csak a Vercel Cron hívhatja (a CRON_SECRET-tel)
+  // Biztonság: csak a Vercel Cron hívhatja
+  // A Vercel Cron automatikusan küldi az Authorization: Bearer <CRON_SECRET> headert
   const authHeader = req.headers.authorization;
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const isVercelCron = req.headers['x-vercel-cron'] === '1';
+  const hasValidSecret = process.env.CRON_SECRET && authHeader === `Bearer ${process.env.CRON_SECRET}`;
+
+  // Ha NINCS beállítva CRON_SECRET, az hiba - ne engedjük
+  if (!process.env.CRON_SECRET) {
+    return res.status(500).json({ error: 'CRON_SECRET nincs beállítva' });
+  }
+  // Csak a Vercel Cron VAGY a helyes secret engedélyezett
+  if (!isVercelCron && !hasValidSecret) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 

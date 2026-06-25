@@ -300,6 +300,7 @@ footer a{color:var(--red);text-decoration:none;}
           <div class="uddiv"></div>
           <button class="udi" onclick="openProfile();toggleDrop(true)">👤 Profilom</button>
           <button class="udi" onclick="showPremium();toggleDrop(true)">✨ Premium</button>
+          <button class="udi" onclick="openReferral();toggleDrop(true)">🎁 Hívj meg barátokat</button>
           <button class="udi" id="admin-menu-item" style="display:none" onclick="openAdmin();toggleDrop(true)">🔐 Admin</button>
           <button class="udi" onclick="goTo('rangsor');toggleDrop(true)">🏆 Ranglista</button>
           <div class="uddiv"></div>
@@ -930,6 +931,36 @@ footer a{color:var(--red);text-decoration:none;}
     <div id="invite-friends-list" style="margin-top:1rem;"><div class="lbempty">Töltés...</div></div>
   </div>
 </div>
+
+<!-- REFERRAL MODAL -->
+<div class="overlay" id="referralov" onclick="if(event.target===this)closeReferral()">
+  <div class="mbox" style="max-width:480px">
+    <button class="mcl" onclick="closeReferral()">×</button>
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">🎁</div>
+      <div class="mtit" style="font-size:1.8rem;">Hívj meg barátokat!</div>
+      <div class="msub">Hívj meg 5 barátot és kapj 2 hét prémiumot ingyen!</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:4px;padding:1.2rem;margin-bottom:1.2rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+        <span style="font-size:0.9rem;color:var(--text-muted);">Sikeres meghívások</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;"><span id="ref-count">0</span> / 5</span>
+      </div>
+      <div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden;">
+        <div id="ref-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#f5c518,#e8a000);transition:width 0.5s;"></div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-dim);margin-top:0.6rem;">Egy meghívás akkor sikeres, ha a barátod regisztrál és legalább 10 kvízt játszik. 2 hetente újraindul!</div>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <span class="flbl">A te meghívó linked</span>
+      <div style="display:flex;gap:0.5rem;margin-top:0.4rem;">
+        <input class="finp" type="text" id="ref-link" readonly style="flex:1;font-size:0.82rem;" value="Töltés...">
+        <button class="btn-p" onclick="copyReferralLink()" style="padding:0.6rem 1rem;">📋</button>
+      </div>
+    </div>
+    <button class="btn-gold" onclick="shareReferralLink()" style="width:100%;">Megosztás →</button>
+  </div>
+</div>
 <div class="toast" id="tst"></div>
 
 <script>
@@ -1211,10 +1242,11 @@ async function init(){
 
   // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();}
+  if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();}
   else{navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
   checkCookieConsent();
+  captureReferralCode();
 
   // UTÁNA a lassú napi kérdés betöltés (nem blokkolja a bejelentkezést)
   document.getElementById('dqt').textContent='Kérdések betöltése...';
@@ -1324,6 +1356,7 @@ async function doReg(){
     await new Promise(r=>setTimeout(r,700));
     // Beleegyezés mentése
     if(wantsReminders){await sb.from('profiles').update({email_reminders:true}).eq('id',CU.id);}
+    await applyReferralOnSignup(CU.id);
     await loadP();navUser();closeAuth();loadLB();loadPC();
     toast('Üdv, '+u+'! Sikeresen regisztráltál 🎉','ok');
   } else {
@@ -1360,11 +1393,20 @@ async function openProfile(){
   // Premium info
   if(isPremium()){
     document.getElementById('prof-premium-wrap').style.display='block';
-    if(CP?.subscription_end){
-      const end=new Date(CP.subscription_end);
-      document.getElementById('prof-premium-end').textContent='Megújul: '+end.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'});
+    const portalBtn=document.querySelector('#prof-premium-wrap button');
+    if(CP?.subscription_status==='referral_reward'){
+      // Referral jutalom - nincs lemondás, mutatjuk a lejáratot
+      const end=CP?.subscription_end?new Date(CP.subscription_end):null;
+      document.getElementById('prof-premium-end').innerHTML='🎁 Meghívásért kapott prémium'+(end?'<br>Lejár: '+end.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'}):'');
+      if(portalBtn)portalBtn.style.display='none';
     } else {
-      document.getElementById('prof-premium-end').textContent='Aktív havi előfizetés';
+      if(portalBtn)portalBtn.style.display='block';
+      if(CP?.subscription_end){
+        const end=new Date(CP.subscription_end);
+        document.getElementById('prof-premium-end').textContent='Megújul: '+end.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'});
+      } else {
+        document.getElementById('prof-premium-end').textContent='Aktív havi előfizetés';
+      }
     }
   } else {
     document.getElementById('prof-premium-wrap').style.display='none';
@@ -1560,7 +1602,14 @@ function renderTopics(){
   }).join('');
 }
 
-function isPremium(){ return CP?.is_premium===true; }
+function isPremium(){
+  if(CP?.is_premium!==true)return false;
+  // Referral jutalom esetén ellenőrizzük a lejáratot
+  if(CP?.subscription_status==='referral_reward'&&CP?.subscription_end){
+    if(new Date(CP.subscription_end)<new Date())return false; // lejárt
+  }
+  return true;
+}
 
 // ── AI QUESTIONS ───────────────────────────────────────────────────────────────
 async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
@@ -2774,6 +2823,83 @@ async function sendDuelInvite(friendId,btn){
   if(error){toast('Hiba: '+error.message,'err');return;}
   if(btn){btn.outerHTML='<button class="friend-btn fb-pending">✓ Elküldve</button>';}
   toast('Meghívó elküldve! 📨','ok');
+}
+
+
+// ── REFERRAL ──────────────────────────────────────────────────────────────────
+function openReferral(){
+  if(!CU){toast('Jelentkezz be a meghíváshoz!','info');openAuth('reg');return;}
+  document.getElementById('referralov').classList.add('show');
+  loadReferralStats();
+}
+function closeReferral(){document.getElementById('referralov').classList.remove('show');}
+
+function captureReferralCode(){
+  const params=new URLSearchParams(window.location.search);
+  const ref=params.get('ref');
+  if(ref){
+    localStorage.setItem('qh_referral',ref);
+    // Tisztítjuk az URL-t
+    const url=new URL(window.location);
+    url.searchParams.delete('ref');
+    window.history.replaceState({},'',url);
+  }
+}
+
+async function applyReferralOnSignup(newUserId){
+  const ref=localStorage.getItem('qh_referral');
+  if(!ref)return;
+  try{
+    // Megkeressük ki a meghívó (referral_code alapján)
+    const{data:referrer}=await sb.from('profiles').select('id').eq('referral_code',ref).single();
+    if(referrer&&referrer.id!==newUserId){
+      await sb.from('profiles').update({referred_by:referrer.id}).eq('id',newUserId);
+    }
+    localStorage.removeItem('qh_referral');
+  }catch(e){console.warn('Referral apply failed:',e);}
+}
+
+async function loadReferralStats(){
+  if(!CU)return;
+  // Sikeres meghívások lekérése a szerver függvénnyel
+  try{
+    const{data,error}=await sb.rpc('check_and_grant_referral_reward',{user_id:CU.id});
+    if(error){console.warn('Referral check:',error);return;}
+    const successful=data?.successful_referrals||0;
+    document.getElementById('ref-count').textContent=successful;
+    document.getElementById('ref-progress-bar').style.width=Math.min(100,(successful/5)*100)+'%';
+    // Ha most kapott jutalmat, frissítjük a profilt
+    if(data?.granted){
+      await loadP();renderTopics();navUser();
+      toast('🎉 Gratulálok! 5 sikeres meghívásért 2 hét prémiumot kaptál!','ok');
+    }
+    // Referral link beállítása
+    if(CP?.referral_code){
+      const link='https://quizhungary.com/?ref='+CP.referral_code;
+      document.getElementById('ref-link').value=link;
+    }
+  }catch(e){console.warn('Referral stats:',e);}
+}
+
+function copyReferralLink(){
+  const inp=document.getElementById('ref-link');
+  inp.select();
+  navigator.clipboard.writeText(inp.value).then(()=>{
+    toast('Meghívó link másolva! 📋','ok');
+  }).catch(()=>{
+    document.execCommand('copy');
+    toast('Meghívó link másolva! 📋','ok');
+  });
+}
+
+function shareReferralLink(){
+  const link=document.getElementById('ref-link').value;
+  const text='Csatlakozz hozzám a QuizHungary-n! Teszteld a tudásod és gyűjts pontokat! 🧠';
+  if(navigator.share){
+    navigator.share({title:'QuizHungary',text,url:link}).catch(()=>{});
+  } else {
+    copyReferralLink();
+  }
 }
 
 // ── UTILS ──────────────────────────────────────────────────────────────────────

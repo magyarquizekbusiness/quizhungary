@@ -24,6 +24,9 @@ export default async function handler(req, res) {
   const today = new Date().toISOString().split('T')[0];
 
   try {
+    // Lejárt referral jutalmak kitakarítása
+    try { await supabase.rpc('cleanup_expired_referral_rewards'); } catch(e) { console.warn('Cleanup failed:', e.message); }
+
     // Felhasználók akik: beleegyeztek + ma még nem játszottak + ma még nem kaptak emlékeztetőt
     const { data: profiles } = await supabase
       .from('profiles')

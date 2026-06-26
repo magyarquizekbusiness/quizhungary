@@ -1487,7 +1487,7 @@ async function loadDailyQuestions(){
       const res=await fetch('/api/quiz',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({prompt:`Generálj 5 VEGYES témájú magyar nyelvű napi kvízkérdést. A mai dátum: ${todayStr()} — ez alapján generálj más kérdéseket mint más napokon. SZIGORÚ SZABÁLYOK: 1) Minden kérdésnek EGYÉRTELMŰ, EGYETLEN helyes válasza legyen! 2) Tényszerű kérdések: évszámok, nevek, adatok, rekordok. 3) Max 10 szó/kérdés, 3 válasz, 1 helyes. 4) TILOS olyan kérdés ahol több válasz is helyes lehet! Válaszolj CSAK JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`})
+        body:JSON.stringify({prompt:`Generálj 5 VEGYES témájú magyar nyelvű napi kvízkérdést. A mai dátum: ${todayStr()} — ez alapján generálj más kérdéseket mint más napokon. SZIGORÚ SZABÁLYOK: 1) Minden kérdésnek EGYÉRTELMŰ, EGYETLEN helyes válasza legyen! 2) Tényszerű kérdések: évszámok, nevek, adatok, rekordok. 3) Max 10 szó/kérdés, 3 válasz, 1 helyes. 4) TILOS olyan kérdés ahol több válasz is helyes lehet! Válaszolj CSAK JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`,verify:true})
       });
       if(!res.ok)throw new Error('API hiba');
       const data=await res.json();
@@ -1620,17 +1620,19 @@ async function generateAIQuestions(topicName,topicId,fallbackQ,diff){
     const res=await fetch('/api/quiz',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:`Generálj 5 egyedi magyar kvízkérdést ebben a témában: "${topicName}". Nehézség: ${diffMap[diff]||'közepes'}. Szabályok: 1) EGYETLEN objektíven helyes válasz (évszám, név, szám, adat). 2) Max 8 szó/kérdés. 3) Természetes magyar szórend és fogalmazás — pl. "Mi a kávé alapja?" nem "Melyik ital a kávé alapja?". Használj "Mi", "Ki", "Hol", "Mikor", "Hány" kezdetű kérdéseket a "Melyik" helyett ahol lehet. 4) 3 válasz: 1 helyes, 2 hihetően rossz. 5) Nehéz = kevésbé ismert tény, könnyű = közismert. 6) Tilos szubjektív vagy általánosítható kérdés. Válaszolj CSAK valid JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`})
+      body:JSON.stringify({prompt:`Generálj 5 egyedi magyar kvízkérdést ebben a témában: "${topicName}". Nehézség: ${diffMap[diff]||'közepes'}. Szabályok: 1) EGYETLEN objektíven helyes válasz (évszám, név, szám, adat). 2) Max 8 szó/kérdés. 3) Természetes magyar szórend és fogalmazás — pl. "Mi a kávé alapja?" nem "Melyik ital a kávé alapja?". Használj "Mi", "Ki", "Hol", "Mikor", "Hány" kezdetű kérdéseket a "Melyik" helyett ahol lehet. 4) 3 válasz: 1 helyes, 2 hihetően rossz. 5) Nehéz = kevésbé ismert tény, könnyű = közismert. 6) Tilos szubjektív vagy általánosítható kérdés. Válaszolj CSAK valid JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`,verify:true})
     });
     if(!res.ok)throw new Error('API hiba '+res.status);
     const data=await res.json();
     const clean=(data.result||'').replace(/```json|```/g,'').trim();
     const qs=JSON.parse(clean);
-    const valid=qs.filter(q=>q.q&&Array.isArray(q.o)&&q.o.length===3&&typeof q.a==='number');
-    if(valid.length<3)throw new Error('Nem elég valid kérdés');
+    let valid=qs.filter(q=>q.q&&Array.isArray(q.o)&&q.o.length===3&&typeof q.a==='number');
+    // A szerver már verifikálta a kérdéseket (verify:true), itt csak formátumot ellenőrzünk
+    if(valid.length<3)throw new Error('Nem elég valid kérdés a verifikáció után');
     return valid;
   }catch(err){console.warn('AI fallback:',err.message);return [...fallbackQ].sort(()=>Math.random()-0.5);}
 }
+
 
 async function openTQ(id,diff){
   if(!CU){toast('Játékhoz jelentkezz be!','info');openAuth('reg');return;}
@@ -1815,7 +1817,7 @@ async function openMarathon(){
       const res=await fetch('/api/quiz',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({prompt:`Generálj 20 VEGYES témájú magyar nyelvű kvízkérdést (történelem, földrajz, tudomány, kultúra, sport, film, zene, stb.). SZIGORÚ SZABÁLYOK: 1) Minden kérdésnek EGYETLEN egyértelmű helyes válasza legyen! 2) Max 10 szó/kérdés. 3) Pontosan 3 válasz, 1 helyes. 4) Változatos témák — ne ismételd ugyanazt a témát egymás után. Válaszolj CSAK JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`})
+        body:JSON.stringify({prompt:`Generálj 20 VEGYES témájú magyar nyelvű kvízkérdést (történelem, földrajz, tudomány, kultúra, sport, film, zene, stb.). SZIGORÚ SZABÁLYOK: 1) Minden kérdésnek EGYETLEN egyértelmű helyes válasza legyen! 2) Max 10 szó/kérdés. 3) Pontosan 3 válasz, 1 helyes. 4) Változatos témák — ne ismételd ugyanazt a témát egymás után. Válaszolj CSAK JSON-ban: [{"q":"...","o":["...","...","..."],"a":0}]`,verify:true})
       });
       if(!res.ok)throw new Error('API hiba');
       const data=await res.json();
@@ -2003,8 +2005,8 @@ async function openLongQuiz(){
 
   try{
     const [r1,r2]=await Promise.all([
-      fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Generálj 25 VEGYES témájú magyar kvízkérdést. EGYETLEN helyes válasz! Max 10 szó, 3 option, tényszerű. CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]'})}),
-      fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Generálj 25 KÜLÖNBÖZŐ témájú magyar kvízkérdést (sport, zene, technika, természet, film). EGYETLEN helyes válasz! Max 10 szó, 3 option. CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]'})})
+      fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Generálj 25 VEGYES témájú magyar kvízkérdést. EGYETLEN helyes válasz! Max 10 szó, 3 option, tényszerű. CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]',verify:true})}),
+      fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Generálj 25 KÜLÖNBÖZŐ témájú magyar kvízkérdést (sport, zene, technika, természet, film). EGYETLEN helyes válasz! Max 10 szó, 3 option. CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]',verify:true})})
     ]);
     const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
     const parse=d=>{try{return JSON.parse((d.result||'').replace(/```json|```/g,'').trim()).filter(q=>q.q&&Array.isArray(q.o)&&q.o.length===3);}catch{return[];}};
@@ -2056,7 +2058,7 @@ async function createRoom(){
   // If more than 5 needed, generate more
   if(mpQCount>5){
     try{
-      const extra=await fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Generálj ${mpQCount} egyedi magyar kvízkérdést ebben a témában: "${t.name}". CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]`})});
+      const extra=await fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Generálj ${mpQCount} egyedi magyar kvízkérdést ebben a témában: "${t.name}". CSAK JSON: [{"q":"...","o":["...","...","..."],"a":0}]`,verify:true})});
       const ed=await extra.json();
       const eq=JSON.parse((ed.result||'').replace(/```json|```/g,'').trim()).filter(q=>q.q&&Array.isArray(q.o)&&q.o.length===3);
       mpQuestions=eq.length>=mpQCount?eq.slice(0,mpQCount):[...baseQs,...eq].slice(0,mpQCount);

@@ -321,6 +321,13 @@ footer a{color:var(--red);text-decoration:none;}
 .nav-friends-btn svg{display:block;}
 .nav-friends-btn:hover{color:var(--red)!important;}
 .nav-friends-dot{position:absolute;top:-2px;right:-2px;background:var(--red);width:9px;height:9px;border-radius:50%;border:2px solid var(--bg);}
+
+/* REFERRAL BANNER (főoldal) */
+.referral-banner{position:relative;background:linear-gradient(135deg,rgba(245,197,24,0.12),rgba(20,20,20,0.6));border:1px solid rgba(245,197,24,0.35);border-radius:8px;padding:1.5rem 2rem;cursor:pointer;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;}
+.referral-banner:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(245,197,24,0.2);border-color:rgba(245,197,24,0.6);}
+.referral-banner-glow{position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(245,197,24,0.15),transparent 60%);animation:referralGlow 4s ease-in-out infinite;pointer-events:none;}
+@keyframes referralGlow{0%,100%{transform:translate(-20%,-20%);opacity:0.5;}50%{transform:translate(20%,20%);opacity:1;}}
+@media(max-width:640px){.referral-banner{padding:1.2rem;}.referral-banner button{width:100%;}}
 </style>
 <!-- Google AdSense -->
 <meta name="google-adsense-account" content="ca-pub-2298331244671294">
@@ -381,6 +388,21 @@ footer a{color:var(--red);text-decoration:none;}
     <div><span class="sn">20</span><span class="sl">Témakör</span></div>
     <div><span class="sn">1000+</span><span class="sl">Kérdés</span></div>
     <div><span class="sn" id="pcnt">—</span><span class="sl">Játékos</span></div>
+  </div>
+</div>
+
+<!-- REFERRAL BANNER -->
+<div class="sw" style="padding-top:0;">
+  <div class="referral-banner" onclick="openReferral()">
+    <div class="referral-banner-glow"></div>
+    <div style="position:relative;z-index:1;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center;text-align:center;">
+      <div style="font-size:2.5rem;">🎁</div>
+      <div style="flex:1;min-width:200px;text-align:left;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;color:var(--gold);line-height:1.1;">HÍVJ MEG 5 BARÁTOT, KAPJ 2 HÉT PRÉMIUMOT!</div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-top:0.3rem;">Oszd meg a meghívó linked, és ha 5 barátod regisztrál és játszik, ingyen prémiumot kapsz. 🔥</div>
+      </div>
+      <button class="btn-gold" style="white-space:nowrap;flex-shrink:0;">Meghívó link kérése →</button>
+    </div>
   </div>
 </div>
 

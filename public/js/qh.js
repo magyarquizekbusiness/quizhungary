@@ -73,8 +73,8 @@
   }
   function isLevelUnlocked(subId,level){return level<=getLevel(subId)+1;}
   function catProgress(cat){ // teljesített szintek / összes
-    let done=0;cat.subs.forEach(s=>{done+=Math.min(getLevel(s.id),QH_RULES.LEVELS);});
-    return {done,total:cat.subs.length*QH_RULES.LEVELS};
+    let done=0,total=0;cat.subs.forEach(s=>{const L=qhLevels(s.id);done+=Math.min(getLevel(s.id),L);total+=L;});
+    return {done,total};
   }
 
   // ── Kérdésbetöltő (data/questions/<kat>.js fájlok on-demand) ───────────────
@@ -83,7 +83,7 @@
     if(loadedCats[catId])return loadedCats[catId];
     loadedCats[catId]=new Promise((res,rej)=>{
       const s=document.createElement('script');
-      s.src='data/questions/'+catId+'.js';
+      s.src='data/questions/'+catId+'.js?v='+(window.QH_DATA_VERSION||'1');
       s.onload=()=>res();
       s.onerror=()=>rej(new Error('Nem sikerült betölteni: '+catId));
       document.head.appendChild(s);

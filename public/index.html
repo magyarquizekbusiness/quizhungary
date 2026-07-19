@@ -430,14 +430,14 @@ footer a{color:var(--red);text-decoration:none;}
     <div class="hero-left">
       <div class="eyebrow">Magyarország #1 kvíz oldala</div>
       <h1><span class="r">QUIZ</span><br>HUNGARY</h1>
-      <p class="hero-sub">10 kategória, 500 szint. Teljesíts egy szintet, oldd fel a következőt — meddig jutsz el?</p>
+      <p class="hero-sub" id="hero-sub">Teljesíts egy szintet, oldd fel a következőt — meddig jutsz el?</p>
       <div class="hero-actions">
         <a href="kategoriak.html" class="btn-p" style="text-decoration:none;">Kezdd el a kihívást →</a>
         <button class="btn-o" onclick="goTo('napi-kviz')">Napi kvíz</button>
       </div>
       <div class="hero-stats">
         <div><span class="sn" id="stat-cat" data-to="10">0</span><span class="sl">Kategória</span></div>
-        <div><span class="sn" id="stat-lvl" data-to="500">0</span><span class="sl">Szint</span></div>
+        <div><span class="sn" id="stat-lvl" data-to="0">0</span><span class="sl">Szint</span></div>
         <div><span class="sn" id="pcnt">—</span><span class="sl">Játékos</span></div>
       </div>
     </div>
@@ -467,7 +467,7 @@ footer a{color:var(--red);text-decoration:none;}
       <span class="how-num">1</span>
       <div class="how-ic">🎯</div>
       <div class="how-t">Válassz kategóriát</div>
-      <div class="how-d">10 fő kategória, egyenként 5 alkategóriával — földrajztól a filmekig, mindből 10-10 szint.</div>
+      <div class="how-d">10 fő kategória, egyenként 5 alkategóriával — földrajztól a filmekig, mindegyikben több tucat szinttel.</div>
     </div>
     <div class="how-step">
       <span class="how-num">2</span>
@@ -503,7 +503,7 @@ footer a{color:var(--red);text-decoration:none;}
 <div id="temak" class="sw">
   <div class="slbl">Szintezett kihívás</div>
   <div class="stit">Kategóriák</div>
-  <p style="color:var(--text-muted);font-size:0.95rem;max-width:560px;margin-bottom:1.5rem;">10 fő kategória, 50 alkategória, 500 szint. Teljesíts egy szintet legalább 4/5 helyes válasszal, és oldd fel a következőt!</p>
+  <p style="color:var(--text-muted);font-size:0.95rem;max-width:560px;margin-bottom:1.5rem;"><span id="cat-intro"></span>Teljesíts egy szintet legalább 4/5 helyes válasszal, és oldd fel a következőt!</p>
   <a id="resume-card" class="resume-card" href="#" style="display:none;">
     <span class="resume-ic">▶️</span>
     <span class="resume-t"><span class="resume-lbl">Folytasd, ahol abbahagytad</span><span class="resume-name" id="resume-name"></span></span>
@@ -1154,7 +1154,7 @@ function loadCatFile(catId){
   if(_catLoaded[catId])return _catLoaded[catId];
   _catLoaded[catId]=new Promise((res,rej)=>{
     const s=document.createElement('script');
-    s.src='data/questions/'+catId+'.js';
+    s.src='data/questions/'+catId+'.js?v='+(window.QH_DATA_VERSION||'1');
     s.onload=()=>res();s.onerror=()=>rej(new Error(catId));
     document.head.appendChild(s);
   });
@@ -1169,17 +1169,27 @@ async function loadPool(){
 }
 // n véletlen kérdés a poolból; catId megadásával csak abból a fő kategóriából,
 // diff: easy=1-4., medium=4-7., hard=7-10. szint kérdései
+// Egy kérdés válaszainak megkeverése, a helyes index követésével.
+// Fontos: enélkül a helyes válasz szinte mindig az "A" lenne.
+function shuffleQ(q){
+  const idx=q.o.map((_,i)=>i).sort(()=>Math.random()-0.5);
+  return {q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a)};
+}
 async function poolRandom(n,catId,diff){
   await loadPool();
   let qs=[];
-  const range=diff==='easy'?[0,4]:diff==='hard'?[6,10]:diff==='medium'?[3,7]:[0,10];
   const cats=catId?QH_CATALOG.filter(c=>c.id===catId):QH_CATALOG;
   cats.forEach(c=>c.subs.forEach(s=>{
     const bank=(window.QH_QUESTIONS||{})[s.id]||[];
+    const L=bank.length||1;
+    // A nehézség a szintek arányos sávja — együtt nő a szintszámmal.
+    const range=diff==='easy'?[0,Math.ceil(L*0.4)]
+              :diff==='medium'?[Math.floor(L*0.3),Math.ceil(L*0.7)]
+              :diff==='hard'?[Math.floor(L*0.6),L]:[0,L];
     bank.slice(range[0],range[1]).forEach(lv=>lv.forEach(q=>qs.push(q)));
   }));
   if(qs.length<n)qs=POOL.length?POOL:getMQFallback();
-  return [...qs].sort(()=>Math.random()-0.5).slice(0,n);
+  return [...qs].sort(()=>Math.random()-0.5).slice(0,n).map(shuffleQ);
 }
 
 // Fallback napi kérdések (ha az AI nem elérhető)
@@ -1206,7 +1216,7 @@ let CU=null,CP=null,di=0,ds=0,tqi=0,tqs=0,tql=[],tqid='',tqDiff='medium',tqTitle
 async function init(){
   document.getElementById('tdate').textContent=new Date().toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'});
   renderTopics(); renderStreak();
-  animateStats(); initHeroCard(); renderResume();
+  fillCounts(); animateStats(); initHeroCard(); renderResume();
 
   // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
@@ -1537,8 +1547,7 @@ function renderTopics(){
   // Helyi haladás a kártyákra (a részletes/szinkronizált nézet a kategória oldalakon van)
   let prog={};try{prog=JSON.parse(localStorage.getItem('qh_levels'))||{};}catch(e){}
   document.getElementById('tgrid').innerHTML=QH_CATALOG.map(c=>{
-    let done=0;c.subs.forEach(s=>{done+=Math.min(prog[s.id]||0,QH_RULES.LEVELS);});
-    const total=c.subs.length*QH_RULES.LEVELS;
+    let done=0,total=0;c.subs.forEach(s=>{const L=qhLevels(s.id);done+=Math.min(prog[s.id]||0,L);total+=L;});
     return `<div class="tc" onclick="location.href='kategoria.html?id=${c.id}'">
       <span class="ti">${c.icon}</span>
       <div class="tn">${c.name}</div>
@@ -1547,6 +1556,18 @@ function renderTopics(){
       <div style="margin-top:0.35rem;font-size:0.72rem;color:${done>=total?'var(--green)':'var(--text-dim)'};letter-spacing:1px;">${done} / ${total}</div>
     </div>`;
   }).join('');
+}
+
+// ── Tényleges szint- és alkategóriaszám a szövegekbe ────────────────────────────
+function fillCounts(){
+  let subs=0, levels=0;
+  QH_CATALOG.forEach(c=>c.subs.forEach(s=>{subs++;levels+=qhLevels(s.id);}));
+  const hs=document.getElementById('hero-sub');
+  if(hs)hs.textContent=`${QH_CATALOG.length} kategória, ${levels} szint. Teljesíts egy szintet, oldd fel a következőt — meddig jutsz el?`;
+  const lvlStat=document.getElementById('stat-lvl');
+  if(lvlStat)lvlStat.dataset.to=levels;
+  const ci=document.getElementById('cat-intro');
+  if(ci)ci.textContent=`${QH_CATALOG.length} fő kategória, ${subs} alkategória, ${levels} szint. `;
 }
 
 // ── HERO: statisztika-felszámlálás ──────────────────────────────────────────────
@@ -1561,7 +1582,7 @@ function animateStats(){
 function renderResume(){
   let prog={};try{prog=JSON.parse(localStorage.getItem('qh_levels'))||{};}catch(e){}
   let best=null;
-  for(const c of QH_CATALOG){for(const s of c.subs){const lv=prog[s.id]||0;if(lv>0&&lv<QH_RULES.LEVELS&&(!best||lv>best.lv)){best={cat:c,sub:s,lv};}}}
+  for(const c of QH_CATALOG){for(const s of c.subs){const lv=prog[s.id]||0;if(lv>0&&lv<qhLevels(s.id)&&(!best||lv>best.lv)){best={cat:c,sub:s,lv};}}}
   const card=document.getElementById('resume-card');if(!card)return;
   if(!best){card.style.display='none';return;}
   card.href='kviz.html?sub='+best.sub.id+'&szint='+(best.lv+1);

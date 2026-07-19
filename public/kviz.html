@@ -76,14 +76,14 @@ async function boot(){
   const catId=QH_SUB_TO_CAT[subId];
   CAT=QH_CATALOG.find(c=>c.id===catId);
   SUB=CAT?.subs.find(s=>s.id===subId);
-  if(!SUB||LEVEL<1||LEVEL>R.LEVELS){location.replace('kategoriak.html');return;}
+  if(!SUB||LEVEL<1||LEVEL>qhLevels(SUB.id)){location.replace('kategoriak.html');return;}
 
   document.title=`${SUB.name} – ${LEVEL}. szint – QuizHungary`;
   document.getElementById('crumb-cat').textContent=CAT.name;
   document.getElementById('crumb-cat').href='kategoria.html?id='+CAT.id;
   document.getElementById('crumb-sub').textContent=SUB.name;
   document.getElementById('q-title').textContent=`${SUB.icon} ${SUB.name}`;
-  document.getElementById('q-lvl-badge').textContent=`${LEVEL}. szint / ${R.LEVELS}`;
+  document.getElementById('q-lvl-badge').textContent=`${LEVEL}. szint / ${qhLevels(SUB.id)}`;
 
   await QH.init();
 
@@ -208,10 +208,10 @@ async function showResult(){
     let extra='';
     if(advanced&&LEVEL===R.UNLOCK_AT_LEVEL&&subIdx<CAT.subs.length-1)
       extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🔓 Új alkategória feloldva: ${CAT.subs[subIdx+1].icon} ${CAT.subs[subIdx+1].name}!</div>`;
-    if(advanced&&LEVEL===R.LEVELS)
+    if(advanced&&LEVEL===qhLevels(SUB.id))
       extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🏆 Az egész alkategóriát teljesítetted!</div>`;
     rp.insertAdjacentHTML('afterend',extra);
-    if(LEVEL<R.LEVELS)btns+=`<a class="btn-p" href="kviz.html?sub=${SUB.id}&szint=${LEVEL+1}">Következő szint →</a>`;
+    if(LEVEL<qhLevels(SUB.id))btns+=`<a class="btn-p" href="kviz.html?sub=${SUB.id}&szint=${LEVEL+1}">Következő szint →</a>`;
     btns+=`<a class="btn-o" href="kategoria.html?id=${CAT.id}">Szinttérkép</a>`;
   }else{
     rp.className='rpass fail';rp.textContent=`Legalább ${R.PASS_MIN}/${QL.length} kell a továbbjutáshoz`;

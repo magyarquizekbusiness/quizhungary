@@ -52,7 +52,7 @@
   document.title=cat.name+' kvíz – QuizHungary';
   document.getElementById('crumb-cat').textContent=cat.name;
   document.getElementById('cat-title').textContent=cat.icon+' '+cat.name;
-  document.getElementById('cat-desc').textContent=cat.desc+' Minden alkategóriában 10 szint — egy szinthez legalább 4/5 helyes válasz kell.';
+  document.getElementById('cat-desc').textContent=cat.desc+' Egy szint teljesítéséhez legalább 4/5 helyes válasz kell.';
 
   await QH.init();
   const R=QH_RULES;
@@ -64,13 +64,13 @@
     if(!unlocked){
       const prev=cat.subs[idx-1];
       statusHtml=`<div class="sub-lock-info">🔒 Feloldás: „${prev.name}" ${R.UNLOCK_AT_LEVEL}. szint (jelenleg: ${QH.getLevel(prev.id)})</div>`;
-    }else if(lvl>=R.LEVELS){
+    }else if(lvl>=qhLevels(s.id)){
       statusHtml=`<div class="sub-done-badge">✓ Teljesítve</div>`;
     }else{
-      statusHtml=`<div class="sub-lock-info" style="color:var(--text-muted)">${lvl} / ${R.LEVELS} szint</div>`;
+      statusHtml=`<div class="sub-lock-info" style="color:var(--text-muted)">${lvl} / ${qhLevels(s.id)} szint</div>`;
     }
     let lvls='';
-    for(let n=1;n<=R.LEVELS;n++){
+    for(let n=1;n<=qhLevels(s.id);n++){
       if(!unlocked){lvls+=`<span class="lvl lock">🔒</span>`;continue;}
       if(n<=lvl)lvls+=`<a class="lvl done" href="kviz.html?sub=${s.id}&szint=${n}" title="${n}. szint — újrajátszás">${n}<span class="lico">✓</span></a>`;
       else if(n===lvl+1)lvls+=`<a class="lvl next" href="kviz.html?sub=${s.id}&szint=${n}" title="${n}. szint — játék!">${n}</a>`;

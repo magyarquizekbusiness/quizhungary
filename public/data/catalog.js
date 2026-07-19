@@ -1,12 +1,74 @@
-// QuizHungary — kategóriafa (10 fő kategória × 5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — kategóriafa (10 fő kategória × 5 alkategória)
 // Az alkategóriák sorrendje = feloldási sorrend: a következő akkor nyílik,
 // ha az előzőben elérted az UNLOCK_AT_LEVEL szintet.
 window.QH_RULES = {
-  LEVELS: 10,           // szintek száma alkategóriánként
+  TARGET_LEVELS: 100,   // cél szintszám alkategóriánként (a bővítés végcélja)
   Q_PER_LEVEL: 5,       // kérdés / szint
   PASS_MIN: 4,          // ennyi jó válasz kell a szint teljesítéséhez
   UNLOCK_AT_LEVEL: 5    // előző alkategóriában elérendő szint a következő feloldásához
 };
+
+// A kérdésbank verziója — cache-busting a kérdésfájlokhoz.
+// (A sync-levels szkript frissíti; ettől biztosan friss kérdések töltődnek be.)
+window.QH_DATA_VERSION = '550';
+
+// Ténylegesen kész szintek alkategóriánként — a kérdésbankból generálva.
+// (A sync-levels szkript írja felül bővítéskor; kézzel ne szerkeszd.)
+window.QH_SUB_LEVELS = {
+  'foldrajz-magyarorszag': 20,
+  'foldrajz-europa': 20,
+  'foldrajz-fovarosok': 20,
+  'foldrajz-oceanok': 20,
+  'foldrajz-vilag': 20,
+  'tortenelem-magyar': 10,
+  'tortenelem-okor': 10,
+  'tortenelem-kozepkor': 10,
+  'tortenelem-ujkor': 10,
+  'tortenelem-20szazad': 10,
+  'tudomany-emberitest': 10,
+  'tudomany-biologia': 10,
+  'tudomany-kemia': 10,
+  'tudomany-fizika': 10,
+  'tudomany-csillagaszat': 10,
+  'sport-labdarugas': 10,
+  'sport-olimpia': 10,
+  'sport-magyar': 10,
+  'sport-csapat': 10,
+  'sport-egyeni': 10,
+  'film-klasszikus': 10,
+  'film-modern': 10,
+  'film-animacios': 10,
+  'film-sorozatok': 10,
+  'film-magyar': 10,
+  'zene-pop': 10,
+  'zene-rock': 10,
+  'zene-magyar': 10,
+  'zene-klasszikus': 10,
+  'zene-hangszerek': 10,
+  'irodalom-magyar': 10,
+  'irodalom-vilag': 10,
+  'irodalom-kolteszet': 10,
+  'irodalom-ifjusagi': 10,
+  'irodalom-drama': 10,
+  'gasztro-magyar': 10,
+  'gasztro-vilag': 10,
+  'gasztro-edessegek': 10,
+  'gasztro-italok': 10,
+  'gasztro-alapanyagok': 10,
+  'termeszet-emlosok': 10,
+  'termeszet-madarak': 10,
+  'termeszet-tenger': 10,
+  'termeszet-hullok': 10,
+  'termeszet-novenyek': 10,
+  'technika-szamitastechnika': 10,
+  'technika-talalmanyok': 10,
+  'technika-autok': 10,
+  'technika-urkutatas': 10,
+  'technika-jatekok': 10
+};
+
+// Egy alkategória tényleges szintszáma (ennyi van kész kérdésekkel).
+window.qhLevels = function(subId){ return window.QH_SUB_LEVELS[subId] || 0; };
 
 window.QH_CATALOG = [
   {id:'foldrajz', name:'Földrajz', icon:'🌍', desc:'Országok, óceánok, hegyek és városok a nagyvilágból.', subs:[

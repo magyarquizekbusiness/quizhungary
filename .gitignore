@@ -1,0 +1,24 @@
+# Privát jegyzetek — SOHA ne kerüljön publikus repóba
+otletek.txt
+
+# Titkok
+.env
+.env.*
+*.key
+*apikey*
+*api-key*
+openAiApi.txt
+
+# Eszköz- és build-mappák
+node_modules/
+.vercel/
+.claude/
+dist/
+build/
+
+# OS / szerkesztő
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

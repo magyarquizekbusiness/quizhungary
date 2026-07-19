@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kvíz – QuizHungary</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23e8192c'/><text y='0.9em' font-size='75' text-anchor='middle' x='50'>🧠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/qh.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="data/catalog.js"></script>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html"><span>QUIZ</span>HUNGARY</a>
+  <div class="nav-links">
+    <a href="index.html" class="hmob">Főoldal</a>
+    <a href="kategoriak.html">Kategóriák</a>
+    <div id="nav-guest" style="display:none"><a href="index.html#login"><button class="btn-nav">Bejelentkezés</button></a></div>
+    <div id="nav-user" style="display:none;align-items:center;gap:0.6rem;">
+      <div class="nav-avatar" id="nava">?</div>
+      <span class="nav-uname hmob" id="navu"></span>
+    </div>
+  </div>
+</nav>
+
+<div class="sw" style="padding-top:5.5rem;">
+  <div class="crumb"><a href="kategoriak.html">Kategóriák</a><span>›</span><a id="crumb-cat" href="kategoriak.html"></a><span>›</span><span id="crumb-sub" style="color:var(--text-muted)"></span></div>
+
+  <div class="quiz-box">
+    <div class="quiz-head">
+      <div class="quiz-title" id="q-title">…</div>
+      <span class="lvl-badge" id="q-lvl-badge"></span>
+    </div>
+
+    <div id="quiz-content">
+      <div class="timer-wrap" id="timer-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+          <div class="qn" id="qn">1 / 5</div>
+          <div class="timer-num" id="timer-num" style="color:var(--green)">10</div>
+        </div>
+        <div class="timer-bar-bg"><div class="timer-bar-fill" id="timer-bar"></div></div>
+      </div>
+      <div class="qpb"><div class="qpf" id="qpf" style="width:0%"></div></div>
+      <div class="qq" id="qt"></div>
+      <div class="qos" id="qo"></div>
+      <div class="qfb" id="qfb"></div>
+      <button class="btn-p qnxt" id="qnxt" onclick="nextQ()">Következő →</button>
+    </div>
+
+    <div class="qr" id="qr">
+      <div class="rs" id="rs"></div>
+      <div class="star-row" id="stars"></div>
+      <div class="rm" id="rm"></div>
+      <div><span class="rpass" id="rpass"></span></div>
+      <div class="ra" id="ra"></div>
+    </div>
+
+    <div id="q-error" style="display:none;text-align:center;padding:2rem 0;color:var(--text-muted);">
+      Nem sikerült betölteni a kérdéseket. <a href="kategoriak.html" style="color:var(--red)">Vissza a kategóriákhoz</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="tst"></div>
+
+<script src="js/qh.js"></script>
+<script>
+const R=QH_RULES;
+let SUB=null,CAT=null,LEVEL=1,QL=[],qi=0,score=0,timer=null,secs=10;
+
+async function boot(){
+  const subId=QH.qs('sub');LEVEL=parseInt(QH.qs('szint'))||1;
+  const catId=QH_SUB_TO_CAT[subId];
+  CAT=QH_CATALOG.find(c=>c.id===catId);
+  SUB=CAT?.subs.find(s=>s.id===subId);
+  if(!SUB||LEVEL<1||LEVEL>R.LEVELS){location.replace('kategoriak.html');return;}
+
+  document.title=`${SUB.name} – ${LEVEL}. szint – QuizHungary`;
+  document.getElementById('crumb-cat').textContent=CAT.name;
+  document.getElementById('crumb-cat').href='kategoria.html?id='+CAT.id;
+  document.getElementById('crumb-sub').textContent=SUB.name;
+  document.getElementById('q-title').textContent=`${SUB.icon} ${SUB.name}`;
+  document.getElementById('q-lvl-badge').textContent=`${LEVEL}. szint / ${R.LEVELS}`;
+
+  await QH.init();
+
+  // Zárolt szintre nem lehet URL-lel beugrani
+  if(!QH.isLevelUnlocked(SUB.id,LEVEL)){
+    QH.toast('Ez a szint még zárolva van!','err');
+    setTimeout(()=>location.replace('kategoria.html?id='+CAT.id),1200);
+    return;
+  }
+  const subIdx=CAT.subs.indexOf(SUB);
+  if(!QH.isSubUnlocked(CAT,subIdx)){
+    QH.toast('Ez az alkategória még zárolva van!','err');
+    setTimeout(()=>location.replace('kategoria.html?id='+CAT.id),1200);
+    return;
+  }
+
+  try{
+    await QH.loadQuestions(CAT.id);
+    QL=(QH.getLevelQuestions(SUB.id,LEVEL)||[]).map(q=>shuffleOptions(q));
+  }catch(e){QL=[];}
+  if(!QL.length){
+    document.getElementById('quiz-content').style.display='none';
+    document.getElementById('q-error').style.display='block';
+    return;
+  }
+  qi=0;score=0;loadQ();
+}
+
+// Válaszok megkeverése kérdésenként, az 'a' index követésével
+function shuffleOptions(q){
+  const idx=q.o.map((_,i)=>i).sort(()=>Math.random()-0.5);
+  return {q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a)};
+}
+
+function loadQ(){
+  const q=QL[qi];
+  document.getElementById('qn').textContent=`${qi+1} / ${QL.length}`;
+  document.getElementById('qpf').style.width=(qi/QL.length*100)+'%';
+  document.getElementById('qt').textContent=q.q;
+  const c=document.getElementById('qo');c.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='qo';
+    b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;
+    b.onclick=()=>answer(i);c.appendChild(b);
+  });
+  document.getElementById('qfb').className='qfb';
+  document.getElementById('qnxt').className='btn-p qnxt';
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timer);secs=10;
+  const bar=document.getElementById('timer-bar');
+  const num=document.getElementById('timer-num');
+  const wrap=document.getElementById('timer-wrap');
+  bar.style.transition='none';bar.style.width='100%';
+  wrap.classList.remove('timer-danger');
+  num.textContent=secs;num.style.color='var(--green)';
+  setTimeout(()=>{bar.style.transition='width 10s linear';bar.style.width='0%';},50);
+  timer=setInterval(()=>{
+    secs--;num.textContent=secs;
+    if(secs<=3){wrap.classList.add('timer-danger');num.style.color='var(--red)';}
+    if(secs<=0){clearInterval(timer);timeoutQ();}
+  },1000);
+}
+function stopTimer(){
+  clearInterval(timer);
+  const bar=document.getElementById('timer-bar');
+  const computed=getComputedStyle(bar).width;
+  const parent=bar.parentElement;
+  const pct=parent?Math.round(parseFloat(computed)/parseFloat(getComputedStyle(parent).width)*100):0;
+  bar.style.transition='none';bar.style.width=pct+'%';
+}
+
+function timeoutQ(){
+  const q=QL[qi];
+  document.querySelectorAll('#qo .qo').forEach(b=>b.disabled=true);
+  document.querySelectorAll('#qo .qo')[q.a].classList.add('correct');
+  const fb=document.getElementById('qfb');
+  fb.className='qfb bad show';fb.textContent=`⏱ Lejárt az idő! Helyes: ${q.o[q.a]}`;
+  showNext();
+}
+
+function answer(i){
+  stopTimer();
+  const q=QL[qi];
+  document.querySelectorAll('#qo .qo').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('qfb');
+  if(i===q.a){score++;document.querySelectorAll('#qo .qo')[i].classList.add('correct');fb.className='qfb good show';fb.textContent='✓ Helyes!';}
+  else{
+    document.querySelectorAll('#qo .qo')[i].classList.add('wrong');
+    document.querySelectorAll('#qo .qo')[q.a].classList.add('correct');
+    fb.className='qfb bad show';fb.textContent=`✗ Helytelen. Helyes: ${q.o[q.a]}`;
+  }
+  showNext();
+}
+function showNext(){
+  const n=document.getElementById('qnxt');
+  n.className='btn-p qnxt show';
+  n.textContent=qi<QL.length-1?'Következő →':'Eredmény →';
+}
+async function nextQ(){
+  qi++;
+  if(qi<QL.length){loadQ();return;}
+  clearInterval(timer);
+  await showResult();
+}
+
+async function showResult(){
+  document.getElementById('quiz-content').style.display='none';
+  const passed=score>=R.PASS_MIN;
+  document.getElementById('rs').textContent=`${score} / ${QL.length}`;
+  document.getElementById('stars').textContent=score>=5?'⭐⭐⭐':score===4?'⭐⭐':score===3?'⭐':'';
+  const rp=document.getElementById('rpass');
+  const ra=document.getElementById('ra');
+  let btns='';
+  if(passed){
+    const advanced=await QH.completeLevel(SUB.id,LEVEL,score);
+    rp.className='rpass ok';rp.textContent='✓ Szint teljesítve!';
+    document.getElementById('rm').textContent=score===QL.length?'Hibátlan! Zseniális!':'Szép munka!';
+    const subIdx=CAT.subs.indexOf(SUB);
+    let extra='';
+    if(advanced&&LEVEL===R.UNLOCK_AT_LEVEL&&subIdx<CAT.subs.length-1)
+      extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🔓 Új alkategória feloldva: ${CAT.subs[subIdx+1].icon} ${CAT.subs[subIdx+1].name}!</div>`;
+    if(advanced&&LEVEL===R.LEVELS)
+      extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🏆 Az egész alkategóriát teljesítetted!</div>`;
+    rp.insertAdjacentHTML('afterend',extra);
+    if(LEVEL<R.LEVELS)btns+=`<a class="btn-p" href="kviz.html?sub=${SUB.id}&szint=${LEVEL+1}">Következő szint →</a>`;
+    btns+=`<a class="btn-o" href="kategoria.html?id=${CAT.id}">Szinttérkép</a>`;
+  }else{
+    rp.className='rpass fail';rp.textContent=`Legalább ${R.PASS_MIN}/${QL.length} kell a továbbjutáshoz`;
+    document.getElementById('rm').textContent='Majdnem megvan — próbáld újra!';
+    btns+=`<button class="btn-p" onclick="location.reload()">Újra próbálom</button>`;
+    btns+=`<a class="btn-o" href="kategoria.html?id=${CAT.id}">Szinttérkép</a>`;
+  }
+  if(!QH.user)btns+=``;
+  ra.innerHTML=btns;
+  document.getElementById('qr').className='qr show';
+  if(!QH.user)QH.toast('Jelentkezz be, hogy a haladásod minden eszközön meglegyen!','ok');
+}
+
+boot();
+</script>
+</body>
+</html>

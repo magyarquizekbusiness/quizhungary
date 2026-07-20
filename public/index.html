@@ -1228,10 +1228,17 @@ async function init(){
 
   // UTÁNA a lassú napi kérdés betöltés (nem blokkolja a bejelentkezést)
   document.getElementById('dqt').textContent='Kérdések betöltése...';
-  loadDailyQuestions().then(()=>dLoad());
+  loadDailyQuestions().then(()=>{restoreDailyProgress();dLoad();});
 
   sb.auth.onAuthStateChange(async(event,ses)=>{
-    if(event==='SIGNED_IN'&&ses?.user){CU=ses.user;localStorage.removeItem('qh_guest_plays');await loadP();navUser();loadLB();loadPC();renderTopics();di=0;ds=0;document.getElementById('dqa').style.display='block';document.getElementById('dqr').className='qr';dLoad();}
+    if(event==='SIGNED_IN'&&ses?.user){
+      const newLogin=!CU||CU.id!==ses.user.id; // token-frissítés NEM új login
+      CU=ses.user;localStorage.removeItem('qh_guest_plays');await loadP();navUser();loadLB();loadPC();renderTopics();
+      if(newLogin){ // csak valódi belépéskor indítsuk újra a napi kvízt
+        di=0;ds=0;clearDailyState();
+        document.getElementById('dqa').style.display='block';document.getElementById('dqr').className='qr';dLoad();
+      }
+    }
     else if(event==='SIGNED_OUT'){CU=null;CP=null;navGuest();loadLB();}
   });
 }
@@ -1472,6 +1479,22 @@ async function loadDailyQuestions(){
   localStorage.setItem('qh_daily_qs_date',todayStr());
 }
 
+// A napi kvíz haladásának mentése/visszaállítása, hogy tab- vagy app-váltás
+// (mobil lap-újratöltés) esetén ne kezdődjön elölről.
+function saveDailyState(answered){
+  try{localStorage.setItem('qh_daily_state',JSON.stringify({date:todayStr(),di,ds,answered:answered||null}));}catch(e){}
+}
+function loadDailyState(){
+  try{const s=JSON.parse(localStorage.getItem('qh_daily_state'));if(s&&s.date===todayStr())return s;}catch(e){}
+  return null;
+}
+function clearDailyState(){try{localStorage.removeItem('qh_daily_state');}catch(e){}}
+function restoreDailyProgress(){
+  if(dAlreadyPlayed())return;
+  const st=loadDailyState();
+  if(st){di=st.di||0;ds=st.ds||0;}
+}
+
 function dLoad(){
   if(di===0&&dAlreadyPlayed()){
     document.getElementById('dqa').style.display='none';
@@ -1481,7 +1504,9 @@ function dLoad(){
     return;
   }
   if(!DQ||DQ.length===0){return;} // még tölt
+  if(di>=DQ.length){return;}      // biztonsági határ
   const q=DQ[di];
+  document.getElementById('dqa').style.display='block';
   document.getElementById('dqn').textContent=`${di+1} / ${DQ.length}`;
   document.getElementById('dpf').style.width=`${(di/DQ.length)*100}%`;
   document.getElementById('dqt').textContent=q.q;
@@ -1489,6 +1514,19 @@ function dLoad(){
   q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qo';b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;b.onclick=()=>dAns(i);c.appendChild(b);});
   document.getElementById('dfb').className='qfb';
   document.getElementById('dnxt').className='btn-p qnxt';
+  // Ha erre a kérdésre már válaszolt (pl. app-váltás előtt), állítsuk vissza a válasz állapotát
+  const st=loadDailyState();
+  if(st&&st.di===di&&st.answered&&typeof st.answered.picked==='number')dShowAnswer(st.answered.picked);
+}
+// A válasz vizuális megjelenítése (megosztott a friss válasz és a visszaállítás közt)
+function dShowAnswer(i){
+  const q=DQ[di];
+  const btns=document.querySelectorAll('#dqo .qo');
+  btns.forEach(b=>b.disabled=true);
+  const fb=document.getElementById('dfb');
+  if(i===q.a){btns[i].classList.add('correct');fb.className='qfb good show';fb.textContent='✓ Helyes válasz!';}
+  else{btns[i].classList.add('wrong');btns[q.a].classList.add('correct');fb.className='qfb bad show';fb.textContent=`✗ Helytelen. Helyes: ${q.o[q.a]}`;}
+  const n=document.getElementById('dnxt');n.className='btn-p qnxt show';n.textContent=di<DQ.length-1?'Következő kérdés →':'Eredmény →';
 }
 function dAns(i){
   // Vendég puha fal - az első válasznál ellenőrizzük
@@ -1498,15 +1536,18 @@ function dAns(i){
     return;
   }
   if(di===0&&!CU){incrementGuestPlays();}
-  const q=DQ[di];
-  document.querySelectorAll('#dqo .qo').forEach(b=>b.disabled=true);
-  const fb=document.getElementById('dfb');
-  if(i===q.a){ds++;document.querySelectorAll('#dqo .qo')[i].classList.add('correct');fb.className='qfb good show';fb.textContent='✓ Helyes válasz!';}
-  else{document.querySelectorAll('#dqo .qo')[i].classList.add('wrong');document.querySelectorAll('#dqo .qo')[q.a].classList.add('correct');fb.className='qfb bad show';fb.textContent=`✗ Helytelen. Helyes: ${q.o[q.a]}`;}
-  const n=document.getElementById('dnxt');n.className='btn-p qnxt show';n.textContent=di<DQ.length-1?'Következő kérdés →':'Eredmény →';
+  if(i===DQ[di].a)ds++;
+  dShowAnswer(i);
+  saveDailyState({picked:i}); // megválaszolt állapot mentése
 }
-function dNext(){di++;if(di>=DQ.length)dResult();else dLoad();}
+function dNext(){
+  di++;
+  if(di>=DQ.length){dResult();return;}
+  saveDailyState(null); // új kérdés, még nincs válasz
+  dLoad();
+}
 async function dResult(){
+  clearDailyState();
   dMarkPlayed();
   document.getElementById('dqa').style.display='none';
   const r=document.getElementById('dqr');r.className='qr show';

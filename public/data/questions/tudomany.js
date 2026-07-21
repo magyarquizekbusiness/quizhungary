@@ -1,4 +1,4 @@
-// QuizHungary — Tudomány kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Tudomány kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['tudomany-emberitest'] = [
@@ -62,7 +62,7 @@ QH_QUESTIONS['tudomany-emberitest'] = [
 {q:'Hány ATP-t termel kb. egy glükózmolekula aerob lebontása?',o:['kb. 2','kb. 30-38','kb. 100'],a:1},
 {q:'Melyik szerv tárolja és bontja le a glikogént?',o:['Máj','Lép','Vese'],a:0},
 {q:'Mi a nefron?',o:['A vese működési egysége','Idegsejt','Izomrost'],a:0},
-{q:'Melyik agyideg a X. agyideg?',o:['Bolygóideg (nervus vagus)','Látóideg','Szaglóideg'],a:0},
+{q:'Melyik agyideg a X. agyideg?',o:['Bolygóideg','Látóideg','Szaglóideg'],a:0},
 {q:'Melyik fehérje adja a kötőszövet szilárdságát?',o:['Kollagén','Aktin','Miozin'],a:0},
 ],
 [ // 10
@@ -94,7 +94,7 @@ QH_QUESTIONS['tudomany-biologia'] = [
 {q:'Melyik tudós alkotta meg az evolúcióelméletet?',o:['Darwin','Mendel','Pasteur'],a:0},
 {q:'Mi a gomba: növény, állat vagy külön ország?',o:['Növény','Külön ország','Állat'],a:1},
 {q:'Melyik vérsejt felel az immunitásért?',o:['Vörösvérsejt','Fehérvérsejt','Vérlemezke'],a:1},
-{q:'Hány szíve van a földigilisztának (érpumpák)?',o:['1','Több (5 pár)','3'],a:1},
+{q:'Hány szíve van a földigilisztának (érpumpák)?',o:['1','Több','3'],a:1},
 ],
 [ // 4
 {q:'Ki az öröklődés törvényeinek felfedezője?',o:['Mendel','Darwin','Linné'],a:0},
@@ -115,7 +115,7 @@ QH_QUESTIONS['tudomany-biologia'] = [
 {q:'Hány bázispár betűje van a DNS-nek?',o:['3','4','5'],a:1},
 {q:'Melyik állatcsoportba tartozik a delfin?',o:['Halak','Emlősök','Hüllők'],a:1},
 {q:'Mi a szimbiózis?',o:['Kölcsönösen előnyös együttélés','Ragadozás','Versengés'],a:0},
-{q:'Melyik szövet vezeti a vizet a növényben?',o:['Farész (xilém)','Háncsrész','Bőrszövet'],a:0},
+{q:'Melyik szövet vezeti a vizet a növényben?',o:['Farész','Háncsrész','Bőrszövet'],a:0},
 ],
 [ // 7
 {q:'Melyik nukleotid-bázis NINCS a DNS-ben?',o:['Uracil','Adenin','Citozin'],a:0},
@@ -247,7 +247,7 @@ QH_QUESTIONS['tudomany-fizika'] = [
 {q:'Melyik törvény szerint a fény visszaverődik?',o:['Visszaverődés törvénye','Ohm törvénye','Boyle törvénye'],a:0},
 {q:'Mi a nyomás mértékegysége?',o:['Pascal','Newton','Joule'],a:0},
 {q:'Melyik részecske hordozza a negatív töltést?',o:['Elektron','Proton','Neutron'],a:0},
-{q:'Milyen energia a magasban lévő test energiája?',o:['Helyzeti (potenciális)','Mozgási','Kémiai'],a:0},
+{q:'Milyen energia a magasban lévő test energiája?',o:['Helyzeti','Mozgási','Kémiai'],a:0},
 ],
 [ // 5
 {q:'Mi az elektromos áram mértékegysége?',o:['Amper','Volt','Ohm'],a:0},
@@ -257,7 +257,7 @@ QH_QUESTIONS['tudomany-fizika'] = [
 {q:'Melyik törvény: U = I × R?',o:['Ohm törvénye','Newton törvénye','Hooke törvénye'],a:0},
 ],
 [ // 6
-{q:'Mi a hang terjedéséhez szükséges?',o:['Közeg (pl. levegő)','Vákuum','Fény'],a:0},
+{q:'Mi a hang terjedéséhez szükséges?',o:['Közeg','Vákuum','Fény'],a:0},
 {q:'Melyik bolygó gravitációja a legnagyobb a Naprendszerben?',o:['Jupiter','Föld','Mars'],a:0},
 {q:'Mi az ellenállás mértékegysége?',o:['Ohm','Volt','Amper'],a:0},
 {q:'Melyik jelenség a fény hullámhossz szerinti szétbontása?',o:['Diszperzió','Diffrakció','Reflexió'],a:0},
@@ -362,7 +362,7 @@ QH_QUESTIONS['tudomany-csillagaszat'] = [
 {q:'Mi a sötét energia feltételezett hatása?',o:['Gyorsítja a tágulást','Lassítja a tágulást','Megállítja a tágulást'],a:0},
 {q:'Melyik csillag a legfényesebb az éjszakai égen?',o:['Szíriusz','Vega','Betelgeuse'],a:0},
 {q:'Mi a fúzió során felszabaduló energia forrása?',o:['Tömegdefektus','Súrlódás','Kémiai kötés'],a:0},
-{q:'Melyik objektumot fényképezte le 2019-ben az Event Horizon Telescope?',o:['Fekete lyuk (M87)','A Nap','A Plútó'],a:0},
+{q:'Melyik objektumot fényképezte le 2019-ben az Event Horizon Telescope?',o:['Fekete lyuk','A Nap','A Plútó'],a:0},
 ],
 ];
 

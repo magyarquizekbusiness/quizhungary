@@ -1,4 +1,4 @@
-// QuizHungary — Zene kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Zene kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['zene-pop'] = [
@@ -166,7 +166,7 @@ QH_QUESTIONS['zene-magyar'] = [
 {q:'Melyik magyar együttes a "P. Mobil"?',o:['Rockegyüttes','Popegyüttes','Jazzegyüttes'],a:0},
 {q:'Melyik magyar énekes a "Charlie"?',o:['Horváth Károly','Presser Gábor','Zorán'],a:0},
 {q:'Melyik magyar zenekar a "Republic"?',o:['Rockegyüttes','Operett','Népzenei együttes'],a:0},
-{q:'Ki volt a Republic frontembere?',o:['Cipő (Bódi László)','Kovács Ákos','Rúzsa Magdi'],a:0},
+{q:'Ki volt a Republic frontembere?',o:['Cipő','Kovács Ákos','Rúzsa Magdi'],a:0},
 {q:'Melyik magyar énekesnő nyert Megasztárt?',o:['Rúzsa Magdi','Tóth Gabi','Wolf Kati'],a:0},
 ],
 [ // 4
@@ -230,7 +230,7 @@ QH_QUESTIONS['zene-klasszikus'] = [
 ],
 [ // 2
 {q:'Melyik Beethoven-szimfónia tartalmazza az "Örömódát"?',o:['9. szimfónia','5. szimfónia','3. szimfónia'],a:0},
-{q:'Melyik Beethoven-szimfónia kezdődik a híres "ta-ta-ta-taaa" motívummal?',o:['5. (Sors) szimfónia','9.','6. (Pastorale)'],a:0},
+{q:'Melyik Beethoven-szimfónia kezdődik a híres "ta-ta-ta-taaa" motívummal?',o:['5. szimfónia','9.','6.'],a:0},
 {q:'Melyik zeneszerző a barokk kor mestere?',o:['Bach','Brahms','Wagner'],a:0},
 {q:'Melyik zeneszerző írta a "Varázsfuvola" operát?',o:['Mozart','Verdi','Wagner'],a:0},
 {q:'Hány éves korában halt meg Mozart?',o:['35','55','75'],a:0},
@@ -247,10 +247,10 @@ QH_QUESTIONS['zene-klasszikus'] = [
 {q:'Melyik hangszercsoportba tartozik a hegedű?',o:['Vonós','Fúvós','Ütős'],a:0},
 {q:'Melyik zeneszerző a klasszikus szimfónia "atyja"?',o:['Haydn','Mozart','Beethoven'],a:0},
 {q:'Melyik zeneszerző írta a "Requiem"-et, amit halálakor nem fejezett be?',o:['Mozart','Verdi','Fauré'],a:0},
-{q:'Melyik zeneszerző a "Wagner" fő műfaja?',o:['Opera (zenedráma)','Szimfónia','Kamarazene'],a:0},
+{q:'Melyik zeneszerző a "Wagner" fő műfaja?',o:['Opera','Szimfónia','Kamarazene'],a:0},
 ],
 [ // 5
-{q:'Melyik Wagner-mű a "Nibelung gyűrűje" tetralógia része?',o:['A Rajna kincse (és társai)','A Traviata','Carmen'],a:0},
+{q:'Melyik Wagner-mű a "Nibelung gyűrűje" tetralógia része?',o:['A Rajna kincse','A Traviata','Carmen'],a:0},
 {q:'Melyik zeneszerző a "Carmen" opera alkotója?',o:['Bizet','Massenet','Gounod'],a:0},
 {q:'Melyik zeneszerző a lengyel romantika hőse, a mazurkák mestere?',o:['Chopin','Liszt','Schumann'],a:0},
 {q:'Melyik zeneszerző a "Magyar rapszódiák" szerzője?',o:['Liszt Ferenc','Brahms','Dvořák'],a:0},
@@ -339,7 +339,7 @@ QH_QUESTIONS['zene-hangszerek'] = [
 [ // 7
 {q:'Melyik hangszer a "csembaló" és a zongora fő különbsége?',o:['A csembaló pengeti, a zongora üti a húrt','Nincs különbség','A csembaló fúvós'],a:0},
 {q:'Melyik hangszernek nincs húrja?',o:['Trombita','Gitár','Hegedű'],a:0},
-{q:'Melyik hangszer a "timpani" csoportja?',o:['Ütős (hangolható)','Vonós','Fúvós'],a:0},
+{q:'Melyik hangszer a "timpani" csoportja?',o:['Ütős','Vonós','Fúvós'],a:0},
 {q:'Melyik hangszer legmélyebb regisztere a "kontrafagott"?',o:['Fafúvós','Rézfúvós','Vonós'],a:0},
 {q:'Melyik hangszer az elektromos gitár erősítéséhez kell?',o:['Erősítő','Vonó','Nádnyelv'],a:0},
 ],

@@ -122,7 +122,7 @@ QH_QUESTIONS['foldrajz-magyarorszag'] = [
 {q:'Melyik magyar vár őrzi a "Sasfészek" elnevezést a Duna felett?',o:['Visegrádi fellegvár','Egri vár','Diósgyőri vár'],a:0},
 ],
 [ // 18
-{q:'Melyik magyar városban van az ország legnagyobb ipari kikötője a Dunán?',o:['Budapest (Csepel)','Szeged','Debrecen'],a:0},
+{q:'Melyik magyar városban van az ország legnagyobb ipari kikötője a Dunán?',o:['Budapest','Szeged','Debrecen'],a:0},
 {q:'Melyik magyar hegység rejti a Szemlő-hegyi és Pál-völgyi barlangot?',o:['Budai-hegység','Mátra','Zemplén'],a:0},
 {q:'Melyik magyar tájegység nevét a Rába és a Mura vidékéről kapta, ahol sok a fatemplom?',o:['Őrség','Hajdúság','Jászság'],a:0},
 {q:'Melyik magyar városban rendezik a Nemzetközi Halfőző Fesztivált a Tisza partján?',o:['Szeged','Győr','Pécs'],a:0},
@@ -183,7 +183,7 @@ QH_QUESTIONS['foldrajz-europa'] = [
 [ // 6
 {q:'Melyik két kontinensen fekszik Isztambul?',o:['Európa és Ázsia','Ázsia és Afrika','Európa és Afrika'],a:0},
 {q:'Melyik ország fővárosa Zágráb?',o:['Szerbia','Horvátország','Szlovénia'],a:1},
-{q:'Melyik hegység húzódik Szlovákia és Lengyelország határán?',o:['Kárpátok (Tátra)','Alpok','Balkán-hegység'],a:0},
+{q:'Melyik hegység húzódik Szlovákia és Lengyelország határán?',o:['Kárpátok','Alpok','Balkán-hegység'],a:0},
 {q:'Melyik szoros választja el Európát Afrikától?',o:['Boszporusz','Gibraltári-szoros','Dardanellák'],a:1},
 {q:'Mi Finnország fővárosa?',o:['Helsinki','Turku','Tampere'],a:0},
 ],
@@ -443,7 +443,7 @@ QH_QUESTIONS['foldrajz-oceanok'] = [
 {q:'Melyik tenger a világ legsósabb "tava"?',o:['Holt-tenger','Vörös-tenger','Kaszpi-tenger'],a:0},
 {q:'Melyik óceán partján fekszik Kalifornia?',o:['Atlanti','Csendes','Jeges'],a:1},
 {q:'Melyik tenger választja el Afrikát az Arab-félszigettől?',o:['Vörös-tenger','Fekete-tenger','Arab-tenger'],a:0},
-{q:'Melyik a legkisebb óceán?',o:['Indiai','Jeges-tenger (Arktisz)','Déli-óceán'],a:1},
+{q:'Melyik a legkisebb óceán?',o:['Indiai','Jeges-tenger','Déli-óceán'],a:1},
 ],
 [ // 3
 {q:'Mi a világ legmélyebb pontja?',o:['Mariana-árok','Tonga-árok','Puerto Rico-árok'],a:0},
@@ -460,8 +460,8 @@ QH_QUESTIONS['foldrajz-oceanok'] = [
 {q:'Melyik a világ legnagyobb szigete?',o:['Ausztrália','Grönland','Borneó'],a:1},
 ],
 [ // 5
-{q:'Melyik szoros választja el Nagy-Britanniát Franciaországtól?',o:['La Manche (Doveri-szoros)','Gibraltár','Kattegat'],a:0},
-{q:'Melyik tengerben van Kréta szigete?',o:['Adriai','Földközi (Égei)','Fekete'],a:1},
+{q:'Melyik szoros választja el Nagy-Britanniát Franciaországtól?',o:['La Manche','Gibraltár','Kattegat'],a:0},
+{q:'Melyik tengerben van Kréta szigete?',o:['Adriai','Földközi','Fekete'],a:1},
 {q:'Melyik óceán a második legnagyobb?',o:['Indiai','Atlanti','Déli'],a:1},
 {q:'Melyik tó a világ legnagyobb (tengernek nevezett) tava?',o:['Kaszpi-tenger','Aral-tó','Bajkál-tó'],a:0},
 {q:'Hol találhatók a Maldív-szigetek?',o:['Csendes-óceán','Indiai-óceán','Atlanti-óceán'],a:1},
@@ -562,7 +562,7 @@ QH_QUESTIONS['foldrajz-oceanok'] = [
 {q:'Mi a neve az óceánfenék hosszan elnyúló vulkanikus hegyláncának?',o:['Óceánközépi hátság','Kontinentális talapzat','Abisszális síkság'],a:0},
 {q:'Hogy nevezzük a kontinensek víz alatti, sekély peremét?',o:['Kontinentális talapzat','Óceánárok','Hátság'],a:0},
 {q:'Melyik övezetbe hatol le még némi napfény az óceánban?',o:['A fényben úszó felső réteg','A hadális zóna','Az abisszális zóna'],a:0},
-{q:'Melyik tektonikai jelenség hozza létre a mélytengeri árkokat?',o:['Az alábukás (szubdukció)','A hegységképződés','Az erózió'],a:0},
+{q:'Melyik tektonikai jelenség hozza létre a mélytengeri árkokat?',o:['Az alábukás','A hegységképződés','Az erózió'],a:0},
 ],
 [ // 20
 {q:'Melyik tenger a legfiatalabb, mert két kontinens szétválása hozza létre?',o:['Vörös-tenger','Balti-tenger','Fekete-tenger'],a:0},

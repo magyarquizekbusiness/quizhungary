@@ -1,4 +1,4 @@
-// QuizHungary — Technika kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Technika kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['technika-szamitastechnika'] = [
@@ -48,20 +48,20 @@ QH_QUESTIONS['technika-szamitastechnika'] = [
 {q:'Melyik cég a "Nvidia" fő terméke?',o:['Grafikus kártyák','Operációs rendszerek','Okostelefonok'],a:0},
 {q:'Melyik programozási nyelvet használják gyakran adatelemzéshez?',o:['Python','HTML','CSS'],a:0},
 {q:'Mit jelent az "SQL"?',o:['Structured Query Language','Simple Question Logic','System Quality Level'],a:0},
-{q:'Melyik adatbázistípus a "relációs" (táblák)?',o:['Relációs (pl. MySQL)','Kulcs-érték csak','Gráf csak'],a:0},
+{q:'Melyik adatbázistípus a "relációs" (táblák)?',o:['Relációs','Kulcs-érték csak','Gráf csak'],a:0},
 {q:'Mit jelent a "cloud computing"?',o:['Felhőalapú számítástechnika','Időjárás-előrejelzés','Vezeték nélküli töltés'],a:0},
 ],
 [ // 8
-{q:'Melyik titkosítási elv nyilvános-privát kulcsú?',o:['Aszimmetrikus (pl. RSA)','Csak jelszavas','Nincs titkosítás'],a:0},
+{q:'Melyik titkosítási elv nyilvános-privát kulcsú?',o:['Aszimmetrikus','Csak jelszavas','Nincs titkosítás'],a:0},
 {q:'Melyik technológia a "blockchain" alapja?',o:['Elosztott főkönyv','Központi szerver','Felhő'],a:0},
 {q:'Melyik nyelvet használják gyakran rendszerprogramozáshoz?',o:['C','HTML','SQL'],a:0},
 {q:'Mit jelent a "kernel" az operációs rendszerben?',o:['A rendszermag','Egy vírus','Egy böngésző'],a:0},
 {q:'Melyik memória a "gyorsítótár" (cache)?',o:['Gyors köztes memória','Merevlemez','USB'],a:0},
 ],
 [ // 9
-{q:'Melyik algoritmus-komplexitás a leggyorsabb nagy N-re: O, O(n), O(n²)?',o:['O(1)','O(n)','O(n²)'],a:0},
-{q:'Melyik adatszerkezet "LIFO" (utoljára be, először ki)?',o:['Verem (stack)','Sor (queue)','Lista'],a:0},
-{q:'Melyik adatszerkezet "FIFO"?',o:['Sor (queue)','Verem','Fa'],a:0},
+{q:'Melyik időbeli komplexitás a leggyorsabb nagy adatmennyiségnél?',o:['O(1)','O(n)','O(n²)'],a:0},
+{q:'Melyik adatszerkezet "LIFO" (utoljára be, először ki)?',o:['Verem','Sor','Lista'],a:0},
+{q:'Melyik adatszerkezet "FIFO"?',o:['Sor','Verem','Fa'],a:0},
 {q:'Melyik protokoll az internet alapcím-rendszere?',o:['IP','HTTP','DNS'],a:0},
 {q:'Mit fordít le a "DNS"?',o:['Domainnevet IP-címre','IP-t jelszóra','Fájlt kóddá'],a:0},
 ],
@@ -100,7 +100,7 @@ QH_QUESTIONS['technika-talalmanyok'] = [
 {q:'Ki találta fel a távírót?',o:['Samuel Morse','Bell','Edison'],a:0},
 {q:'Melyik találmány rögzíti a hangot Edison nevéhez?',o:['Fonográf','Rádió','Telefon'],a:0},
 {q:'Ki alkotta az első filmvetítést?',o:['Lumière fivérek','Edison egyedül','Méliès'],a:0},
-{q:'Ki fejlesztette a hűtőgépet/hűtést?',o:['Több feltaláló (pl. Carrier a légkondit)','Egyetlen ember','Edison'],a:0},
+{q:'Ki fejlesztette a hűtőgépet/hűtést?',o:['Több feltaláló','Egyetlen ember','Edison'],a:0},
 {q:'Ki alkotta a légkondicionálót?',o:['Willis Carrier','Edison','Tesla'],a:0},
 ],
 [ // 5
@@ -172,7 +172,7 @@ QH_QUESTIONS['technika-autok'] = [
 [ // 4
 {q:'Melyik a leggyorsabb sorozatgyártású autó volt?',o:['Bugatti Chiron SS 300+','Ferrari','Lamborghini'],a:0},
 {q:'Melyik motorrész gyújtja be az üzemanyagot benzinesnél?',o:['Gyújtógyertya','Injektor csak','Turbó'],a:0},
-{q:'Melyik cég luxusmárkája a "Rolls-Royce"?',o:['Brit (BMW tulaj)','Olasz','Japán'],a:0},
+{q:'Melyik cég luxusmárkája a "Rolls-Royce"?',o:['Brit','Olasz','Japán'],a:0},
 {q:'Melyik autóverseny a legrangosabb?',o:['Forma-1','Rali','NASCAR'],a:0},
 {q:'Melyik alkatrész forgatja a kerekeket a motortól?',o:['Hajtótengely','Lengéscsillapító','Kormány'],a:0},
 ],
@@ -193,7 +193,7 @@ QH_QUESTIONS['technika-autok'] = [
 [ // 7
 {q:'Melyik NEM üteme a négyütemű motornak?',o:['Töltés','Sűrítés','Kipufogás'],a:0},
 {q:'Melyik autós biztonsági rendszer felfújódik ütközéskor?',o:['Légzsák','ABS','ESP'],a:0},
-{q:'Melyik rendszer stabilizálja az autót kanyarban?',o:['ESP (menetstabilizátor)','ABS','GPS'],a:0},
+{q:'Melyik rendszer stabilizálja az autót kanyarban?',o:['ESP','ABS','GPS'],a:0},
 {q:'Melyik üzemanyagcella-technológia víz kibocsátású?',o:['Hidrogén-üzemanyagcella','Dízel','Benzin'],a:0},
 {q:'Melyik F1-versenyző rekordbajnok?',o:['Hamilton és Schumacher','Csak Senna','Csak Prost'],a:0},
 ],
@@ -237,7 +237,7 @@ QH_QUESTIONS['technika-urkutatas'] = [
 ],
 [ // 3
 {q:'Melyik bolygóra küldtek rovereket?',o:['Mars','Jupiter','Szaturnusz'],a:0},
-{q:'Melyik űrállomás kering a Föld körül?',o:['ISS','Mir (leszerelve)','Skylab (leszerelve)'],a:0},
+{q:'Melyik űrállomás kering a Föld körül?',o:['ISS','Mir','Skylab'],a:0},
 {q:'Melyik teleszkóp készít mélyűri felvételeket?',o:['Hubble','Kepler','Voyager'],a:0},
 {q:'Melyik szonda hagyta el a Naprendszert?',o:['Voyager 1','Cassini','Juno'],a:0},
 {q:'Melyik ország juttatott másodikként embert az űrbe hosszú programmal?',o:['USA','Kína','India'],a:0},
@@ -257,7 +257,7 @@ QH_QUESTIONS['technika-urkutatas'] = [
 {q:'Melyik kis helikopter repült a Marson?',o:['Ingenuity','Sojourner','Spirit'],a:0},
 ],
 [ // 6
-{q:'Melyik program célja a Holdra való visszatérés?',o:['Artemis','Apollo (befejezett)','Gemini'],a:0},
+{q:'Melyik program célja a Holdra való visszatérés?',o:['Artemis','Apollo','Gemini'],a:0},
 {q:'Melyik magáncég visz turistákat szuborbitális űrutakra?',o:['Blue Origin','NASA','ESA'],a:0},
 {q:'Melyik szonda csapódott szándékosan egy aszteroidába?',o:['DART','Osiris-Rex','Hayabusa'],a:0},
 {q:'Melyik japán szonda hozott mintát egy aszteroidáról?',o:['Hayabusa','Voyager','Cassini'],a:0},
@@ -338,8 +338,8 @@ QH_QUESTIONS['technika-jatekok'] = [
 ],
 [ // 7
 {q:'Melyik konzolgeneráció a PS5 és Xbox Series?',o:['9. generáció','7.','5.'],a:0},
-{q:'Melyik technológia teszi valósághűbbé a fényt játékokban?',o:['Sugárkövetés (ray tracing)','Pixelezés','8-bit'],a:0},
-{q:'Melyik indie-játék barlangi túlélés-építés?',o:['Terraria','Minecraft (3D)','Stardew'],a:0},
+{q:'Melyik technológia teszi valósághűbbé a fényt játékokban?',o:['Sugárkövetés','Pixelezés','8-bit'],a:0},
+{q:'Melyik indie-játék barlangi túlélés-építés?',o:['Terraria','Minecraft','Stardew'],a:0},
 {q:'Melyik farmszimulátor indie-siker?',o:['Stardew Valley','Terraria','Hades'],a:0},
 {q:'Melyik japán cég a "Resident Evil" és "Street Fighter" kiadója?',o:['Capcom','Konami','Sega'],a:0},
 ],
@@ -351,9 +351,9 @@ QH_QUESTIONS['technika-jatekok'] = [
 {q:'Melyik roguelike indie nyert díjakat 2020-ban?',o:['Hades','Celeste','Cuphead'],a:0},
 ],
 [ // 9
-{q:'Melyik VR-headset a Meta terméke?',o:['Meta Quest','PSVR (Sony)','Valve Index'],a:0},
+{q:'Melyik VR-headset a Meta terméke?',o:['Meta Quest','PSVR','Valve Index'],a:0},
 {q:'Melyik technológia a felhőalapú játék streamelés (cloud gaming)?',o:['Felhőjáték','Helyi mentés','Emuláció'],a:0},
-{q:'Melyik e-sport torna a Dota 2 legnagyobb díjazású?',o:['The International','Worlds (LoL)','Major (CS)'],a:0},
+{q:'Melyik e-sport torna a Dota 2 legnagyobb díjazású?',o:['The International','Worlds','Major'],a:0},
 {q:'Melyik játékfejlesztési szakasz a "béta"?',o:['Nyilvános teszt','A végleges kiadás','A tervezés'],a:0},
 {q:'Melyik Nvidia-technológia növeli a felbontást AI-alapú felskálázással?',o:['DLSS','8-bit','MIDI'],a:0},
 ],

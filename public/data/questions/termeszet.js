@@ -1,4 +1,4 @@
-// QuizHungary — Természet és állatok kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Természet és állatok kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['termeszet-emlosok'] = [
@@ -19,7 +19,7 @@ QH_QUESTIONS['termeszet-emlosok'] = [
 [ // 3
 {q:'Melyik állat a legnagyobb macskaféle?',o:['Tigris','Oroszlán','Jaguár'],a:0},
 {q:'Melyik ragadozó él és vadászik falkában?',o:['Farkas','Tigris','Jegesmedve'],a:0},
-{q:'Melyik emlős él a legtovább általában?',o:['Grönlandi bálna (200+ év)','Kutya','Egér'],a:0},
+{q:'Melyik emlős él a legtovább általában?',o:['Grönlandi bálna','Kutya','Egér'],a:0},
 {q:'Melyik állat kizárólag eukaliptuszt eszik?',o:['Koala','Panda','Lajhár'],a:0},
 {q:'Melyik állat kizárólag bambuszt eszik főleg?',o:['Óriáspanda','Koala','Gorilla'],a:0},
 ],
@@ -33,7 +33,7 @@ QH_QUESTIONS['termeszet-emlosok'] = [
 [ // 5
 {q:'Melyik emlős tájékozódik ultrahangos visszhang alapján?',o:['Denevér','Ló','Medve'],a:0},
 {q:'Melyik tengeri emlős a legnagyobb ragadozó?',o:['Orka','Fóka','Delfin'],a:0},
-{q:'Melyik állatcsoportba tartozik a delfin?',o:['Cetek (emlősök)','Halak','Hüllők'],a:0},
+{q:'Melyik állatcsoportba tartozik a delfin?',o:['Cetek','Halak','Hüllők'],a:0},
 {q:'Melyik állat orrának módosulása az ormány?',o:['Elefánt','Oroszlán','Zsiráf'],a:0},
 {q:'Melyik állat hullajtja és növeszti újra az agancsát évente?',o:['Szarvas','Zsiráf','Elefánt'],a:0},
 ],
@@ -56,7 +56,7 @@ QH_QUESTIONS['termeszet-emlosok'] = [
 {q:'Melyik állat a "hangyász" táplálékának neve is?',o:['Hangya és termesz','Bogár','Méh'],a:0},
 {q:'Melyik dél-amerikai emlős testét csontos páncél borítja?',o:['Tatu','Sün','Vidra'],a:0},
 {q:'Melyik emlős pikkelyes?',o:['Tobzoska','Tatu','Sün'],a:0},
-{q:'Melyik állat a leghosszabb agyarú?',o:['Narvál (agyara csavart)','Rozmár','Víziló'],a:0},
+{q:'Melyik állat a leghosszabb agyarú?',o:['Narvál','Rozmár','Víziló'],a:0},
 ],
 [ // 9
 {q:'Melyik emlős a leggyorsabb szívverésű, apró?',o:['Cickány','Elefánt','Bálna'],a:0},
@@ -97,7 +97,7 @@ QH_QUESTIONS['termeszet-madarak'] = [
 {q:'Melyik madár csőre szűrő a táplálékhoz?',o:['Flamingó','Gólya','Gém'],a:0},
 ],
 [ // 4
-{q:'Mitől rózsaszín a flamingó?',o:['A táplálékától (rákok, algák)','Genetika','Napfény'],a:0},
+{q:'Mitől rózsaszín a flamingó?',o:['A táplálékától','Genetika','Napfény'],a:0},
 {q:'Melyik madár a nemzeti jelkép az USA-ban?',o:['Fehérfejű rétisas','Pulyka','Sólyom'],a:0},
 {q:'Melyik madár kiváló úszó és búvár, de nem tud repülni?',o:['Pingvin','Sirály','Vadkacsa'],a:0},
 {q:'Melyik madár rak fészket kéménybe/eresz alá vándorolva?',o:['Gólya és fecske','Sas','Bagoly'],a:0},
@@ -122,14 +122,14 @@ QH_QUESTIONS['termeszet-madarak'] = [
 {q:'Melyik madárcsoport élhet nagyon sokáig, akár 50 év felett?',o:['Nagy papagájok','Verebek','Fecskék'],a:0},
 {q:'Melyik madár a legnagyobb szárnyfesztávolságú?',o:['Vándoralbatrosz','Sas','Gólya'],a:0},
 {q:'Melyik madár "táncol" a párzáskor?',o:['Daru','Veréb','Rigó'],a:0},
-{q:'Melyik madár faj kihalt, nem repülő?',o:['Dodó','Kivi (él)','Emu (él)'],a:0},
+{q:'Melyik madár faj kihalt, nem repülő?',o:['Dodó','Kivi','Emu'],a:0},
 ],
 [ // 8
 {q:'Mi segíti sok vándormadár tájékozódását?',o:['A Föld mágneses tere','A holdfázisok','A szél illata'],a:0},
 {q:'Melyik madár raktároz télire magvakat és makkot?',o:['Szajkó','Fecske','Gólya'],a:0},
 {q:'Melyik madár csőrének formája jelzi a táplálékot (Darwin pinty)?',o:['Darwin-pintyek','Verebek','Galambok'],a:0},
-{q:'Melyik madár a nappali ragadozók közé tartozik?',o:['Sas és ölyv','Bagoly (éjjeli)','Fecske'],a:0},
-{q:'Melyik madár él kolóniában sziklán (lunda, alka)?',o:['Tengeri madarak (lunda)','Veréb','Rigó'],a:0},
+{q:'Melyik madár a nappali ragadozók közé tartozik?',o:['Sas és ölyv','Bagoly','Fecske'],a:0},
+{q:'Melyik madár él kolóniában sziklán (lunda, alka)?',o:['Tengeri madarak','Veréb','Rigó'],a:0},
 ],
 [ // 9
 {q:'Milyen a talajon fészkelő madarak tojásainak színe jellemzően?',o:['Rejtőszínű, foltos','Élénkpiros','Fémesen kék'],a:0},
@@ -177,7 +177,7 @@ QH_QUESTIONS['termeszet-tenger'] = [
 {q:'Melyik ragadozó a korallzátony réme, tövises?',o:['Koronás tengericsillag','Medúza','Rák'],a:0},
 ],
 [ // 5
-{q:'Melyik tengeri állat a leghosszabb?',o:['Óriás heringkirály (oarfish)','Cápa','Delfin'],a:0},
+{q:'Melyik tengeri állat a leghosszabb?',o:['Óriás heringkirály','Cápa','Delfin'],a:0},
 {q:'Melyik óriási állat szűri ki a planktont hatalmas szájával?',o:['Kék bálna','Fehér cápa','Barrakuda'],a:0},
 {q:'Melyik tengeri állat a "Nemo" a rajzfilmben?',o:['Bohóchal','Kardhal','Aranyhal'],a:0},
 {q:'Melyik tengeri állat él szimbiózisban a tengeri rózsával?',o:['Bohóchal','Cápa','Teknős'],a:0},
@@ -186,7 +186,7 @@ QH_QUESTIONS['termeszet-tenger'] = [
 [ // 6
 {q:'Melyik tengeri állat a legmérgezőbb?',o:['Kockamedúza','Delfin','Lazac'],a:0},
 {q:'Melyik állat képes felfújni magát tüskésen?',o:['Gömbhal','Cápa','Rája'],a:0},
-{q:'Melyik hal mérge halálos, japán csemege?',o:['Fugu (gömbhal)','Tonhal','Lazac'],a:0},
+{q:'Melyik hal mérge halálos, japán csemege?',o:['Fugu','Tonhal','Lazac'],a:0},
 {q:'Melyik tengeri lény a leghosszabb életű?',o:['Grönlandi cápa','Delfin','Tonhal'],a:0},
 {q:'Melyik tengeri emlős "egyszarvúja" a csavart agyar?',o:['Narvál','Delfin','Fóka'],a:0},
 ],
@@ -198,7 +198,7 @@ QH_QUESTIONS['termeszet-tenger'] = [
 {q:'Melyik állat kolóniája alkotja a Nagy-korallzátonyt?',o:['Korallpolipok','Kagylók','Rákok'],a:0},
 ],
 [ // 8
-{q:'Melyik cet a legnagyobb fogascet?',o:['Ámbráscet','Kék bálna (szűrő)','Orka'],a:0},
+{q:'Melyik cet a legnagyobb fogascet?',o:['Ámbráscet','Kék bálna','Orka'],a:0},
 {q:'Melyik állat merül a legmélyebbre (ámbráscet/Cuvier-csőröscet)?',o:['Csőröscetek','Delfin','Fóka'],a:0},
 {q:'Melyik tengeri lény biolumineszcenciát csalira használ?',o:['Mélytengeri horgászhal','Lazac','Ponty'],a:0},
 {q:'Milyen színű a rákok és puhatestűek rézalapú vére?',o:['Kékes','Piros','Zöld'],a:0},
@@ -209,7 +209,7 @@ QH_QUESTIONS['termeszet-tenger'] = [
 {q:'Melyik zóna a legmélyebb, sötét óceáni öv?',o:['Hadális zóna','Napfényes zóna','Partközeli'],a:0},
 {q:'Melyik lény él a hidrotermális kürtőknél táplálék nélkül fentről?',o:['Óriás csőférgek','Delfin','Cápa'],a:0},
 {q:'Melyik folyamat táplálja a mélytengeri kürtők életét?',o:['Kemoszintézis','Fotoszintézis','Erjedés'],a:0},
-{q:'Melyik állat a leghosszabb ismert?',o:['Csalánállat gyarmat (siphonophora)','Cápa','Bálna'],a:0},
+{q:'Melyik állat a leghosszabb ismert?',o:['Csalánállat gyarmat','Cápa','Bálna'],a:0},
 ],
 [ // 10
 {q:'Melyik óceáni jelenség pusztítja a korallt melegedéskor?',o:['Korallfehéredés','Árapály','Hullámzás'],a:0},
@@ -338,7 +338,7 @@ QH_QUESTIONS['termeszet-novenyek'] = [
 ],
 [ // 7
 {q:'Melyik növényi hormon szabályozza a növekedést?',o:['Auxin','Inzulin','Adrenalin'],a:0},
-{q:'Melyik növény terem a trópusi esőerdőben rétegesen?',o:['Sokféle (liánok, epifiták)','Csak fenyő','Csak kaktusz'],a:0},
+{q:'Melyik növény terem a trópusi esőerdőben rétegesen?',o:['Sokféle','Csak fenyő','Csak kaktusz'],a:0},
 {q:'Melyik növény "epifita"?',o:['Orchidea','Tölgy','Búza'],a:0},
 {q:'Melyik növény terjed rizómával?',o:['Gyömbér','Alma','Rózsa'],a:0},
 {q:'Melyik növény termése toktermés?',o:['Mák','Cseresznye','Szőlő'],a:0},
@@ -346,7 +346,7 @@ QH_QUESTIONS['termeszet-novenyek'] = [
 [ // 8
 {q:'Melyik növény végez hatékony C4-es fotoszintézist?',o:['Kukorica','Búza','Rizs'],a:0},
 {q:'Melyik sivatagi növény végez CAM-fotoszintézist?',o:['Kaktusz','Tölgy','Búza'],a:0},
-{q:'Melyik növény a legnagyobb élő szervezet klonálisan?',o:['Rezgő nyár (Pando)','Tölgy','Fenyő'],a:0},
+{q:'Melyik növény a legnagyobb élő szervezet klonálisan?',o:['Rezgő nyár','Tölgy','Fenyő'],a:0},
 {q:'Melyik növény jellemző a tundra növényzetére?',o:['Zuzmó','Pálma','Bambusz'],a:0},
 {q:'Melyik vegyület véd sok növényt a növényevőktől?',o:['Alkaloidák','Klorofill','Cellulóz'],a:0},
 ],

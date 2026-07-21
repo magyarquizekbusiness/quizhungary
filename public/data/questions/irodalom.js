@@ -1,4 +1,4 @@
-// QuizHungary — Irodalom kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Irodalom kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['irodalom-magyar'] = [
@@ -214,7 +214,7 @@ QH_QUESTIONS['irodalom-kolteszet'] = [
 [ // 10
 {q:'Melyik amerikai költőnő élt visszavonultan, halála után lett híres?',o:['Emily Dickinson','Sylvia Plath','Sexton'],a:0},
 {q:'Melyik költőnő az "Üvegbura" szerzője? Költészetéről is híres:',o:['Sylvia Plath','Dickinson','Bishop'],a:0},
-{q:'Melyik lengyel Nobel-díjas költőnő?',o:['Wisława Szymborska','Miłosz (férfi)','Herbert (férfi)'],a:0},
+{q:'Melyik lengyel Nobel-díjas költőnő?',o:['Wisława Szymborska','Miłosz','Herbert'],a:0},
 {q:'Melyik költő az orosz akmeizmus alakja, sztálini terror áldozata?',o:['Oszip Mandelstam','Jeszenyin','Majakovszkij'],a:0},
 {q:'Melyik költő a szovjet futurizmus hangja?',o:['Majakovszkij','Blok','Jeszenyin'],a:0},
 ],
@@ -225,7 +225,7 @@ QH_QUESTIONS['irodalom-ifjusagi'] = [
 {q:'Ki írta a Harry Potter könyveket?',o:['J. K. Rowling','Tolkien','C. S. Lewis'],a:0},
 {q:'Melyik iskolába jár Harry Potter?',o:['Roxfort','Beauxbatons','Durmstrang'],a:0},
 {q:'Ki írta A Gyűrűk Ura trilógiát?',o:['J. R. R. Tolkien','Rowling','Martin'],a:0},
-{q:'Melyik lény hordozza a Gyűrűt a Végzet Hegyéhez?',o:['Frodó (hobbit)','Egy tünde','Egy törp'],a:0},
+{q:'Melyik lény hordozza a Gyűrűt a Végzet Hegyéhez?',o:['Frodó','Egy tünde','Egy törp'],a:0},
 {q:'Ki írta A hobbit című könyvet?',o:['Tolkien','Lewis','Pullman'],a:0},
 ],
 [ // 2
@@ -251,7 +251,7 @@ QH_QUESTIONS['irodalom-ifjusagi'] = [
 ],
 [ // 5
 {q:'Ki írta A kis herceget?',o:['Antoine de Saint-Exupéry','Verne','Dumas'],a:0},
-{q:'Melyik bolygóról érkezett a kis herceg?',o:['Egy aszteroidáról (B-612)','A Marsról','A Holdról'],a:0},
+{q:'Melyik bolygóról érkezett a kis herceg?',o:['Egy aszteroidáról','A Marsról','A Holdról'],a:0},
 {q:'Ki írte a Pinokkió történetét?',o:['Carlo Collodi','Andersen','Grimm'],a:0},
 {q:'Ki írta az Alice Csodaországban című művet?',o:['Lewis Carroll','Barrie','Milne'],a:0},
 {q:'Ki írta a Pán Péter (Peter Pan) történetét?',o:['J. M. Barrie','Carroll','Grahame'],a:0},

@@ -10,7 +10,7 @@ window.QH_RULES = {
 
 // A kérdésbank verziója — cache-busting a kérdésfájlokhoz.
 // (A sync-levels szkript frissíti; ettől biztosan friss kérdések töltődnek be.)
-window.QH_DATA_VERSION = '550';
+window.QH_DATA_VERSION = '550-04ae4e79';
 
 // Ténylegesen kész szintek alkategóriánként — a kérdésbankból generálva.
 // (A sync-levels szkript írja felül bővítéskor; kézzel ne szerkeszd.)

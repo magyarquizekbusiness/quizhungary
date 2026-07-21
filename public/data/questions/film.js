@@ -1,4 +1,4 @@
-// QuizHungary — Film és TV kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Film és TV kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['film-klasszikus'] = [
@@ -52,14 +52,14 @@ QH_QUESTIONS['film-klasszikus'] = [
 {q:'Ki rendezte a Casablanca című klasszikust?',o:['Michael Curtiz','John Ford','Howard Hawks'],a:0},
 ],
 [ // 8
-{q:'Melyik magyar származású rendező készítette a Casablancát?',o:['Kertész Mihály (Curtiz)','Korda Sándor','Cukor György'],a:0},
+{q:'Melyik magyar származású rendező készítette a Casablancát?',o:['Kertész Mihály','Korda Sándor','Cukor György'],a:0},
 {q:'Ki rendezte az Apokalipszis mostot?',o:['Coppola','Cimino','Stone'],a:0},
 {q:'Melyik regény ihlette az Apokalipszis mostot?',o:['A sötétség mélyén','1984','Ulysses'],a:0},
 {q:'Melyik olasz film Fellini klasszikusa?',o:['La Dolce Vita','Bicikli­tolvajok','Róma nyílt város'],a:0},
 {q:'Ki rendezte A jó, a rossz és a csúfot?',o:['Sergio Leone','Peckinpah','Eastwood'],a:0},
 ],
 [ // 9
-{q:'Melyik film nyerte az első legjobb film Oscart?',o:['Szárnyak (Wings)','Ben-Hur','Casablanca'],a:0},
+{q:'Melyik film nyerte az első legjobb film Oscart?',o:['Szárnyak','Ben-Hur','Casablanca'],a:0},
 {q:'Ki rendezte a Rómeó és Júlia 1968-as verzióját?',o:['Franco Zeffirelli','Visconti','Antonioni'],a:0},
 {q:'Melyik svéd rendező készítette A hetedik pecsétet?',o:['Ingmar Bergman','Bo Widerberg','Roy Andersson'],a:0},
 {q:'Melyik francia újhullámos rendező készítette a Kifulladásigot?',o:['Godard','Truffaut','Chabrol'],a:0},
@@ -91,7 +91,7 @@ QH_QUESTIONS['film-modern'] = [
 ],
 [ // 3
 {q:'Ki rendezte az Eredetet (Inception)?',o:['Christopher Nolan','Villeneuve','Fincher'],a:0},
-{q:'Melyik filmben szerepel a "Joker" Heath Ledger alakításában?',o:['A sötét lovag','Joker (2019)','Batman Begins'],a:0},
+{q:'Melyik filmben szerepel a "Joker" Heath Ledger alakításában?',o:['A sötét lovag','Joker','Batman Begins'],a:0},
 {q:'Ki rendezte a Titanic (1997) filmet?',o:['James Cameron','Spielberg','Zemeckis'],a:0},
 {q:'Melyik Marvel-film gyűjtötte a legtöbb bevételt?',o:['Bosszúállók: Végjáték','Vasember','Thor'],a:0},
 {q:'Ki játssza Vasembert a Marvel-filmekben?',o:['Robert Downey Jr.','Chris Evans','Mark Ruffalo'],a:0},
@@ -105,7 +105,7 @@ QH_QUESTIONS['film-modern'] = [
 ],
 [ // 5
 {q:'Ki rendezte a Csillagok között (Interstellar) filmet?',o:['Nolan','Villeneuve','Cuarón'],a:0},
-{q:'Melyik film nyerte a legjobb film Oscart 2020-ban?',o:['Élősködők (Parasite)','1917','Joker'],a:0},
+{q:'Melyik film nyerte a legjobb film Oscart 2020-ban?',o:['Élősködők','1917','Joker'],a:0},
 {q:'Melyik országból származik az Élősködők rendezője?',o:['Dél-Korea','Japán','Kína'],a:0},
 {q:'Ki rendezte az Élősködőket?',o:['Bong Joon-ho','Park Chan-wook','Kim Ki-duk'],a:0},
 {q:'Melyik film főszereplője Tony Stark?',o:['Vasember','Batman','Pókember'],a:0},
@@ -139,7 +139,7 @@ QH_QUESTIONS['film-modern'] = [
 {q:'Melyik Bong Joon-ho film nyert 4 Oscart?',o:['Élősködők','Snowpiercer','Okja'],a:0},
 ],
 [ // 10
-{q:'Melyik film nyerte a legtöbb Oscart 2024-ig holtversenyben?',o:['Oppenheimer (7)','Barbie','Napkirály'],a:0},
+{q:'Melyik film nyerte a legtöbb Oscart 2024-ig holtversenyben?',o:['Oppenheimer','Barbie','Napkirály'],a:0},
 {q:'Ki rendezte a Twin Peaks utáni Mulholland Drive-ot?',o:['David Lynch','Fincher','Aronofsky'],a:0},
 {q:'Melyik A24-film nyert legjobb film Oscart?',o:['Minden, mindenhol, mindenkor','Ex Machina','Hereditary'],a:0},
 {q:'Melyik évben nyert a Minden, mindenhol, mindenkor?',o:['2023','2021','2019'],a:0},
@@ -166,13 +166,13 @@ QH_QUESTIONS['film-animacios'] = [
 {q:'Ki alapította a Studio Ghiblit?',o:['Hayao Miyazaki','Makoto Shinkai','Satoshi Kon'],a:0},
 {q:'Melyik Ghibli-film a Chihiro Szellemországban?',o:['2001-es','1997-es','2013-as'],a:0},
 {q:'Melyik Pixar-film egy szemetet gyűjtő robotról szól?',o:['WALL-E','Verdák','RON'],a:0},
-{q:'Melyik Pixar-film egy öregember léggömbös házáról szól?',o:['Fel! (Up)','Coco','Merida'],a:0},
+{q:'Melyik Pixar-film egy öregember léggömbös házáról szól?',o:['Fel!','Coco','Merida'],a:0},
 {q:'Melyik Disney-film hercegnője Belle?',o:['A szépség és a szörnyeteg','Hamupipőke','Csipkerózsika'],a:0},
 ],
 [ // 4
 {q:'Melyik Disney-film játszódik a mexikói halottak napján?',o:['Coco','Vaiana','Encanto'],a:0},
-{q:'Melyik Pixar-film az érzelmekről szól?',o:['Agymanók (Inside Out)','Coco','Fel!'],a:0},
-{q:'Melyik animációs film patkánya szakács Párizsban?',o:['L\'ecsó (Ratatouille)','Verdák','Bogár'],a:0},
+{q:'Melyik Pixar-film az érzelmekről szól?',o:['Agymanók','Coco','Fel!'],a:0},
+{q:'Melyik animációs film patkánya szakács Párizsban?',o:['L\'ecsó','Verdák','Bogár'],a:0},
 {q:'Melyik évben mutatták be a Jégvarázst?',o:['2013','2010','2016'],a:0},
 {q:'Melyik Ghibli-film a Vándorló palota?',o:['2004-es','2001-es','1988-as'],a:0},
 ],
@@ -237,14 +237,14 @@ QH_QUESTIONS['film-sorozatok'] = [
 ],
 [ // 3
 {q:'Melyik sorozat egy börtönben játszódó női dráma?',o:['Orange Is the New Black','Prison Break','Oz'],a:0},
-{q:'Melyik brit sorozat a királyi családról szól?',o:['A korona (The Crown)','Downton Abbey','Bridgerton'],a:0},
+{q:'Melyik brit sorozat a királyi családról szól?',o:['A korona','Downton Abbey','Bridgerton'],a:0},
 {q:'Melyik sorozat főhőse Don Draper reklámszakember?',o:['Mad Men','Suits','Billions'],a:0},
 {q:'Melyik sorozat főhőse egy sorozatgyilkosokra vadászó igazságügyis?',o:['Dexter','Hannibal','Mindhunter'],a:0},
 {q:'Melyik zombis sorozat főszereplője Rick Grimes?',o:['The Walking Dead','Z Nation','Fear the Walking Dead'],a:0},
 ],
 [ // 4
-{q:'Melyik HBO-sorozat főhőse Tony Soprano?',o:['Maffiózók (The Sopranos)','Boardwalk Empire','The Wire'],a:0},
-{q:'Melyik baltimore-i bűnügyi sorozatot tartják sokan a valaha volt legjobbnak?',o:['Drót (The Wire)','Jóbarátok','A Simpson család'],a:0},
+{q:'Melyik HBO-sorozat főhőse Tony Soprano?',o:['Maffiózók','Boardwalk Empire','The Wire'],a:0},
+{q:'Melyik baltimore-i bűnügyi sorozatot tartják sokan a valaha volt legjobbnak?',o:['Drót','Jóbarátok','A Simpson család'],a:0},
 {q:'Melyik országból ered eredetileg a The Office sorozat?',o:['Egyesült Királyság','USA','Kanada'],a:0},
 {q:'Melyik sorozat főhőse Michael Scott?',o:['The Office','Parks and Rec','Brooklyn 99'],a:0},
 {q:'Melyik sci-fi sorozat epizódjai külön történetek a technológiáról?',o:['Black Mirror','Westworld','Devs'],a:0},
@@ -253,12 +253,12 @@ QH_QUESTIONS['film-sorozatok'] = [
 {q:'Melyik sorozat androidjai egy vadnyugati vidámparkban?',o:['Westworld','Humans','Raised by Wolves'],a:0},
 {q:'Melyik német Netflix-sorozat az időutazásról?',o:['Dark','1899','Babylon Berlin'],a:0},
 {q:'Melyik sorozat főhőse Saul Goodman ügyvéd?',o:['Better Call Saul','Suits','The Good Wife'],a:0},
-{q:'Melyik spanyol Netflix-sorozat rablásokról szól?',o:['A nagy pénzrablás (La Casa de Papel)','Élite','Berlin'],a:0},
-{q:'Melyik dél-koreai túlélőshow-sorozat lett világsláger?',o:['Squid Game (Nyerd meg az életed)','Sweet Home','Kingdom'],a:0},
+{q:'Melyik spanyol Netflix-sorozat rablásokról szól?',o:['A nagy pénzrablás','Élite','Berlin'],a:0},
+{q:'Melyik dél-koreai túlélőshow-sorozat lett világsláger?',o:['Squid Game','Sweet Home','Kingdom'],a:0},
 ],
 [ // 6
 {q:'Melyik sorozat főhőse egy vámpírvadász?',o:['Buffy, a vámpírok réme','True Blood','The Vampire Diaries'],a:0},
-{q:'Melyik orvosi sorozat játszódik a Seattle Grace kórházban?',o:['Grace klinika (Grey\'s Anatomy)','House','Scrubs'],a:0},
+{q:'Melyik orvosi sorozat játszódik a Seattle Grace kórházban?',o:['Grace klinika','House','Scrubs'],a:0},
 {q:'Melyik sorozat főhőse Gregory House doktor?',o:['Doktor House','Grace klinika','ER'],a:0},
 {q:'Melyik fantasy-sorozat Geraltról szól?',o:['The Witcher','Shadow and Bone','The Wheel of Time'],a:0},
 {q:'Melyik sorozat a Trónok harca előzménye?',o:['House of the Dragon','The Rings of Power','Vikings'],a:0},
@@ -317,7 +317,7 @@ QH_QUESTIONS['film-magyar'] = [
 ],
 [ // 4
 {q:'Ki rendezte a Saul fiát?',o:['Nemes Jeles László','Enyedi Ildikó','Mundruczó Kornél'],a:0},
-{q:'Melyik díjat nyerte a Saul fia 2016-ban?',o:['Oscar (legjobb idegen nyelvű film)','Arany Pálma','Ezüst Medve'],a:0},
+{q:'Melyik díjat nyerte a Saul fia 2016-ban?',o:['Oscar','Arany Pálma','Ezüst Medve'],a:0},
 {q:'Melyik magyar film nyert Arany Medvét Berlinben?',o:['Testről és lélekről','Saul fia','Fehér isten'],a:0},
 {q:'Ki rendezte a Testről és lélekről filmet?',o:['Enyedi Ildikó','Nemes Jeles','Fliegauf'],a:0},
 {q:'Melyik magyar rendező filmje a Fehér isten (kutyás)?',o:['Mundruczó Kornél','Nemes Jeles','Pálfi György'],a:0},

@@ -1,4 +1,4 @@
-// QuizHungary — Gasztronómia kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Gasztronómia kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['gasztro-magyar'] = [
@@ -10,7 +10,7 @@ QH_QUESTIONS['gasztro-magyar'] = [
 {q:'Melyik magyar étel a töltött káposzta?',o:['Húsos-rizses káposzta','Egy leves','Egy sütemény'],a:0},
 ],
 [ // 2
-{q:'Melyik magyar étel a "halászlé" alapja?',o:['Hal (ponty)','Marha','Csirke'],a:0},
+{q:'Melyik magyar étel a "halászlé" alapja?',o:['Hal','Marha','Csirke'],a:0},
 {q:'Melyik magyar tésztaétel a "túrós csusza"?',o:['Túrós-tepertős tészta','Édes sütemény','Leves'],a:0},
 {q:'Melyik magyar édesség a "somlói galuska"?',o:['Piskótás desszert','Sós rágcsa','Leves'],a:0},
 {q:'Melyik magyar étel a "pörkölt"?',o:['Paprikás húsétel','Sütemény','Saláta'],a:0},
@@ -99,7 +99,7 @@ QH_QUESTIONS['gasztro-vilag'] = [
 [ // 4
 {q:'Melyik ország étele a "dim sum"?',o:['Kína','Japán','Korea'],a:0},
 {q:'Melyik konyha jellegzetes édessége a baklava?',o:['Török','Francia','Olasz'],a:0},
-{q:'Melyik ország étele a "hummus" (csicseriborsókrém)?',o:['Közel-Kelet (Libanon stb.)','India','Kína'],a:0},
+{q:'Melyik ország étele a "hummus" (csicseriborsókrém)?',o:['Közel-Kelet','India','Kína'],a:0},
 {q:'Melyik ország étele a "falafel"?',o:['Közel-Kelet','Mexikó','Görögország'],a:0},
 {q:'Melyik ország étele a "risotto"?',o:['Olaszország','Spanyolország','Franciaország'],a:0},
 ],
@@ -128,13 +128,13 @@ QH_QUESTIONS['gasztro-vilag'] = [
 {q:'Melyik ország étele a "peking-i kacsa"?',o:['Kína','Japán','Vietnám'],a:0},
 {q:'Melyik ország étele a "haggis" (birkabelsőség)?',o:['Skócia','Írország','Wales'],a:0},
 {q:'Melyik ország étele a "sauerbraten"?',o:['Németország','Ausztria','Hollandia'],a:0},
-{q:'Melyik ország édessége a "cannoli"?',o:['Olaszország (Szicília)','Franciaország','Görögország'],a:0},
+{q:'Melyik ország édessége a "cannoli"?',o:['Olaszország','Franciaország','Görögország'],a:0},
 {q:'Melyik ország étele a "gado-gado" salátája?',o:['Indonézia','Thaiföld','Malajzia'],a:0},
 ],
 [ // 9
 {q:'Melyik ország étele a "feijoada" babos-húsos étel?',o:['Brazília','Portugália','Mexikó'],a:0},
 {q:'Melyik ország étele a "rendang" (indonéz/maláj csípős marha)?',o:['Indonézia','India','Thaiföld'],a:0},
-{q:'Melyik ország étele a "bouillabaisse" halleves?',o:['Franciaország (Marseille)','Olaszország','Spanyolország'],a:0},
+{q:'Melyik ország étele a "bouillabaisse" halleves?',o:['Franciaország','Olaszország','Spanyolország'],a:0},
 {q:'Melyik országhoz köthető a habcsókalapú pavlova desszert?',o:['Ausztrália','Franciaország','Japán'],a:0},
 {q:'Melyik ország étele a "injera" savanyú lepénykenyér?',o:['Etiópia','Marokkó','Egyiptom'],a:0},
 ],
@@ -216,7 +216,7 @@ QH_QUESTIONS['gasztro-edessegek'] = [
 {q:'Melyik olasz kávés fagylalt forró eszpresszóval leöntve?',o:['Affogato','Gelato','Granita'],a:0},
 {q:'Melyik közel-keleti sajtos, sziruppal átitatott meleg desszert?',o:['Künefe','Baklava','Lokum'],a:0},
 {q:'Melyik francia habos, könnyű csokoládé­desszert (mousse au chocolat)?',o:['Csokoládémousse','Ganache','Crème brûlée'],a:0},
-{q:'Melyik magyar cukrászdinasztiáról nevezték el a "Gerbeaud-szeletet"?',o:['Gerbeaud (Emil)','Auguszt','Ruszwurm'],a:0},
+{q:'Melyik magyar cukrászdinasztiáról nevezték el a "Gerbeaud-szeletet"?',o:['Gerbeaud','Auguszt','Ruszwurm'],a:0},
 ],
 ];
 
@@ -224,7 +224,7 @@ QH_QUESTIONS['gasztro-italok'] = [
 [ // 1
 {q:'Melyik ország a tea egyik szülőhazája?',o:['Kína','Franciaország','USA'],a:0},
 {q:'Miből készül a bor?',o:['Szőlőből','Almából','Búzából'],a:0},
-{q:'Miből készül a sör fő alapanyaga?',o:['Árpa (maláta)','Szőlő','Rizs csak'],a:0},
+{q:'Miből készül a sör fő alapanyaga?',o:['Árpa','Szőlő','Rizs csak'],a:0},
 {q:'Milyen italból lesz koffein a reggeli ébredéshez?',o:['Kávé','Tej','Víz'],a:0},
 {q:'Melyik ital habos teteje az "eszpresszó" fölött?',o:['Crema','Tejszín','Cukor'],a:0},
 ],
@@ -232,7 +232,7 @@ QH_QUESTIONS['gasztro-italok'] = [
 {q:'Melyik kávé tejjel és habbal készül?',o:['Cappuccino','Eszpresszó','Ristretto'],a:0},
 {q:'Melyik szeszes ital alapja a borpárlat?',o:['Brandy','Vodka','Rum'],a:0},
 {q:'Miből készül a rum?',o:['Cukornád','Búza','Árpa'],a:0},
-{q:'Miből készül a whisky főleg?',o:['Gabona (árpa)','Szőlő','Burgonya'],a:0},
+{q:'Miből készül a whisky főleg?',o:['Gabona','Szőlő','Burgonya'],a:0},
 {q:'Miből készül a klasszikus vodka gyakran?',o:['Gabona vagy burgonya','Szőlő','Cukornád'],a:0},
 ],
 [ // 3
@@ -272,14 +272,14 @@ QH_QUESTIONS['gasztro-italok'] = [
 ],
 [ // 8
 {q:'Melyik whisky-fajta füstös, skót (Islay single malt)?',o:['Skót whisky','Bourbon','Ír whiskey'],a:0},
-{q:'Melyik amerikai whisky kukoricából?',o:['Bourbon','Scotch','Rozs (rye) csak'],a:0},
+{q:'Melyik amerikai whisky kukoricából?',o:['Bourbon','Scotch','Rozs csak'],a:0},
 {q:'Melyik erjesztési folyamat hozza létre az alkoholt?',o:['Cukor élesztős erjedése','Oxidáció','Párolgás'],a:0},
 {q:'Melyik ital készítése a "lepárlás" célja?',o:['Alkohol töményítése','Cukrosítás','Hűtés'],a:0},
 {q:'Melyik olasz kávé kevés tejhabbal?',o:['Macchiato','Latte','Mokka'],a:0},
 ],
 [ // 9
 {q:'Melyik bor "aszú" jellegzetessége a nemesrothadás (Botrytis)?',o:['Tokaji aszú','Portói','Sherry'],a:0},
-{q:'Melyik erősített bor portugál?',o:['Portói','Sherry (spanyol)','Marsala (olasz)'],a:0},
+{q:'Melyik erősített bor portugál?',o:['Portói','Sherry','Marsala'],a:0},
 {q:'Melyik erősített bor spanyol?',o:['Sherry','Portói','Madeira'],a:0},
 {q:'Melyik kávékészítési mód nyomás alatti?',o:['Eszpresszó','Filteres','French press'],a:0},
 {q:'Melyik pezsgőkészítési mód a hagyományos, palackos erjesztés?',o:['Méthode champenoise','Charmat','Transzfer'],a:0},

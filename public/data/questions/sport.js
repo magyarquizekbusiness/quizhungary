@@ -1,4 +1,4 @@
-// QuizHungary — Sport kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Sport kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['sport-labdarugas'] = [
@@ -67,7 +67,7 @@ QH_QUESTIONS['sport-labdarugas'] = [
 ],
 [ // 10
 {q:'Melyik évben alapították a FIFA-t?',o:['1904','1930','1954'],a:0},
-{q:'Melyik magyar játékos lett aranylabdás?',o:['Albert Flórián (Bajnokok tornáján kiváló)','Puskás hivatalosan','Bozsik'],a:0},
+{q:'Melyik magyar játékos lett aranylabdás?',o:['Albert Flórián','Puskás hivatalosan','Bozsik'],a:0},
 {q:'Melyik döntőt döntötte el Zidane fejelése/piros lapja (2006)?',o:['Vb-döntő','Bl-döntő','Eb-döntő'],a:0},
 {q:'Melyik afrikai válogatott jutott elsőként vb-elődöntőbe?',o:['Marokkó','Ghána','Kamerun'],a:0},
 {q:'Hány csapat vett részt a 2022-es vb-n?',o:['32','24','48'],a:0},
@@ -100,7 +100,7 @@ QH_QUESTIONS['sport-olimpia'] = [
 {q:'Ki a legtöbb olimpiai aranyat nyert sportoló?',o:['Michael Phelps','Usain Bolt','Carl Lewis'],a:0},
 {q:'Melyik sportágban versenyzett Usain Bolt?',o:['Sprintfutás','Úszás','Torna'],a:0},
 {q:'Melyik olimpián vezették be a maratont?',o:['1896 Athén','1900 Párizs','1924 Párizs'],a:0},
-{q:'Melyik ország rendezte a 2008-as olimpiát?',o:['Kína (Peking)','Görögország','Ausztrália'],a:0},
+{q:'Melyik ország rendezte a 2008-as olimpiát?',o:['Kína','Görögország','Ausztrália'],a:0},
 {q:'Hány km egy maratoni táv?',o:['42,195 km','21 km','50 km'],a:0},
 ],
 [ // 5
@@ -164,7 +164,7 @@ QH_QUESTIONS['sport-magyar'] = [
 ],
 [ // 3
 {q:'Melyik magyar tornász nyert sok olimpiai aranyat?',o:['Keleti Ágnes','Ónodi Henrietta','Berki Krisztián'],a:0},
-{q:'Milyen sportban lett olimpiai bajnok Berki Krisztián?',o:['Torna (lólengés)','Úszás','Vívás'],a:0},
+{q:'Milyen sportban lett olimpiai bajnok Berki Krisztián?',o:['Torna','Úszás','Vívás'],a:0},
 {q:'Melyik sportág az egyik legeredményesebb Magyarországon az olimpián?',o:['Kajak-kenu','Kosárlabda','Curling'],a:0},
 {q:'Melyik sportágban nyert Magyarország több olimpiai aranyat is?',o:['Öttusa','Amerikai futball','Krikett'],a:0},
 {q:'Melyik sportágban erős még Magyarország (öttusa mellett)?',o:['Vívás','Kosárlabda','Amerikai foci'],a:0},
@@ -193,7 +193,7 @@ QH_QUESTIONS['sport-magyar'] = [
 [ // 7
 {q:'Melyik magyar sportoló nyert diszkoszban vagy gerelyben olimpiát?',o:['Németh Miklós','Kulcsár Gergely','Pars Krisztián'],a:0},
 {q:'Melyik magyar kalapácsvető nyert Londonban 2012-ben?',o:['Pars Krisztián','Németh Miklós','Kiss Balázs'],a:0},
-{q:'Melyik magyar úszó nyert Athénban 2004-ben?',o:['Gyurta Dániel (2012)','Cseh László arany','Biró Kapás'],a:0},
+{q:'Melyik magyar úszó nyert Athénban 2004-ben?',o:['Gyurta Dániel','Cseh László arany','Biró Kapás'],a:0},
 {q:'Melyik magyar kardvívó nyert Tokióban 2020-ban?',o:['Szilágyi Áron','Gémesi','Decsi'],a:0},
 {q:'Hány egyéni olimpiai aranyat nyert Szilágyi Áron sorozatban?',o:['3','1','5'],a:0},
 ],
@@ -324,7 +324,7 @@ QH_QUESTIONS['sport-egyeni'] = [
 ],
 [ // 5
 {q:'Melyik teniszező nyerte a legtöbb Grand Slamet férfiaknál?',o:['Djokovic','Federer','Nadal'],a:0},
-{q:'Melyik F1-versenyző a legtöbb bajnoki címmel holtversenyben?',o:['Hamilton és Schumacher (7)','Csak Verstappen','Csak Alonso'],a:0},
+{q:'Melyik F1-versenyző a legtöbb bajnoki címmel holtversenyben?',o:['Hamilton és Schumacher','Csak Verstappen','Csak Alonso'],a:0},
 {q:'Melyik sportban van "birkózás" görög-római stílus?',o:['Birkózás','Cselgáncs','Ökölvívás'],a:0},
 {q:'Melyik atlétikai szám a "rúdugrás"?',o:['Ugrószám','Dobószám','Futószám'],a:0},
 {q:'Melyik teniszezőnő nyerte a legtöbb Grand Slam-egyéni címet a nyílt érában (23)?',o:['Serena Williams','Steffi Graf','Martina Hingis'],a:0},

@@ -1,4 +1,4 @@
-// QuizHungary — Történelem kérdésbank (5 alkategória × 10 szint × 5 kérdés)
+// QuizHungary — Történelem kérdésbank
 window.QH_QUESTIONS = window.QH_QUESTIONS || {};
 
 QH_QUESTIONS['tortenelem-magyar'] = [
@@ -10,7 +10,7 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 {q:'Mi Magyarország nemzeti ünnepe augusztusban?',o:['Aug. 15.','Aug. 20.','Aug. 23.'],a:1},
 ],
 [ // 2
-{q:'Melyik évben koronázták királlyá Szent Istvánt?',o:['1000 (1001)','1100','1200'],a:0},
+{q:'Melyik évben koronázták királlyá Szent Istvánt?',o:['1000','1100','1200'],a:0},
 {q:'Melyik csatában győzte le a török a magyar sereget 1526-ban?',o:['Nándorfehérvári','Mohácsi','Egri'],a:1},
 {q:'Ki volt az 1956-os forradalom miniszterelnöke?',o:['Kádár János','Nagy Imre','Rákosi Mátyás'],a:1},
 {q:'Melyik évben tört ki az 1956-os forradalom?',o:['1953','1956','1958'],a:1},
@@ -54,7 +54,7 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 [ // 8
 {q:'Melyik uralkodó adta ki az Urbáriumot 1767-ben?',o:['Mária Terézia','II. József','III. Károly'],a:0},
 {q:'Ki volt a "kalapos király"?',o:['II. József','I. Lipót','V. Ferdinánd'],a:0},
-{q:'Melyik felkelés fűződik II. Rákóczi Ferenc nevéhez?',o:['A kuruc szabadságharc (1703-11)','A Wesselényi-összeesküvés','A Dózsa-felkelés'],a:0},
+{q:'Melyik felkelés fűződik II. Rákóczi Ferenc nevéhez?',o:['A kuruc szabadságharc','A Wesselényi-összeesküvés','A Dózsa-felkelés'],a:0},
 {q:'Melyik évben volt a Dózsa György-féle parasztfelkelés?',o:['1414','1514','1614'],a:1},
 {q:'Hol kötötték meg a Rákóczi-szabadságharcot lezáró békét?',o:['Szatmáron','Pozsonyban','Kassán'],a:0},
 ],
@@ -133,10 +133,10 @@ QH_QUESTIONS['tortenelem-okor'] = [
 ],
 [ // 9
 {q:'Melyik csatában győzte le Octavianus Antoniust és Kleopátrát?',o:['Actiumi csata','Philippi csata','Pharszaloszi csata'],a:0},
-{q:'Mi volt a római légió alapegysége?',o:['Falanx','Cohors (cohort)','Hoplita'],a:1},
+{q:'Mi volt a római légió alapegysége?',o:['Falanx','Cohors','Hoplita'],a:1},
 {q:'Melyik kő segített megfejteni a hieroglifákat?',o:['A rosette-i kő','A moábi kő','A behisztuni felirat'],a:0},
 {q:'Ki fejtette meg a hieroglifákat 1822-ben?',o:['Champollion','Carter','Young'],a:0},
-{q:'Melyik római császár tette államvallássá a kereszténységet?',o:['Constantinus (elismerte)','Theodosius','Diocletianus'],a:1},
+{q:'Melyik római császár tette államvallássá a kereszténységet?',o:['Constantinus','Theodosius','Diocletianus'],a:1},
 ],
 [ // 10
 {q:'Melyik egyiptomi fáraó uralkodott a leghosszabb ideig (kb. 66 év)?',o:['II. Ramszesz','Tutanhamon','Ehnaton'],a:0},
@@ -157,7 +157,7 @@ QH_QUESTIONS['tortenelem-kozepkor'] = [
 ],
 [ // 2
 {q:'Melyik évben koronázták császárrá Nagy Károlyt?',o:['700','800','900'],a:1},
-{q:'Melyik betegség pusztított 1347-től Európában?',o:['A pestis (fekete halál)','A kolera','A himlő'],a:0},
+{q:'Melyik betegség pusztított 1347-től Európában?',o:['A pestis','A kolera','A himlő'],a:0},
 {q:'Kik támadták a tengerről Európát a 8-11. században?',o:['A vikingek','A mongolok','A szaracénok'],a:0},
 {q:'Mi volt a keresztes hadjáratok célja?',o:['A Szentföld visszafoglalása','Amerika felfedezése','Róma védelme'],a:0},
 {q:'Melyik stílusban épültek a csúcsíves katedrálisok?',o:['Román','Gótikus','Barokk'],a:1},
@@ -192,7 +192,7 @@ QH_QUESTIONS['tortenelem-kozepkor'] = [
 ],
 [ // 7
 {q:'Ki utazott Kínába a 13. században Velencéből?',o:['Marco Polo','Vasco da Gama','Ibn Battúta'],a:0},
-{q:'Melyik egyházszakadás történt 1054-ben?',o:['A nagy skizma (kelet-nyugat)','A reformáció','Az avignoni fogság'],a:0},
+{q:'Melyik egyházszakadás történt 1054-ben?',o:['A nagy skizma','A reformáció','Az avignoni fogság'],a:0},
 {q:'Hol székeltek a pápák az "avignoni fogság" idején?',o:['Franciaországban','Itáliában','Spanyolországban'],a:0},
 {q:'Melyik uralkodóház adta a német-római császárokat a 12-13. században?',o:['Hohenstaufen','Habsburg','Wittelsbach'],a:0},
 {q:'Ki volt Barbarossa (Rőtszakállú) Frigyes?',o:['Német-római császár','Francia király','Angol király'],a:0},
@@ -206,7 +206,7 @@ QH_QUESTIONS['tortenelem-kozepkor'] = [
 ],
 [ // 9
 {q:'Melyik angol dinasztiák vívták a rózsák háborúját?',o:['York és Lancaster','Tudor és Stuart','Plantagenet és Windsor'],a:0},
-{q:'Ki nyerte a rózsák háborúját, dinasztiát alapítva?',o:['VII. Henrik (Tudor)','III. Richárd','IV. Eduárd'],a:0},
+{q:'Ki nyerte a rózsák háborúját, dinasztiát alapítva?',o:['VII. Henrik','III. Richárd','IV. Eduárd'],a:0},
 {q:'Melyik bizánci császár állította helyre a birodalmat a 6. században?',o:['Justinianus','Konstantin','Hérakleiosz'],a:0},
 {q:'Mi volt a Hanza?',o:['Északi kereskedővárosok szövetsége','Lovagrend','Egyházi bíróság'],a:0},
 {q:'Melyik csatában állította meg Martell Károly az arab előrenyomulást 732-ben?',o:['Poitiers-i csata','Hastingsi csata','Lechfeldi csata'],a:0},
@@ -286,7 +286,7 @@ QH_QUESTIONS['tortenelem-ujkor'] = [
 ],
 [ // 10
 {q:'Melyik évben lett Ausztria-Magyarország kettős monarchia?',o:['1867','1848','1878'],a:0},
-{q:'Melyik konferencián osztották fel Afrikát a gyarmatosítók?',o:['Berlini konferencia (1884-85)','Bécsi kongresszus','Párizsi konferencia'],a:0},
+{q:'Melyik konferencián osztották fel Afrikát a gyarmatosítók?',o:['Berlini konferencia','Bécsi kongresszus','Párizsi konferencia'],a:0},
 {q:'Ki volt a "Mahdi-felkelés" helyszíne szerinti ország?',o:['Szudán','Egyiptom','Etiópia'],a:0},
 {q:'Melyik japán fordulat nyitotta meg az országot 1868-ban?',o:['A Meidzsi-restauráció','A sógunátus','Az Edo-kor'],a:0},
 {q:'Melyik háborúban győzött először ázsiai ország európai nagyhatalom felett (1905)?',o:['Orosz-japán háború','Kínai-japán háború','Krími háború'],a:0},

@@ -391,8 +391,8 @@ footer a{color:var(--red);text-decoration:none;}
 <nav>
   <span class="nav-logo" onclick="goTo('hero')"><span>QUIZ</span>HUNGARY</span>
   <div class="nav-links">
-    <a href="kategoriak.html" class="hmob">Kategóriák</a>
-    <a href="iqteszt.html" class="hmob">IQ teszt</a>
+    <a href="kategoriak" class="hmob">Kategóriák</a>
+    <a href="iqteszt" class="hmob">IQ teszt</a>
     <a onclick="goTo('napi-kviz')" class="hmob">Napi kvíz</a>
     <a onclick="goTo('konyv')" class="hmob">Könyv</a>
     <a onclick="goTo('rangsor')" class="hmob">Rangsor</a>
@@ -433,7 +433,7 @@ footer a{color:var(--red);text-decoration:none;}
       <h1><span class="r">QUIZ</span><br>HUNGARY</h1>
       <p class="hero-sub" id="hero-sub">Teljesíts egy szintet, oldd fel a következőt — meddig jutsz el?</p>
       <div class="hero-actions">
-        <a href="kategoriak.html" class="btn-p" style="text-decoration:none;">Kezdd el a kihívást →</a>
+        <a href="kategoriak" class="btn-p" style="text-decoration:none;">Kezdd el a kihívást →</a>
         <button class="btn-o" onclick="goTo('napi-kviz')">Napi kvíz</button>
       </div>
       <div class="hero-stats">
@@ -512,7 +512,7 @@ footer a{color:var(--red);text-decoration:none;}
   </a>
   <div class="tg" id="tgrid"></div>
   <div style="text-align:center;margin-top:1.5rem;">
-    <a href="kategoriak.html" class="btn-p" style="text-decoration:none;">Összes kategória és szint →</a>
+    <a href="kategoriak" class="btn-p" style="text-decoration:none;">Összes kategória és szint →</a>
   </div>
   <!-- SPECIAL MODES -->
   <div style="margin-top:1rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;">
@@ -1583,13 +1583,13 @@ function fallbackShare(text){
   navigator.clipboard.writeText(text).then(()=>toast('Szöveg vágólapra másolva! 📋','ok')).catch(()=>toast('Másold ki manuálisan!','err'));
 }
 
-// ── KATEGÓRIÁK (szintezett rendszer — kategoriak.html / kategoria.html) ────────
+// ── KATEGÓRIÁK (szintezett rendszer — kategoriak / kategoria.html) ────────
 function renderTopics(){
   // Helyi haladás a kártyákra (a részletes/szinkronizált nézet a kategória oldalakon van)
   let prog={};try{prog=JSON.parse(localStorage.getItem('qh_levels'))||{};}catch(e){}
   document.getElementById('tgrid').innerHTML=QH_CATALOG.map(c=>{
     let done=0,total=0;c.subs.forEach(s=>{const L=qhLevels(s.id);done+=Math.min(prog[s.id]||0,L);total+=L;});
-    return `<div class="tc" onclick="location.href='kategoria.html?id=${c.id}'">
+    return `<div class="tc" onclick="location.href='kategoria?id=${c.id}'">
       <span class="ti">${c.icon}</span>
       <div class="tn">${c.name}</div>
       <div class="tc2" style="margin-top:0.3rem;">${c.subs.length} alkategória · ${total} szint</div>
@@ -1626,7 +1626,7 @@ function renderResume(){
   for(const c of QH_CATALOG){for(const s of c.subs){const lv=prog[s.id]||0;if(lv>0&&lv<qhLevels(s.id)&&(!best||lv>best.lv)){best={cat:c,sub:s,lv};}}}
   const card=document.getElementById('resume-card');if(!card)return;
   if(!best){card.style.display='none';return;}
-  card.href='kviz.html?sub='+best.sub.id+'&szint='+(best.lv+1);
+  card.href='kviz?sub='+best.sub.id+'&szint='+(best.lv+1);
   document.getElementById('resume-name').textContent=`${best.cat.icon} ${best.sub.name} — ${best.lv+1}. szint`;
   card.style.display='flex';
 }

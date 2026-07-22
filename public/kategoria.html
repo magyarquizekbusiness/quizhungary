@@ -15,13 +15,13 @@
 <body>
 
 <nav>
-  <a class="nav-logo" href="index.html"><span>QUIZ</span>HUNGARY</a>
+  <a class="nav-logo" href="/"><span>QUIZ</span>HUNGARY</a>
   <div class="nav-links">
-    <a href="index.html" class="hmob">Főoldal</a>
-    <a href="kategoriak.html" style="color:var(--red)">Kategóriák</a>
-    <a href="index.html#napi-kviz" class="hmob">Napi kvíz</a>
-    <a href="index.html#rangsor" class="hmob">Rangsor</a>
-    <div id="nav-guest" style="display:none"><a href="index.html#login"><button class="btn-nav">Bejelentkezés</button></a></div>
+    <a href="/" class="hmob">Főoldal</a>
+    <a href="kategoriak" style="color:var(--red)">Kategóriák</a>
+    <a href="/#napi-kviz" class="hmob">Napi kvíz</a>
+    <a href="/#rangsor" class="hmob">Rangsor</a>
+    <div id="nav-guest" style="display:none"><a href="/#login"><button class="btn-nav">Bejelentkezés</button></a></div>
     <div id="nav-user" style="display:none;align-items:center;gap:0.6rem;">
       <div class="nav-avatar" id="nava">?</div>
       <span class="nav-uname hmob" id="navu"></span>
@@ -30,7 +30,7 @@
 </nav>
 
 <div class="sw">
-  <div class="crumb"><a href="kategoriak.html">Kategóriák</a><span>›</span><span id="crumb-cat" style="color:var(--text-muted)"></span></div>
+  <div class="crumb"><a href="kategoriak">Kategóriák</a><span>›</span><span id="crumb-cat" style="color:var(--text-muted)"></span></div>
   <div class="slbl" id="cat-lbl">Kategória</div>
   <div class="stit" id="cat-title">…</div>
   <p class="ssub" id="cat-desc"></p>
@@ -39,7 +39,7 @@
 
 <footer>
   <span class="flogo"><span>QUIZ</span>HUNGARY</span>
-  <p><a href="kategoriak.html">Kategóriák</a> · <a href="index.html">Főoldal</a> · © 2025 QuizHungary</p>
+  <p><a href="kategoriak">Kategóriák</a> · <a href="/">Főoldal</a> · © 2025 QuizHungary</p>
 </footer>
 
 <div class="toast" id="tst"></div>
@@ -48,7 +48,7 @@
 <script>
 (async function(){
   const cat=QH_CATALOG.find(c=>c.id===QH.qs('id'));
-  if(!cat){location.replace('kategoriak.html');return;}
+  if(!cat){location.replace('kategoriak');return;}
   document.title=cat.name+' kvíz – QuizHungary';
   document.getElementById('crumb-cat').textContent=cat.name;
   document.getElementById('cat-title').textContent=cat.icon+' '+cat.name;
@@ -72,8 +72,8 @@
     let lvls='';
     for(let n=1;n<=qhLevels(s.id);n++){
       if(!unlocked){lvls+=`<span class="lvl lock">🔒</span>`;continue;}
-      if(n<=lvl)lvls+=`<a class="lvl done" href="kviz.html?sub=${s.id}&szint=${n}" title="${n}. szint — újrajátszás">${n}<span class="lico">✓</span></a>`;
-      else if(n===lvl+1)lvls+=`<a class="lvl next" href="kviz.html?sub=${s.id}&szint=${n}" title="${n}. szint — játék!">${n}</a>`;
+      if(n<=lvl)lvls+=`<a class="lvl done" href="kviz?sub=${s.id}&szint=${n}" title="${n}. szint — újrajátszás">${n}<span class="lico">✓</span></a>`;
+      else if(n===lvl+1)lvls+=`<a class="lvl next" href="kviz?sub=${s.id}&szint=${n}" title="${n}. szint — játék!">${n}</a>`;
       else lvls+=`<span class="lvl lock">${n}</span>`;
     }
     return `<div class="sub-card ${unlocked?'unlocked':'locked'}">

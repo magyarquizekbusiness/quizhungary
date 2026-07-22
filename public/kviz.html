@@ -61,6 +61,16 @@
     <div id="q-error" style="display:none;text-align:center;padding:2rem 0;color:var(--text-muted);">
       Nem sikerült betölteni a kérdéseket. <a href="kategoriak.html" style="color:var(--red)">Vissza a kategóriákhoz</a>
     </div>
+
+    <div id="q-gate" style="display:none;text-align:center;padding:1.5rem 0;">
+      <div style="font-size:2.4rem;margin-bottom:0.6rem;">🔒</div>
+      <div class="stit" style="font-size:1.6rem;">Regisztráció szükséges</div>
+      <p style="color:var(--text-muted);max-width:420px;margin:0.6rem auto 1.4rem;">A szintezett kvíz játékához ingyenes fiók kell — így a haladásod minden eszközön megmarad. A <a href="index.html" style="color:var(--red)">napi kvíz</a> regisztráció nélkül is játszható!</p>
+      <div class="ra">
+        <a class="btn-p" href="index.html#register">Ingyenes regisztráció →</a>
+        <a class="btn-o" href="index.html#login">Már van fiókom</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -86,6 +96,13 @@ async function boot(){
   document.getElementById('q-lvl-badge').textContent=`${LEVEL}. szint / ${qhLevels(SUB.id)}`;
 
   await QH.init();
+
+  // A szintezett kvíz csak bejelentkezve játszható (a napi kvíz kivétel)
+  if(!QH.user){
+    document.getElementById('quiz-content').style.display='none';
+    document.getElementById('q-gate').style.display='block';
+    return;
+  }
 
   // Zárolt szintre nem lehet URL-lel beugrani
   if(!QH.isLevelUnlocked(SUB.id,LEVEL)){

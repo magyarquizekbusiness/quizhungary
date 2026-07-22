@@ -1227,6 +1227,11 @@ async function init(){
   checkCookieConsent();
   captureReferralCode();
 
+  // Aloldalról (#login / #register) érkezve nyissuk meg az auth-ablakot
+  if(!CU&&(location.hash==='#login'||location.hash==='#register')){
+    openAuth(location.hash==='#register'?'reg':'login');
+  }
+
   // UTÁNA a lassú napi kérdés betöltés (nem blokkolja a bejelentkezést)
   document.getElementById('dqt').textContent='Kérdések betöltése...';
   loadDailyQuestions().then(()=>{restoreDailyProgress();dLoad();});
@@ -1530,13 +1535,7 @@ function dShowAnswer(i){
   const n=document.getElementById('dnxt');n.className='btn-p qnxt show';n.textContent=di<DQ.length-1?'Következő kérdés →':'Eredmény →';
 }
 function dAns(i){
-  // Vendég puha fal - az első válasznál ellenőrizzük
-  if(di===0&&!CU&&getGuestPlays()>=GUEST_FREE_PLAYS){
-    toast('🎯 Tetszett? Regisztrálj ingyen és játssz korlátlanul!','info');
-    openAuth('reg');
-    return;
-  }
-  if(di===0&&!CU){incrementGuestPlays();}
+  // A napi kvíz mindenki számára ingyenes, regisztráció nélkül is játszható.
   if(i===DQ[di].a)ds++;
   dShowAnswer(i);
   saveDailyState({picked:i}); // megválaszolt állapot mentése
@@ -2856,20 +2855,14 @@ function incrementGuestPlays(){
   localStorage.setItem('qh_guest_plays',n);
   return n;
 }
-// Ellenőrzi: játszhat-e a vendég, vagy regisztrálnia kell.
+// Ellenőrzi: játszhat-e a felhasználó. A napi kvíz és a főoldali minta kvíz
+// kivételével minden játékmódhoz regisztráció szükséges.
 // true = folytathatja, false = megállítottuk és feldobtuk a regisztrációt
 function checkGuestGate(){
   if(CU)return true; // bejelentkezett user mindig játszhat
-  const plays=getGuestPlays();
-  if(plays>=GUEST_FREE_PLAYS){
-    // Elérte a limitet - kötelező regisztráció
-    toast('🎯 Tetszett? Regisztrálj ingyen és játssz korlátlanul!','info');
-    openAuth('reg');
-    return false;
-  }
-  // Még játszhat - növeljük a számlálót (ez a mostani játék)
-  incrementGuestPlays();
-  return true;
+  toast('🔒 A játékhoz ingyenes regisztráció szükséges!','info');
+  openAuth('reg');
+  return false;
 }
 
 // ── REFERRAL ──────────────────────────────────────────────────────────────────

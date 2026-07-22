@@ -51,6 +51,21 @@
 <div class="sw" style="padding-top:5.5rem;">
   <div class="crumb"><a href="kategoriak.html">Kategóriák</a><span>›</span><span style="color:var(--text-muted)">IQ teszt</span></div>
 
+  <!-- REGISZTRÁCIÓ-KAPU -->
+  <div id="iq-gate-screen" style="display:none;">
+    <div class="slbl">Gondolkodás próba</div>
+    <div class="stit">IQ teszt</div>
+    <div class="iq-intro" style="text-align:center;">
+      <div style="font-size:2.4rem;margin-bottom:0.6rem;">🔒</div>
+      <div class="stit" style="font-size:1.6rem;">Regisztráció szükséges</div>
+      <p style="color:var(--text-muted);max-width:440px;margin:0.6rem auto 1.4rem;">Az IQ teszt kitöltéséhez ingyenes fiók kell — így az eredményed mentődik. A <a href="index.html" style="color:var(--red)">napi kvíz</a> regisztráció nélkül is játszható!</p>
+      <div class="ra" style="justify-content:center;">
+        <a class="btn-p" href="index.html#register">Ingyenes regisztráció →</a>
+        <a class="btn-o" href="index.html#login">Már van fiókom</a>
+      </div>
+    </div>
+  </div>
+
   <!-- INTRO -->
   <div id="iq-intro-screen">
     <div class="slbl">Gondolkodás próba</div>
@@ -123,6 +138,12 @@ function clearIQ(){try{localStorage.removeItem(LS);}catch(e){}}
 
 async function boot(){
   await QH.init();
+  // Az IQ teszt csak bejelentkezve tölthető ki (a napi kvíz kivétel)
+  if(!QH.user){
+    document.getElementById('iq-intro-screen').style.display='none';
+    document.getElementById('iq-gate-screen').style.display='block';
+    return;
+  }
   const st=loadIQ();
   if(st){
     idx=st.idx||0; answers=st.answers; done=!!st.done;

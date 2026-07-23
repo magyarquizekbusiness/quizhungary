@@ -27,6 +27,9 @@
 .iq-feat .l{font-size:0.85rem;color:var(--text-muted);}
 .iq-disc{font-size:0.8rem;color:var(--text-dim);margin-top:1rem;line-height:1.5;}
 .iq-band{display:inline-block;margin-top:1rem;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--border-red);color:var(--red);border-radius:4px;padding:0.4rem 1.1rem;}
+.iq-est{margin-top:1.2rem;}
+.iq-est .lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);}
+.iq-est .val{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;letter-spacing:2px;color:var(--gold);line-height:1.1;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data/catalog.js"></script>
@@ -104,6 +107,7 @@
     <div class="quiz-box" style="text-align:center;">
       <div class="slbl">Eredmény</div>
       <div class="rs" id="iq-score" style="margin-top:0.5rem;"></div>
+      <div class="iq-est"><div class="lbl">Becsült IQ</div><div class="val" id="iq-est-val"></div></div>
       <div class="iq-band" id="iq-band"></div>
       <div class="rm" id="iq-msg" style="margin-top:1rem;"></div>
       <div class="iq-disc" style="text-align:center;max-width:460px;margin:1rem auto 0;">Ez az eredmény szórakoztató célú, nem hivatalos IQ-érték. A pontos, hitelesített IQ-mérést csak szakember végezheti.</div>
@@ -213,14 +217,20 @@ function bandFor(score){
   if(score>=20)return{b:'Ügyes',m:'Jó alap — gyakorlással még jobb lehetsz.'};
   return{b:'Kezdő gondolkodó',m:'Ne add fel — a logika fejleszthető!'};
 }
-let lastScore=0;
+// Becsült IQ a pontszámból: 0 pont ≈ 70, 25 pont ≈ 108 (átlag körül), 50 pont ≈ 145.
+// Szórakoztató célú becslés, nem hivatalos mérés — a disclaimer is jelzi.
+function iqEstimate(score){ return Math.round(70 + score*1.5); }
+
+let lastScore=0, lastIQ=0;
 function showResult(score){
   if(typeof score!=='number'){ score=answers.reduce((s,a,k)=>s+(a===IQ[k].a?1:0),0); }
   lastScore=score;
+  lastIQ=iqEstimate(score);
   document.getElementById('iq-intro-screen').style.display='none';
   document.getElementById('iq-quiz-screen').style.display='none';
   document.getElementById('iq-result-screen').style.display='block';
   document.getElementById('iq-score').textContent=`${score} / ${IQ.length}`;
+  document.getElementById('iq-est-val').textContent=`~${lastIQ}`;
   const bd=bandFor(score);
   document.getElementById('iq-band').textContent=bd.b;
   document.getElementById('iq-msg').textContent=bd.m;
@@ -228,7 +238,7 @@ function showResult(score){
 
 function iqRestart(){ clearIQ(); startIQ(); }
 function iqShare(){
-  const text=`🧠 ${lastScore}/50 pontot értem el a QuizHungary IQ tesztjén! Te meddig jutsz?\nPróbáld ki: https://quizhungary.com/iqteszt`;
+  const text=`🧠 ${lastScore}/50 pont, becsült IQ: ~${lastIQ} a QuizHungary IQ tesztjén! Te meddig jutsz?\nPróbáld ki: https://quizhungary.com/iqteszt`;
   if(navigator.share){navigator.share({text}).catch(()=>iqCopy(text));} else iqCopy(text);
 }
 function iqCopy(t){ navigator.clipboard.writeText(t).then(()=>QH.toast('Vágólapra másolva! 📋','ok')).catch(()=>QH.toast('Másold ki manuálisan!','err')); }

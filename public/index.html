@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuizHungary – Online Kvíz Játék | Teszteld a Tudásod Magyarul</title>
-<meta name="description" content="QuizHungary – Magyarország szórakoztató online kvízoldala. Több mint 40 témakör: történelem, földrajz, tudomány, film, sport és sok más. Játssz ingyen, gyűjts pontokat, hívd ki a barátaidat párbajra!">
+<meta name="description" content="QuizHungary – Magyarország szórakoztató kvízoldala. 10 kategória, 50 alkategória, 2750+ ellenőrzött kérdés szintezett kihívásokban, napi kvíz és IQ teszt. Játssz ingyen, gyűjts pontokat, hívd ki a barátaidat!">
 <meta name="keywords" content="kvíz, kviz, online kvíz, kvíz játék, magyar kvíz, tudáspróba, kérdések, vetélkedő, quiz magyarul, ingyenes kvíz, kvíz kérdések, általános műveltség, trivia magyar">
 <meta name="robots" content="index, follow">
 <meta name="author" content="QuizHungary">
@@ -14,7 +14,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://quizhungary.com/">
 <meta property="og:title" content="QuizHungary – Online Kvíz Játék | Teszteld a Tudásod">
-<meta property="og:description" content="Magyarország szórakoztató kvízoldala. 40+ témakör, párbaj mód, ranglista. Játssz ingyen és gyűjts pontokat!">
+<meta property="og:description" content="Magyarország szórakoztató kvízoldala. 2750+ kérdés szintezett kihívásokban, napi kvíz, IQ teszt, ranglista. Játssz ingyen!">
 <meta property="og:image" content="https://quizhungary.com/og-image.png">
 <meta property="og:locale" content="hu_HU">
 <meta property="og:site_name" content="QuizHungary">
@@ -22,7 +22,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="QuizHungary – Online Kvíz Játék">
-<meta name="twitter:description" content="Magyarország szórakoztató kvízoldala. 40+ témakör, párbaj mód, ranglista. Játssz ingyen!">
+<meta name="twitter:description" content="Magyarország szórakoztató kvízoldala. 2750+ kérdés, napi kvíz, IQ teszt, ranglista. Játssz ingyen!">
 <meta name="twitter:image" content="https://quizhungary.com/og-image.png">
 
 <!-- Structured Data (Google rich results) -->
@@ -32,7 +32,7 @@
   "@type": "WebSite",
   "name": "QuizHungary",
   "url": "https://quizhungary.com/",
-  "description": "Magyarország szórakoztató online kvízoldala. Több mint 40 témakör, párbaj mód és ranglista.",
+  "description": "Magyarország szórakoztató kvízoldala: szintezett kvízrendszer 2750+ kérdéssel, napi kvíz, IQ teszt, párbaj mód és ranglista.",
   "inLanguage": "hu-HU",
   "potentialAction": {
     "@type": "SearchAction",
@@ -381,9 +381,18 @@ footer a{color:var(--red);text-decoration:none;}
 .resume-name{font-weight:600;font-size:1rem;}
 .resume-go{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;color:var(--green);white-space:nowrap;}
 </style>
-<!-- Google AdSense -->
+<!-- Google AdSense — csak cookie-hozzájárulás UTÁN töltődik be (GDPR) -->
 <meta name="google-adsense-account" content="ca-pub-2298331244671294">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2298331244671294" crossorigin="anonymous"></script>
+<script>
+function loadAdSense(){
+  if(document.getElementById('adsense-js'))return;
+  var s=document.createElement('script');
+  s.id='adsense-js';s.async=true;s.crossOrigin='anonymous';
+  s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2298331244671294';
+  document.head.appendChild(s);
+}
+try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }catch(e){}
+</script>
 </head>
 <body>
 
@@ -543,18 +552,6 @@ footer a{color:var(--red);text-decoration:none;}
   </div>
 </div>
 
-<!-- ADSENSE BANNER BETWEEN HERO AND DAILY QUIZ -->
-<div style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0.75rem 2rem;text-align:center;">
-  <!-- Google AdSense — cseréld ki a saját kódodra! -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script> -->
-  <div style="font-size:0.65rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.4rem;">Hirdetés</div>
-  <div style="height:90px;background:var(--bg3);border:1px dashed var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:0.8rem;max-width:728px;margin:0 auto;">
-    Google AdSense (728×90) — Regisztrálj a <a href="https://adsense.google.com" target="_blank" style="color:var(--red)">Google AdSense</a>-re és illeszd be a kódodat
-  </div>
-</div>
-
 <!-- DAILY QUIZ -->
 <div id="napi-kviz" class="sw">
   <div class="slbl">Napi kihívás</div>
@@ -660,11 +657,11 @@ footer a{color:var(--red);text-decoration:none;}
     </a>
   </div>
   <div style="display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;font-size:0.8rem;">
-    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('about')">Rólunk</span>
-    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('faq')">GYIK</span>
-    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('privacy')">Adatvédelem</span>
-    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('terms')">Felhasználási feltételek</span>
-    <span style="color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-muted)'" onclick="openInfo('contact')">Kapcsolat</span>
+    <a href="rolunk" style="color:var(--text-muted);text-decoration:none;">Rólunk</a>
+    <a href="gyik" style="color:var(--text-muted);text-decoration:none;">GYIK</a>
+    <a href="adatvedelem" style="color:var(--text-muted);text-decoration:none;">Adatvédelem</a>
+    <a href="feltetelek" style="color:var(--text-muted);text-decoration:none;">Felhasználási feltételek</a>
+    <a href="kapcsolat" style="color:var(--text-muted);text-decoration:none;">Kapcsolat</a>
   </div>
   <p style="font-size:0.72rem">© 2025 QuizHungary – Minden jog fenntartva</p>
 </footer>
@@ -948,18 +945,6 @@ footer a{color:var(--red);text-decoration:none;}
   </div>
 </div>
 
-<!-- ADSENSE BANNER (top) -->
-<div id="ad-top" style="display:none">
-  <!-- Google AdSense kód ide -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script> -->
-  <div style="font-size:0.7rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;">Hirdetés</div>
-  <div style="height:90px;background:var(--bg3);border:1px dashed var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:0.8rem;max-width:728px;margin:0.5rem auto 0;">
-    AdSense banner (728×90) — Add meg a Google AdSense kódodat
-  </div>
-</div>
-
 <!-- PREMIUM MODAL -->
 <div class="overlay" id="premov" onclick="if(event.target===this)closePremium()">
   <div class="mbox" style="max-width:460px">
@@ -1034,7 +1019,7 @@ footer a{color:var(--red);text-decoration:none;}
 
 <!-- COOKIE BANNER -->
 <div class="cookie-banner" id="cookie-banner">
-  <div class="cookie-text">🍪 Az oldal sütiket használ a működéshez, a bejelentkezés fenntartásához és a felhasználói élmény javításához. A használat folytatásával elfogadod ezt. <a onclick="openInfo('privacy')">Részletek</a></div>
+  <div class="cookie-text">🍪 Az oldal sütiket használ a működéshez és a bejelentkezés fenntartásához. Hirdetési sütiket csak az „Elfogadom" gombra kattintva helyezünk el. <a href="adatvedelem" style="color:var(--red);">Részletek</a></div>
   <div class="cookie-actions">
     <button class="btn-o" style="padding:0.6rem 1.2rem;" onclick="declineCookies()">Csak a szükségesek</button>
     <button class="btn-p" style="padding:0.6rem 1.4rem;" onclick="acceptCookies()">Elfogadom</button>
@@ -1589,7 +1574,7 @@ function renderTopics(){
   let prog={};try{prog=JSON.parse(localStorage.getItem('qh_levels'))||{};}catch(e){}
   document.getElementById('tgrid').innerHTML=QH_CATALOG.map(c=>{
     let done=0,total=0;c.subs.forEach(s=>{const L=qhLevels(s.id);done+=Math.min(prog[s.id]||0,L);total+=L;});
-    return `<div class="tc" onclick="location.href='kategoria?id=${c.id}'">
+    return `<div class="tc" onclick="location.href='kategoria-'+c.id">
       <span class="ti">${c.icon}</span>
       <div class="tn">${c.name}</div>
       <div class="tc2" style="margin-top:0.3rem;">${c.subs.length} alkategória · ${total} szint</div>
@@ -2552,6 +2537,7 @@ function checkCookieConsent(){
 function acceptCookies(){
   localStorage.setItem('qh_cookie_consent','accepted');
   document.getElementById('cookie-banner').classList.remove('show');
+  loadAdSense(); // hirdetések csak hozzájárulás után
 }
 function declineCookies(){
   localStorage.setItem('qh_cookie_consent','essential');

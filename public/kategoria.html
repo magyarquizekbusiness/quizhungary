@@ -3,89 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alkategóriák – QuizHungary</title>
-<meta name="description" content="Válassz alkategóriát és szintet, oldj fel új kihívásokat a QuizHungary szintezett kvízrendszerében!">
-<meta name="robots" content="index, follow">
+<title>Átirányítás – QuizHungary</title>
+<meta name="robots" content="noindex, follow">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23e8192c'/><text y='0.9em' font-size='75' text-anchor='middle' x='50'>🧠</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/qh.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="data/catalog.js"></script>
 </head>
-<body>
-
-<nav>
-  <a class="nav-logo" href="/"><span>QUIZ</span>HUNGARY</a>
-  <div class="nav-links">
-    <a href="/" class="hmob">Főoldal</a>
-    <a href="kategoriak" style="color:var(--red)">Kategóriák</a>
-    <a href="/#napi-kviz" class="hmob">Napi kvíz</a>
-    <a href="/#rangsor" class="hmob">Rangsor</a>
-    <div id="nav-guest" style="display:none"><a href="/#login"><button class="btn-nav">Bejelentkezés</button></a></div>
-    <div id="nav-user" style="display:none;align-items:center;gap:0.6rem;">
-      <div class="nav-avatar" id="nava">?</div>
-      <span class="nav-uname hmob" id="navu"></span>
-    </div>
-  </div>
-</nav>
-
-<div class="sw">
-  <div class="crumb"><a href="kategoriak">Kategóriák</a><span>›</span><span id="crumb-cat" style="color:var(--text-muted)"></span></div>
-  <div class="slbl" id="cat-lbl">Kategória</div>
-  <div class="stit" id="cat-title">…</div>
-  <p class="ssub" id="cat-desc"></p>
-  <div id="sub-list"></div>
-</div>
-
-<footer>
-  <span class="flogo"><span>QUIZ</span>HUNGARY</span>
-  <p><a href="kategoriak">Kategóriák</a> · <a href="/">Főoldal</a> · © 2025 QuizHungary</p>
-</footer>
-
-<div class="toast" id="tst"></div>
-
-<script src="js/qh.js"></script>
+<body style="background:#0a0a0a;color:#f0ede8;font-family:sans-serif;text-align:center;padding-top:4rem;">
+<p>Átirányítás…</p>
 <script>
-(async function(){
-  const cat=QH_CATALOG.find(c=>c.id===QH.qs('id'));
-  if(!cat){location.replace('kategoriak');return;}
-  document.title=cat.name+' kvíz – QuizHungary';
-  document.getElementById('crumb-cat').textContent=cat.name;
-  document.getElementById('cat-title').textContent=cat.icon+' '+cat.name;
-  document.getElementById('cat-desc').textContent=cat.desc+' Egy szint teljesítéséhez legalább 4/5 helyes válasz kell.';
-
-  await QH.init();
-  const R=QH_RULES;
-
-  document.getElementById('sub-list').innerHTML=cat.subs.map((s,idx)=>{
-    const unlocked=QH.isSubUnlocked(cat,idx);
-    const lvl=QH.getLevel(s.id);
-    let statusHtml='';
-    if(!unlocked){
-      const prev=cat.subs[idx-1];
-      statusHtml=`<div class="sub-lock-info">🔒 Feloldás: „${prev.name}" ${R.UNLOCK_AT_LEVEL}. szint (jelenleg: ${QH.getLevel(prev.id)})</div>`;
-    }else if(lvl>=qhLevels(s.id)){
-      statusHtml=`<div class="sub-done-badge">✓ Teljesítve</div>`;
-    }else{
-      statusHtml=`<div class="sub-lock-info" style="color:var(--text-muted)">${lvl} / ${qhLevels(s.id)} szint</div>`;
-    }
-    let lvls='';
-    for(let n=1;n<=qhLevels(s.id);n++){
-      if(!unlocked){lvls+=`<span class="lvl lock">🔒</span>`;continue;}
-      if(n<=lvl)lvls+=`<a class="lvl done" href="kviz?sub=${s.id}&szint=${n}" title="${n}. szint — újrajátszás">${n}<span class="lico">✓</span></a>`;
-      else if(n===lvl+1)lvls+=`<a class="lvl next" href="kviz?sub=${s.id}&szint=${n}" title="${n}. szint — játék!">${n}</a>`;
-      else lvls+=`<span class="lvl lock">${n}</span>`;
-    }
-    return `<div class="sub-card ${unlocked?'unlocked':'locked'}">
-      <div class="sub-head">
-        <span class="sub-icon">${s.icon}</span>
-        <div class="sub-name">${s.name}<small>${s.desc}</small></div>
-        ${statusHtml}
-      </div>
-      <div class="lvl-row">${lvls}</div>
-    </div>`;
-  }).join('');
+// Régi ?id= linkek átirányítása az új, statikus kategóriaoldalakra.
+(function(){
+  var id=new URLSearchParams(location.search).get('id');
+  var valid=['foldrajz','tortenelem','tudomany','sport','film','zene','irodalom','gasztro','termeszet','technika'];
+  location.replace(valid.indexOf(id)>=0 ? 'kategoria-'+id : 'kategoriak');
 })();
 </script>
+<noscript><a href="kategoriak" style="color:#e8192c;">Tovább a kategóriákhoz</a></noscript>
 </body>
 </html>

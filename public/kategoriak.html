@@ -44,12 +44,90 @@
     <div class="cd">50 logikai és mintázatfelismerő kérdés, időkorlát nélkül — egyetlen teszt, alkategóriák nélkül. Mérd fel a gondolkodásod!</div>
     <div class="cat-prog-lbl"><span>50 kérdés · nincs időkorlát</span><span style="color:var(--red)">Kipróbálom →</span></div>
   </a>
-  <div class="cat-grid" id="cat-grid"></div>
+  <div class="cat-grid" id="cat-grid">
+    <a class="cat-card" href="kategoria-foldrajz">
+      <span class="ci">🌍</span>
+      <div class="cn">Földrajz</div>
+      <div class="cd">Országok, óceánok, hegyek és városok a nagyvilágból. Alkategóriák: Magyarország, Európa, Fővárosok, Óceánok és tengerek, Világ csodái.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-foldrajz" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 100 szint</span><span id="pl-foldrajz">0 / 100 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-tortenelem">
+      <span class="ci">🏛️</span>
+      <div class="cn">Történelem</div>
+      <div class="cd">Az ókortól a 20. századig — és a magyar história. Alkategóriák: Magyar történelem, Ókor, Középkor, Újkor, 20. század.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-tortenelem" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-tortenelem">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-tudomany">
+      <span class="ci">🔬</span>
+      <div class="cn">Tudomány</div>
+      <div class="cd">Biológia, kémia, fizika és a világegyetem titkai. Alkategóriák: Emberi test, Biológia, Kémia, Fizika, Csillagászat.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-tudomany" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-tudomany">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-sport">
+      <span class="ci">⚽</span>
+      <div class="cn">Sport</div>
+      <div class="cd">Foci, olimpia, magyar sportsikerek és rekordok. Alkategóriák: Labdarúgás, Olimpia, Magyar sport, Csapatsportok, Egyéni sportok.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-sport" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-sport">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-film">
+      <span class="ci">🎬</span>
+      <div class="cn">Film és TV</div>
+      <div class="cd">Mozifilmek, sorozatok, rajzfilmek és sztárok. Alkategóriák: Klasszikus filmek, Modern filmek, Animációs filmek, Sorozatok, Magyar film.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-film" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-film">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-zene">
+      <span class="ci">🎵</span>
+      <div class="cn">Zene</div>
+      <div class="cd">Poptól a klasszikusig, hangszerektől az előadókig. Alkategóriák: Popzene, Rock, Magyar zene, Klasszikus zene, Hangszerek.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-zene" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-zene">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-irodalom">
+      <span class="ci">📚</span>
+      <div class="cn">Irodalom</div>
+      <div class="cd">Magyar és világirodalom, költők és regények. Alkategóriák: Magyar irodalom, Világirodalom, Költészet, Ifjúsági és fantasy, Dráma és színház.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-irodalom" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-irodalom">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-gasztro">
+      <span class="ci">🍽️</span>
+      <div class="cn">Gasztronómia</div>
+      <div class="cd">Magyar konyha, világkonyhák, italok és édességek. Alkategóriák: Magyar konyha, Világkonyhák, Édességek, Italok, Alapanyagok.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-gasztro" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-gasztro">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-termeszet">
+      <span class="ci">🦁</span>
+      <div class="cn">Természet és állatok</div>
+      <div class="cd">Emlősök, madarak, tengerek élővilága és növények. Alkategóriák: Emlősök, Madarak, Tengeri élővilág, Hüllők és rovarok, Növényvilág.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-termeszet" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-termeszet">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card" href="kategoria-technika">
+      <span class="ci">💡</span>
+      <div class="cn">Technika</div>
+      <div class="cd">Számítógépek, találmányok, autók és űrkutatás. Alkategóriák: Számítástechnika, Találmányok, Autók és közlekedés, Űrkutatás, Videójátékok.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-technika" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-technika">0 / 50 szint</span></div>
+    </a>
+  </div>
 </div>
 
 <footer>
   <span class="flogo"><span>QUIZ</span>HUNGARY</span>
-  <p><a href="/">Főoldal</a> · © 2025 QuizHungary – Minden jog fenntartva</p>
+  <div style="display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;font-size:0.8rem;">
+    <a href="rolunk">Rólunk</a>
+    <a href="gyik">GYIK</a>
+    <a href="adatvedelem">Adatvédelem</a>
+    <a href="feltetelek">Felhasználási feltételek</a>
+    <a href="kapcsolat">Kapcsolat</a>
+  </div>
+  <p><a href="/">Főoldal</a> · <a href="iqteszt">IQ teszt</a> · © 2025 QuizHungary – Minden jog fenntartva</p>
 </footer>
 
 <div class="toast" id="tst"></div>
@@ -59,17 +137,14 @@
 (async function(){
   await QH.init();
   if(!QH.user)document.getElementById('guest-hint').style.display='block';
-  document.getElementById('cat-grid').innerHTML=QH_CATALOG.map(c=>{
+  // haladás rátöltése a statikus kártyákra
+  QH_CATALOG.forEach(c=>{
     const p=QH.catProgress(c);
     const pct=p.total?Math.round(p.done/p.total*100):0;
-    return `<a class="cat-card" href="kategoria?id=${c.id}">
-      <span class="ci">${c.icon}</span>
-      <div class="cn">${c.name}</div>
-      <div class="cd">${c.desc}</div>
-      <div class="cat-prog-bar"><div class="cat-prog-fill" style="width:${pct}%"></div></div>
-      <div class="cat-prog-lbl"><span>${c.subs.length} alkategória</span><span class="${pct===100?'done':''}">${p.done} / ${p.total} szint</span></div>
-    </a>`;
-  }).join('');
+    const pf=document.getElementById('pf-'+c.id); if(pf)pf.style.width=pct+'%';
+    const pl=document.getElementById('pl-'+c.id);
+    if(pl){pl.textContent=p.done+' / '+p.total+' szint'; if(pct===100)pl.classList.add('done');}
+  });
 })();
 </script>
 </body>

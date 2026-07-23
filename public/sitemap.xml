@@ -16,53 +16,78 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=foldrajz</loc>
+    <loc>https://quizhungary.com/kategoria-foldrajz</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=tortenelem</loc>
+    <loc>https://quizhungary.com/kategoria-tortenelem</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=tudomany</loc>
+    <loc>https://quizhungary.com/kategoria-tudomany</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=sport</loc>
+    <loc>https://quizhungary.com/kategoria-sport</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=film</loc>
+    <loc>https://quizhungary.com/kategoria-film</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=zene</loc>
+    <loc>https://quizhungary.com/kategoria-zene</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=irodalom</loc>
+    <loc>https://quizhungary.com/kategoria-irodalom</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=gasztro</loc>
+    <loc>https://quizhungary.com/kategoria-gasztro</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=termeszet</loc>
+    <loc>https://quizhungary.com/kategoria-termeszet</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://quizhungary.com/kategoria?id=technika</loc>
+    <loc>https://quizhungary.com/kategoria-technika</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/rolunk</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/gyik</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/adatvedelem</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/feltetelek</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/kapcsolat</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>

@@ -65,7 +65,7 @@
     <div id="q-gate" style="display:none;text-align:center;padding:1.5rem 0;">
       <div style="font-size:2.4rem;margin-bottom:0.6rem;">🔒</div>
       <div class="stit" style="font-size:1.6rem;">Regisztráció szükséges</div>
-      <p style="color:var(--text-muted);max-width:420px;margin:0.6rem auto 1.4rem;">A szintezett kvíz játékához ingyenes fiók kell — így a haladásod minden eszközön megmarad. A <a href="/" style="color:var(--red)">napi kvíz</a> regisztráció nélkül is játszható!</p>
+      <p style="color:var(--text-muted);max-width:440px;margin:0.6rem auto 1.4rem;">A szintezett kvíz folytatásához ingyenes fiók kell — így a haladásod minden eszközön megmarad. Regisztráció nélkül is kipróbálhatod a kategóriák <strong style="color:var(--text)">1. szintjét</strong> és a <a href="/" style="color:var(--red)">napi kvízt</a>!</p>
       <div class="ra">
         <a class="btn-p" href="/#register">Ingyenes regisztráció →</a>
         <a class="btn-o" href="/#login">Már van fiókom</a>
@@ -90,15 +90,17 @@ async function boot(){
 
   document.title=`${SUB.name} – ${LEVEL}. szint – QuizHungary`;
   document.getElementById('crumb-cat').textContent=CAT.name;
-  document.getElementById('crumb-cat').href='kategoria?id='+CAT.id;
+  document.getElementById('crumb-cat').href='kategoria-'+CAT.id;
   document.getElementById('crumb-sub').textContent=SUB.name;
   document.getElementById('q-title').textContent=`${SUB.icon} ${SUB.name}`;
   document.getElementById('q-lvl-badge').textContent=`${LEVEL}. szint / ${qhLevels(SUB.id)}`;
 
   await QH.init();
 
-  // A szintezett kvíz csak bejelentkezve játszható (a napi kvíz kivétel)
-  if(!QH.user){
+  // A szintezett kvízhez regisztráció kell — KIVÉTEL a kedvcsináló:
+  // vendégként minden kategória első alkategóriájának 1. szintje kipróbálható.
+  const guestTeaser = LEVEL===1 && CAT.subs.indexOf(SUB)===0;
+  if(!QH.user && !guestTeaser){
     document.getElementById('quiz-content').style.display='none';
     document.getElementById('q-gate').style.display='block';
     return;
@@ -107,13 +109,13 @@ async function boot(){
   // Zárolt szintre nem lehet URL-lel beugrani
   if(!QH.isLevelUnlocked(SUB.id,LEVEL)){
     QH.toast('Ez a szint még zárolva van!','err');
-    setTimeout(()=>location.replace('kategoria?id='+CAT.id),1200);
+    setTimeout(()=>location.replace('kategoria-'+CAT.id),1200);
     return;
   }
   const subIdx=CAT.subs.indexOf(SUB);
   if(!QH.isSubUnlocked(CAT,subIdx)){
     QH.toast('Ez az alkategória még zárolva van!','err');
-    setTimeout(()=>location.replace('kategoria?id='+CAT.id),1200);
+    setTimeout(()=>location.replace('kategoria-'+CAT.id),1200);
     return;
   }
 
@@ -228,18 +230,23 @@ async function showResult(){
     if(advanced&&LEVEL===qhLevels(SUB.id))
       extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🏆 Az egész alkategóriát teljesítetted!</div>`;
     rp.insertAdjacentHTML('afterend',extra);
-    if(LEVEL<qhLevels(SUB.id))btns+=`<a class="btn-p" href="kviz?sub=${SUB.id}&szint=${LEVEL+1}">Következő szint →</a>`;
-    btns+=`<a class="btn-o" href="kategoria?id=${CAT.id}">Szinttérkép</a>`;
+    if(!QH.user){
+      // Vendég kedvcsináló vége: a folytatáshoz regisztráció kell
+      rp.insertAdjacentHTML('afterend',`<div style="margin-top:0.8rem;color:var(--text-muted);font-size:0.92rem;">Tetszett? A 2. szinttől <strong style="color:var(--text)">ingyenes regisztrációval</strong> folytathatod — a haladásod is mentődik!</div>`);
+      btns+=`<a class="btn-p" href="/#register">Ingyenes regisztráció →</a>`;
+      btns+=`<a class="btn-o" href="kategoria-${CAT.id}">Szinttérkép</a>`;
+    }else{
+      if(LEVEL<qhLevels(SUB.id))btns+=`<a class="btn-p" href="kviz?sub=${SUB.id}&szint=${LEVEL+1}">Következő szint →</a>`;
+      btns+=`<a class="btn-o" href="kategoria-${CAT.id}">Szinttérkép</a>`;
+    }
   }else{
     rp.className='rpass fail';rp.textContent=`Legalább ${R.PASS_MIN}/${QL.length} kell a továbbjutáshoz`;
     document.getElementById('rm').textContent='Majdnem megvan — próbáld újra!';
     btns+=`<button class="btn-p" onclick="location.reload()">Újra próbálom</button>`;
-    btns+=`<a class="btn-o" href="kategoria?id=${CAT.id}">Szinttérkép</a>`;
+    btns+=`<a class="btn-o" href="kategoria-${CAT.id}">Szinttérkép</a>`;
   }
-  if(!QH.user)btns+=``;
   ra.innerHTML=btns;
   document.getElementById('qr').className='qr show';
-  if(!QH.user)QH.toast('Jelentkezz be, hogy a haladásod minden eszközön meglegyen!','ok');
 }
 
 boot();

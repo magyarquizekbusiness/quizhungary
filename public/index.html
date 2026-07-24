@@ -1574,7 +1574,7 @@ function renderTopics(){
   let prog={};try{prog=JSON.parse(localStorage.getItem('qh_levels'))||{};}catch(e){}
   document.getElementById('tgrid').innerHTML=QH_CATALOG.map(c=>{
     let done=0,total=0;c.subs.forEach(s=>{const L=qhLevels(s.id);done+=Math.min(prog[s.id]||0,L);total+=L;});
-    return `<div class="tc" onclick="location.href='kategoria-'+c.id">
+    return `<div class="tc" onclick="location.href='kategoria-${c.id}'">
       <span class="ti">${c.icon}</span>
       <div class="tn">${c.name}</div>
       <div class="tc2" style="margin-top:0.3rem;">${c.subs.length} alkategória · ${total} szint</div>

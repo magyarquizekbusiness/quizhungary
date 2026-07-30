@@ -14,6 +14,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.9
 .nav-links a:hover{color:var(--red);}
 .nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.85rem;color:#fff;}
 .nav-uname{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;letter-spacing:1px;color:var(--text-muted);}
+/* Felhasználói legördülő menü (mint a főoldalon) */
+.user-menu{position:relative;}
+.user-trigger{display:flex;align-items:center;gap:0.6rem;cursor:pointer;}
+.udrop{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1px solid var(--border);border-radius:3px;min-width:190px;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity 0.15s,transform 0.15s;z-index:300;}
+.udrop.show{opacity:1;pointer-events:all;transform:translateY(0);}
+.udi{display:block;padding:0.7rem 1rem;font-size:0.88rem;color:var(--text-muted);cursor:pointer;transition:background 0.15s;border:none;background:none;width:100%;text-align:left;font-family:'Barlow',sans-serif;}
+.udi:hover{background:var(--bg3);color:var(--text);}
+.udi.danger:hover{color:var(--red);}
+.udlabel{padding:0.7rem 1rem;font-size:0.75rem;color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;}
+.uddiv{height:1px;background:var(--border);}
 @media(max-width:640px){.hmob{display:none!important;}nav{padding:0 1rem;}}
 
 /* LAYOUT */

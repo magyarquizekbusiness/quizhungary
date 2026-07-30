@@ -19,7 +19,7 @@
         const{data:{session}}=await sb.auth.getSession();
         if(session?.user){
           user=session.user;
-          const{data}=await sb.from('profiles').select('username').eq('id',user.id).single();
+          const{data}=await sb.from('profiles').select('username,is_admin,is_premium,subscription_status,subscription_end').eq('id',user.id).single();
           profile=data;
           await syncFromServer();
         }
@@ -106,11 +106,53 @@
       const n=profile?.username||user.email.split('@')[0];
       const a=document.getElementById('nava');if(a)a.textContent=n.slice(0,2).toUpperCase();
       const un=document.getElementById('navu');if(un)un.textContent=n;
-      // Profil bárhonnan megnyitható: a főoldalra navigálunk, ahol a modal megnyílik.
-      u.style.cursor='pointer';
-      u.title='Profilom megnyitása';
-      u.onclick=()=>{location.href='/#profil';};
+      buildUserMenu(u,n);
     }else{g.style.display='flex';u.style.display='none';}
+  }
+
+  function isPremium(){
+    if(profile?.is_premium!==true)return false;
+    if(profile?.subscription_status==='referral_reward'&&profile?.subscription_end){
+      if(new Date(profile.subscription_end)<new Date())return false;
+    }
+    return true;
+  }
+
+  // Ugyanaz a felhasználói legördülő menü, mint a főoldalon. A menüpontok a
+  // főoldal megfelelő nézetét nyitják meg (#hash), a kijelentkezés helyben történik.
+  function buildUserMenu(u,name){
+    if(u.dataset.qhMenu)return; // csak egyszer építjük fel
+    u.dataset.qhMenu='1';
+    u.classList.add('user-menu');
+    // A meglévő avatar+név lesz a kattintható trigger.
+    const trigger=document.createElement('div');
+    trigger.className='user-trigger';
+    while(u.firstChild)trigger.appendChild(u.firstChild);
+    u.appendChild(trigger);
+
+    const drop=document.createElement('div');
+    drop.className='udrop';
+    const label=isPremium()?name+' <span style="color:var(--gold)">✨ Premium</span>':name;
+    let html='<div class="udlabel">'+label+'</div><div class="uddiv"></div>';
+    html+='<button class="udi" data-go="#profil">👤 Profilom</button>';
+    html+='<button class="udi" data-go="#premium">✨ Premium</button>';
+    html+='<button class="udi" data-go="#referral">🎁 Hívj meg barátokat</button>';
+    if(profile?.is_admin===true)html+='<button class="udi" data-go="#admin">🔐 Admin</button>';
+    html+='<button class="udi" data-go="#rangsor">🏆 Ranglista</button>';
+    html+='<div class="uddiv"></div><button class="udi danger" data-signout="1">Kijelentkezés</button>';
+    drop.innerHTML=html;
+    u.appendChild(drop);
+
+    trigger.addEventListener('click',e=>{e.stopPropagation();drop.classList.toggle('show');});
+    drop.querySelectorAll('[data-go]').forEach(b=>{
+      b.addEventListener('click',()=>{location.href='/'+b.getAttribute('data-go');});
+    });
+    const so=drop.querySelector('[data-signout]');
+    if(so)so.addEventListener('click',async()=>{
+      try{await sb.auth.signOut();}catch(e){}
+      location.href='/';
+    });
+    document.addEventListener('click',e=>{if(!u.contains(e.target))drop.classList.remove('show');});
   }
 
   let tt=null;

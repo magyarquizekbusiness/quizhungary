@@ -971,7 +971,10 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
   <div class="mbox" style="max-width:900px;max-height:90vh;">
     <button class="mcl" onclick="closeAdmin()">×</button>
     <div class="mtit">🔐 Admin Panel</div>
-    <div class="msub">QuizHungary statisztikák és felhasználók</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <div class="msub" style="margin:0;">QuizHungary statisztikák és felhasználók</div>
+      <button onclick="openAdmin()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);border-radius:3px;padding:0.45rem 0.9rem;font-size:0.82rem;cursor:pointer;font-family:'Barlow',sans-serif;white-space:nowrap;">🔄 Frissítés</button>
+    </div>
     <div id="admin-loading" class="tq-loading" style="display:none"><div class="tq-spinner"></div><div class="tq-loading-text">Adatok betöltése...</div></div>
     <div id="admin-content" style="display:none">
       <!-- Stat cards -->
@@ -1217,10 +1220,17 @@ async function init(){
     openAuth(location.hash==='#register'?'reg':'login');
   }
 
-  // Aloldalról a profil avatárra kattintva (#profil) nyissuk meg a profilt.
-  if(location.hash==='#profil'){
+  // Aloldalról a felhasználói menü egy pontjára kattintva (#profil, #premium,
+  // #referral, #admin, #rangsor) a főoldalon nyitjuk meg a megfelelő nézetet.
+  const menuHash=location.hash;
+  if(['#profil','#premium','#referral','#admin','#rangsor'].includes(menuHash)){
     history.replaceState(null,'',location.pathname+location.search);
-    CU?openProfile():openAuth();
+    if(!CU){openAuth();}
+    else if(menuHash==='#profil')openProfile();
+    else if(menuHash==='#premium')showPremium();
+    else if(menuHash==='#referral')openReferral();
+    else if(menuHash==='#admin')openAdmin();
+    else if(menuHash==='#rangsor')goTo('rangsor');
   }
 
   // UTÁNA a lassú napi kérdés betöltés (nem blokkolja a bejelentkezést)
@@ -2436,8 +2446,9 @@ async function openAdmin(){
   document.getElementById('admin-content').style.display='none';
   document.getElementById('admin-error').style.display='none';
   try{
-    const res=await fetch('/api/admin-stats',{
+    const res=await fetch('/api/admin-stats?_='+Date.now(),{
       method:'POST',
+      cache:'no-store',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({userId:CU.id})
     });

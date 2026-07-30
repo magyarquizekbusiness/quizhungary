@@ -1217,6 +1217,12 @@ async function init(){
     openAuth(location.hash==='#register'?'reg':'login');
   }
 
+  // Aloldalról a profil avatárra kattintva (#profil) nyissuk meg a profilt.
+  if(location.hash==='#profil'){
+    history.replaceState(null,'',location.pathname+location.search);
+    CU?openProfile():openAuth();
+  }
+
   // UTÁNA a lassú napi kérdés betöltés (nem blokkolja a bejelentkezést)
   document.getElementById('dqt').textContent='Kérdések betöltése...';
   loadDailyQuestions().then(()=>{restoreDailyProgress();dLoad();});

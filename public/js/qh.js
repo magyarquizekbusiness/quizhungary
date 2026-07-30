@@ -106,6 +106,10 @@
       const n=profile?.username||user.email.split('@')[0];
       const a=document.getElementById('nava');if(a)a.textContent=n.slice(0,2).toUpperCase();
       const un=document.getElementById('navu');if(un)un.textContent=n;
+      // Profil bárhonnan megnyitható: a főoldalra navigálunk, ahol a modal megnyílik.
+      u.style.cursor='pointer';
+      u.title='Profilom megnyitása';
+      u.onclick=()=>{location.href='/#profil';};
     }else{g.style.display='flex';u.style.display='none';}
   }
 

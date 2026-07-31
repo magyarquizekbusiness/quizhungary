@@ -56,7 +56,7 @@ QH_QUESTIONS['foldrajz-magyarorszag'] = [
 {q:'Melyik megyének Tatabánya a székhelye?',o:['Fejér','Komárom-Esztergom','Veszprém'],a:1},
 {q:'Hol található a Szalajka-völgy?',o:['Szilvásvárad mellett','Lillafüred mellett','Bánkút mellett'],a:0},
 {q:'Melyik a leghosszabb magyarországi folyószakasz?',o:['Duna','Tisza','Körös'],a:1},
-{q:'Melyik város határában van a Hortobágyi Kilenclyukú híd?',o:['Hortobágy','Karcag','Balmazújváros'],a:0},
+{q:'Melyik alföldi település határában áll a Kilenclyukú híd, az ország leghosszabb közúti kőhídja?',o:['Hortobágy','Karcag','Balmazújváros'],a:0},
 ],
 [ // 9
 {q:'Mikor nyilvánították világörökséggé Hollókő ófaluját?',o:['1987','1997','2007'],a:0},
@@ -579,7 +579,7 @@ QH_QUESTIONS['foldrajz-vilag'] = [
 {q:'Melyik kontinensen van a Szahara?',o:['Ázsia','Afrika','Ausztrália'],a:1},
 {q:'Hány kontinens van a Földön?',o:['5','7','9'],a:1},
 {q:'Melyik a leghosszabb folyó Afrikában?',o:['Kongó','Nílus','Niger'],a:1},
-{q:'Melyik országban van a Kínai Nagy Fal?',o:['Japán','Kína','Mongólia'],a:1},
+{q:'Melyik ázsiai országban épült a világ leghosszabb ókori védőfala?',o:['Japán','Kína','Mongólia'],a:1},
 ],
 [ // 2
 {q:'Melyik kontinensen van Brazília?',o:['Észak-Amerika','Dél-Amerika','Afrika'],a:1},
@@ -647,7 +647,7 @@ QH_QUESTIONS['foldrajz-vilag'] = [
 [ // 11
 {q:'Melyik a világ legnagyobb sivataga, ha a jeges sivatagokat is számoljuk?',o:['Antarktisz','Szahara','Góbi'],a:0},
 {q:'Melyik sivatag terül el Dél-Afrika és Botswana területén?',o:['Kalahári','Namib','Atacama'],a:0},
-{q:'Melyik sivatag húzódik Namíbia atlanti partja mentén?',o:['Namib','Kalahári','Szahara'],a:0},
+{q:'Melyik sivatag húzódik Afrika délnyugati, atlanti-óceáni partvidéke mentén?',o:['Namib','Kalahári','Szahara'],a:0},
 {q:'Melyik sivatag fekszik Ausztrália belsejében?',o:['Nagy-homoksivatag','Góbi','Karakum'],a:0},
 {q:'Melyik sivatag terül el az Arab-félszigeten, hatalmas homokdűnékkel?',o:['Rub-el-Khali','Góbi','Taklamakán'],a:0},
 ],

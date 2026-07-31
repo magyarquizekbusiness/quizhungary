@@ -13,7 +13,7 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 {q:'Melyik évben koronázták királlyá Szent Istvánt?',o:['1000','1100','1200'],a:0},
 {q:'Melyik csatában győzte le a török a magyar sereget 1526-ban?',o:['Nándorfehérvári','Mohácsi','Egri'],a:1},
 {q:'Ki volt az 1956-os forradalom miniszterelnöke?',o:['Kádár János','Nagy Imre','Rákosi Mátyás'],a:1},
-{q:'Melyik évben tört ki az 1956-os forradalom?',o:['1953','1956','1958'],a:1},
+{q:'Melyik évben tört ki a szovjet megszállás elleni magyar forradalom és szabadságharc?',o:['1953','1956','1958'],a:1},
 {q:'Ki védte meg Egert 1552-ben?',o:['Dobó István','Zrínyi Miklós','Hunyadi János'],a:0},
 ],
 [ // 3
@@ -48,7 +48,7 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 {q:'Ki alapította a turini (torinói) emigrációjáról híres politikus a Védegyletet?',o:['Kossuth Lajos','Széchenyi István','Deák Ferenc'],a:0},
 {q:'Melyik királyunk uralkodott a leghosszabb ideig?',o:['I. Ferenc József','Zsigmond','Mátyás'],a:0},
 {q:'Melyik évben szűnt meg a Magyar Királyság (kikiáltották a köztársaságot)?',o:['1946','1949','1956'],a:0},
-{q:'Ki volt a Rákosi-korszak névadó vezetője?',o:['Rákosi Mátyás','Gerő Ernő','Kádár János'],a:0},
+{q:'Ki volt Magyarország sztálinista diktátora az 1950-es évek elején?',o:['Rákosi Mátyás','Gerő Ernő','Kádár János'],a:0},
 {q:'Melyik évben vonultak ki a szovjet csapatok Magyarországról?',o:['1989','1991','1994'],a:1},
 ],
 [ // 8
@@ -77,7 +77,7 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 QH_QUESTIONS['tortenelem-okor'] = [
 [ // 1
 {q:'Melyik országban épültek a gízai piramisok?',o:['Görögország','Egyiptom','Irak'],a:1},
-{q:'Melyik város volt a Római Birodalom központja?',o:['Athén','Róma','Konstantinápoly'],a:1},
+{q:'Melyik itáliai város volt az ókor legnagyobb birodalmának központja?',o:['Athén','Róma','Konstantinápoly'],a:1},
 {q:'Hogy hívták az egyiptomi uralkodókat?',o:['Császár','Fáraó','Szultán'],a:1},
 {q:'Melyik népről kapta nevét a görög főváros, Athén védőistennője?',o:['Athéné istennőről','Zeuszról','Apollónról'],a:0},
 {q:'Milyen írást használtak az ókori egyiptomiak?',o:['Rovásírást','Hieroglifákat','Cirill betűket'],a:1},
@@ -165,7 +165,7 @@ QH_QUESTIONS['tortenelem-kozepkor'] = [
 [ // 3
 {q:'Ki volt az angolok legendás királya a kerekasztallal?',o:['Artúr király','Richárd király','Alfréd király'],a:0},
 {q:'Melyik csata volt 1066-ban Angliában?',o:['Hastingsi','Azincourt-i','Crécyi'],a:0},
-{q:'Ki hódította meg Angliát 1066-ban?',o:['Hódító Vilmos','Dán Kanut','Harold'],a:0},
+{q:'Ki győzött a hastingsi csatában, és lett Anglia normann királya 1066-ban?',o:['Hódító Vilmos','Dán Kanut','Harold'],a:0},
 {q:'Melyik dokumentumot adta ki Földnélküli János 1215-ben?',o:['Magna Carta','Aranybulla','Domesday Book'],a:0},
 {q:'Melyik két ország vívta a százéves háborút?',o:['Anglia és Franciaország','Spanyolország és Portugália','Németország és Itália'],a:0},
 ],
@@ -200,7 +200,7 @@ QH_QUESTIONS['tortenelem-kozepkor'] = [
 [ // 8
 {q:'Melyik évben kezdődött a reconquista utolsó szakasza, Granada eleste?',o:['1492','1453','1526'],a:0},
 {q:'Melyik két királyság egyesült Spanyolországgá?',o:['Kasztília és Aragónia','León és Navarra','Katalónia és Galícia'],a:0},
-{q:'Ki volt a Domonkos-rend alapítója?',o:['Szent Domonkos','Assisi Szent Ferenc','Szent Benedek'],a:0},
+{q:'Ki alapította a prédikátorok (dominikánus) szerzetesrendjét a 13. században?',o:['Szent Domonkos','Assisi Szent Ferenc','Szent Benedek'],a:0},
 {q:'Melyik szerzetesrend jelmondata az "Ora et labora"?',o:['Bencések','Ferencesek','Jezsuiták'],a:0},
 {q:'Melyik középkori járvány vitte el Európa lakosságának kb. harmadát?',o:['A fekete halál','Az angol izzadás','A lepra'],a:0},
 ],

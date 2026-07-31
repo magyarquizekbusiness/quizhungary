@@ -27,7 +27,7 @@ QH_QUESTIONS['termeszet-emlosok'] = [
 {q:'Melyik állat a legnagyobb főemlős?',o:['Gorilla','Csimpánz','Orangután'],a:0},
 {q:'Hány szívkamrája van egy emlősnek?',o:['4','3','2'],a:0},
 {q:'Melyik a leglassabban mozgó emlős?',o:['Lajhár','Gepárd','Nyúl'],a:0},
-{q:'Melyik állat agyara a klasszikus elefántcsont forrása?',o:['Elefánt','Zebra','Zsiráf'],a:0},
+{q:'Melyik nagy testű állat agyaráért folyt évszázadokig tiltott vadászat a belőle faragott dísztárgyak miatt?',o:['Elefánt','Zebra','Zsiráf'],a:0},
 {q:'Melyik emlős a legnagyobb ragadozó a szárazföldön?',o:['Jegesmedve','Oroszlán','Tigris'],a:0},
 ],
 [ // 5
@@ -112,7 +112,7 @@ QH_QUESTIONS['termeszet-madarak'] = [
 ],
 [ // 6
 {q:'Melyik madár utánozza a hangokat legjobban?',o:['Lantfarkú madár','Veréb','Galamb'],a:0},
-{q:'Melyik madár épít bonyolult "lugast" a párzáshoz?',o:['Lugasépítő madár','Fecske','Gólya'],a:0},
+{q:'Melyik madár hímje díszes, kunyhószerű építményt emel, hogy elnyerje a tojó tetszését?',o:['Lugasépítő madár','Fecske','Gólya'],a:0},
 {q:'Melyik madár csőre horgas ragadozónál (sas, sólyom)?',o:['Ragadozó madarak','Énekesmadarak','Vízimadarak'],a:0},
 {q:'Melyik madarak repülnek jellegzetes V-alakzatban vándorláskor?',o:['Vadludak','Verebek','Baglyok'],a:0},
 {q:'Melyik madár a leggyorsabb vízszintes repülésben?',o:['Sarlósfecske','Veréb','Rigó'],a:0},
@@ -152,7 +152,7 @@ QH_QUESTIONS['termeszet-tenger'] = [
 {q:'Melyik a legnagyobb hal?',o:['Cetcápa','Fehér cápa','Tonhal'],a:0},
 {q:'Melyik tengeri állatnak 8 karja van?',o:['Polip','Csillag','Medúza'],a:0},
 {q:'Melyik tengeri emlős kommunikál összetett "énekkel"?',o:['A bálna','A cápa','A medúza'],a:0},
-{q:'Melyik állat a "tenger csillaga"?',o:['Tengeri csillag','Medúza','Rák'],a:0},
+{q:'Melyik jellegzetesen ötkarú, sugaras felépítésű tüskésbőrű tengeri állat?',o:['Tengeri csillag','Medúza','Rák'],a:0},
 {q:'Hány szíve van a polipnak?',o:['3','1','5'],a:0},
 ],
 [ // 2
@@ -181,7 +181,7 @@ QH_QUESTIONS['termeszet-tenger'] = [
 {q:'Melyik óriási állat szűri ki a planktont hatalmas szájával?',o:['Kék bálna','Fehér cápa','Barrakuda'],a:0},
 {q:'Melyik tengeri állat a "Nemo" a rajzfilmben?',o:['Bohóchal','Kardhal','Aranyhal'],a:0},
 {q:'Melyik tengeri állat él szimbiózisban a tengeri rózsával?',o:['Bohóchal','Cápa','Teknős'],a:0},
-{q:'Melyik cápa feje kalapács alakú?',o:['Kalapácsfejű cápa','Fehér cápa','Tigriscápa'],a:0},
+{q:'Melyik cápafaj feje jellegzetes, oldalra kinyúló, T alakú?',o:['Kalapácsfejű cápa','Fehér cápa','Tigriscápa'],a:0},
 ],
 [ // 6
 {q:'Melyik tengeri állat a legmérgezőbb?',o:['Kockamedúza','Delfin','Lazac'],a:0},

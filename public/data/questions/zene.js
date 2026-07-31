@@ -149,11 +149,11 @@ QH_QUESTIONS['zene-rock'] = [
 
 QH_QUESTIONS['zene-magyar'] = [
 [ // 1
-{q:'Melyik magyar együttes az "Illés", "Metró", "Omega" korszakból az űrutazós daláról híres?',o:['Omega','Illés','Metró'],a:0},
+{q:'Melyik magyar rockegyüttes a hazai progresszív rock úttörője, amelynek nevét egy görög betű adja?',o:['Omega','Illés','Metró'],a:0},
 {q:'Melyik Omega-dal világsláger?',o:['Gyöngyhajú lány','Trombitás Frédi','Petróleum­lámpa'],a:0},
 {q:'Melyik magyar rockegyüttes az "LGT" rövidítés?',o:['Locomotiv GT','Piramis','Edda'],a:0},
-{q:'Melyik magyar zenész a "Presser Gábor" hangszere?',o:['Billentyű','Dob','Gitár'],a:0},
-{q:'Melyik magyar együttes az "Edda Művek"?',o:['Egy rockegyüttes','Egy popduó','Egy kórus'],a:0},
+{q:'Milyen hangszeren játszik elsősorban Presser Gábor?',o:['Billentyű','Dob','Gitár'],a:0},
+{q:'Milyen zenei formáció az Edda Művek?',o:['Egy rockegyüttes','Egy popduó','Egy kórus'],a:0},
 ],
 [ // 2
 {q:'Ki az Edda frontembere?',o:['Pataky Attila','Kovács Ákos','Presser Gábor'],a:0},
@@ -163,30 +163,30 @@ QH_QUESTIONS['zene-magyar'] = [
 {q:'Melyik magyar zenész a "Bikini" frontembere?',o:['D. Nagy Lajos','Lukács Laci','Vikidál Gyula'],a:0},
 ],
 [ // 3
-{q:'Melyik magyar együttes a "P. Mobil"?',o:['Rockegyüttes','Popegyüttes','Jazzegyüttes'],a:0},
+{q:'Milyen típusú zenei együttes a P. Mobil?',o:['Rockegyüttes','Popegyüttes','Jazzegyüttes'],a:0},
 {q:'Melyik magyar énekes a "Charlie"?',o:['Horváth Károly','Presser Gábor','Zorán'],a:0},
-{q:'Melyik magyar zenekar a "Republic"?',o:['Rockegyüttes','Operett','Népzenei együttes'],a:0},
+{q:'Milyen típusú zenekar a Republic?',o:['Rockegyüttes','Operett','Népzenei együttes'],a:0},
 {q:'Ki volt a Republic frontembere?',o:['Cipő','Kovács Ákos','Rúzsa Magdi'],a:0},
 {q:'Melyik magyar énekesnő nyert Megasztárt?',o:['Rúzsa Magdi','Tóth Gabi','Wolf Kati'],a:0},
 ],
 [ // 4
 {q:'Melyik magyar előadó képviselte az országot az Eurovízión 1994-ben?',o:['Friderika','Bereczki','Csézy'],a:0},
 {q:'Kinek a slágere az "Elmegyek" című dal?',o:['Máté Péter','Zorán','Charlie'],a:0},
-{q:'Melyik magyar sanzonénekes a "Cserháti Zsuzsa" nem, hanem a "Koncz Zsuzsa" előadója ("Ha én rózsa volnék")?',o:['Koncz Zsuzsa','Zalatnay','Kovács Kati'],a:0},
-{q:'Melyik magyar énekesnő a "Kovács Kati"?',o:['Egy énekesnő','Egy színésznő','Egy zeneszerző'],a:0},
+{q:'Melyik magyar énekesnő a "Ha én rózsa volnék" című dal előadója?',o:['Koncz Zsuzsa','Zalatnay Sarolta','Kovács Kati'],a:0},
+{q:'Mi Kovács Kati foglalkozása?',o:['Egy énekesnő','Egy színésznő','Egy zeneszerző'],a:0},
 {q:'Melyik magyar zeneszerző az operett műfaj magyar mestere?',o:['Kálmán Imre','Bartók Béla','Kodály'],a:0},
 ],
 [ // 5
-{q:'Melyik magyar rapper/hiphop-előadó a "Ganxsta Zolee"?',o:['Rapper','Operaénekes','Népzenész'],a:0},
-{q:'Melyik magyar hiphop-formáció az "Animal Cannibals"?',o:['Egy rapduó','Egy rockegyüttes','Egy DJ'],a:0},
-{q:'Melyik magyar énekesnő a "Zséda" (Zsédenyi Adrienn)?',o:['Popénekesnő','Operaénekesnő','Népdalénekes'],a:0},
-{q:'Melyik magyar együttes a "Quimby"?',o:['Alternatív rockegyüttes','Diszkó','Operett'],a:0},
+{q:'Milyen műfaj előadója Ganxsta Zolee?',o:['Rapper','Operaénekes','Népzenész'],a:0},
+{q:'Milyen zenei formáció az Animal Cannibals?',o:['Egy rapduó','Egy rockegyüttes','Egy DJ'],a:0},
+{q:'Milyen műfaj előadója Zséda (Zsédenyi Adrienn)?',o:['Popénekesnő','Operaénekesnő','Népdalénekes'],a:0},
+{q:'Milyen műfajú együttes a Quimby?',o:['Alternatív rockegyüttes','Diszkó','Operett'],a:0},
 {q:'Ki a Quimby frontembere?',o:['Kiss Tibor','Lovasi András','Ferenczi György'],a:0},
 ],
 [ // 6
-{q:'Melyik magyar együttes a "Kispál és a Borz"?',o:['Alternatív rock','Metál','Diszkó'],a:0},
+{q:'Milyen műfajú együttes a Kispál és a Borz?',o:['Alternatív rock','Metál','Diszkó'],a:0},
 {q:'Ki a Kispál és a Borz frontembere?',o:['Lovasi András','Kiss Tibor','Bérczesi Róbert'],a:0},
-{q:'Melyik magyar zenekar a "Tankcsapda"?',o:['Rockegyüttes Debrecenből','Popegyüttes','Népzenei'],a:0},
+{q:'Milyen típusú zenekar a Tankcsapda?',o:['Rockegyüttes Debrecenből','Popegyüttes','Népzenei'],a:0},
 {q:'Ki a Tankcsapda frontembere?',o:['Lukács László','Pataky Attila','Vikidál'],a:0},
 {q:'Melyik magyar popénekes beceneve volt "a Király"?',o:['Zámbó Jimmy','Charlie','Demjén Ferenc'],a:0},
 ],
@@ -195,7 +195,7 @@ QH_QUESTIONS['zene-magyar'] = [
 {q:'Ki írta a Himnusz szövegét?',o:['Kölcsey Ferenc','Vörösmarty','Petőfi'],a:0},
 {q:'Ki írta a Szózat versét?',o:['Vörösmarty Mihály','Kölcsey','Arany'],a:0},
 {q:'Melyik magyar zeneszerző a Bánk bán opera alkotója?',o:['Erkel Ferenc','Bartók','Kodály'],a:0},
-{q:'Melyik magyar zongoraművész a "Cziffra György"?',o:['Zongoraművész','Hegedűművész','Karmester'],a:0},
+{q:'Milyen művész volt Cziffra György?',o:['Zongoraművész','Hegedűművész','Karmester'],a:0},
 ],
 [ // 8
 {q:'Melyik magyar zeneszerző a világhírű "Kékszakállú herceg vára" alkotója?',o:['Bartók Béla','Kodály Zoltán','Liszt Ferenc'],a:0},
@@ -215,8 +215,8 @@ QH_QUESTIONS['zene-magyar'] = [
 {q:'Melyik magyar énekesnő a "Rúzsa Magdi" híres dala?',o:['Élj úgy','Aprócska','Kislány'],a:0},
 {q:'Melyik magyar zeneszerző műveit játsszák a Zeneakadémián, névadó?',o:['Liszt Ferenc','Bartók','Kodály'],a:0},
 {q:'Melyik a legmélyebb férfi énekhang?',o:['Basszus','Tenor','Szoprán'],a:0},
-{q:'Melyik magyar zenekar a "30Y"?',o:['Alternatív rock','Diszkó','Metál'],a:0},
-{q:'Melyik magyar előadó a "Bagossy Brothers Company" műfaja?',o:['Pop-rock','Opera','Népzene tisztán'],a:0},
+{q:'Milyen műfajú zenekar a 30Y?',o:['Alternatív rock','Diszkó','Metál'],a:0},
+{q:'Milyen műfajú a Bagossy Brothers Company?',o:['Pop-rock','Opera','Népzene tisztán'],a:0},
 ],
 ];
 
@@ -226,7 +226,7 @@ QH_QUESTIONS['zene-klasszikus'] = [
 {q:'Melyik zeneszerző volt süket élete végére?',o:['Beethoven','Chopin','Vivaldi'],a:0},
 {q:'Ki írta a "Kis éji zenét" (Eine kleine Nachtmusik)?',o:['Mozart','Haydn','Schubert'],a:0},
 {q:'Melyik hangszeren játszott Chopin főleg?',o:['Zongora','Hegedű','Cselló'],a:0},
-{q:'Melyik évszakokról szól Vivaldi híres műve?',o:['A négy évszak','A tavasz','A tél'],a:0},
+{q:'Melyik Vivaldi-mű négy hegedűversenyből áll, amelyek a természet változásait festik le?',o:['A négy évszak','A tavasz','A tél'],a:0},
 ],
 [ // 2
 {q:'Melyik Beethoven-szimfónia tartalmazza az "Örömódát"?',o:['9. szimfónia','5. szimfónia','3. szimfónia'],a:0},
@@ -237,7 +237,7 @@ QH_QUESTIONS['zene-klasszikus'] = [
 ],
 [ // 3
 {q:'Melyik zeneszerző írta a "Diótörő" balettet?',o:['Csajkovszkij','Prokofjev','Sztravinszkij'],a:0},
-{q:'Melyik zeneszerző a "Hattyúk tava" alkotója?',o:['Csajkovszkij','Csajkovszkij','Csajkovszkij'],a:0},
+{q:'Melyik zeneszerző a "Hattyúk tava" alkotója?',o:['Csajkovszkij','Prokofjev','Sztravinszkij'],a:0},
 {q:'Melyik zeneszerző írta a "Boleró"-t?',o:['Ravel','Debussy','Satie'],a:0},
 {q:'Melyik olasz zeneszerző a "Nabucco" és "Aida" alkotója?',o:['Verdi','Puccini','Rossini'],a:0},
 {q:'Melyik zeneszerző írta a Bohémélet és a Tosca című operát?',o:['Puccini','Verdi','Rossini'],a:0},
@@ -247,7 +247,7 @@ QH_QUESTIONS['zene-klasszikus'] = [
 {q:'Melyik hangszercsoportba tartozik a hegedű?',o:['Vonós','Fúvós','Ütős'],a:0},
 {q:'Melyik zeneszerző a klasszikus szimfónia "atyja"?',o:['Haydn','Mozart','Beethoven'],a:0},
 {q:'Melyik zeneszerző írta a "Requiem"-et, amit halálakor nem fejezett be?',o:['Mozart','Verdi','Fauré'],a:0},
-{q:'Melyik zeneszerző a "Wagner" fő műfaja?',o:['Opera','Szimfónia','Kamarazene'],a:0},
+{q:'Mi Richard Wagner fő műfaja?',o:['Opera','Szimfónia','Kamarazene'],a:0},
 ],
 [ // 5
 {q:'Melyik Wagner-mű a "Nibelung gyűrűje" tetralógia része?',o:['A Rajna kincse','A Traviata','Carmen'],a:0},
@@ -275,7 +275,7 @@ QH_QUESTIONS['zene-klasszikus'] = [
 {q:'Melyik zeneszerző a "Rómeó és Júlia" balett és "Péter és a farkas" alkotója?',o:['Prokofjev','Sosztakovics','Hacsaturján'],a:0},
 {q:'Melyik zeneszerző a "Kardtánc" alkotója?',o:['Hacsaturján','Prokofjev','Kabalevszkij'],a:0},
 {q:'Melyik zeneszerző a szovjet 20. század nagy szimfonistája?',o:['Sosztakovics','Prokofjev','Mjaszkovszkij'],a:0},
-{q:'Melyik hangszeren szólózik egy zongoraverseny szólistája?',o:['Zongora','Hegedű','Fuvola'],a:0},
+{q:'Melyik hangszer a szólistája Beethoven "Császár" című versenyművének?',o:['Zongora','Hegedű','Fuvola'],a:0},
 ],
 [ // 9
 {q:'Melyik zeneszerző a "Also sprach Zarathustra" (2001 Űrodüsszeia zenéje) alkotója?',o:['Richard Strauss','Johann Strauss','Mahler'],a:0},
@@ -337,7 +337,7 @@ QH_QUESTIONS['zene-hangszerek'] = [
 {q:'Melyik népi hangszer a "furulya" csoportja?',o:['Fafúvós','Rézfúvós','Ütős'],a:0},
 ],
 [ // 7
-{q:'Melyik hangszer a "csembaló" és a zongora fő különbsége?',o:['A csembaló pengeti, a zongora üti a húrt','Nincs különbség','A csembaló fúvós'],a:0},
+{q:'Mi a fő különbség a csembaló és a zongora hangképzése között?',o:['A csembaló pengeti, a zongora üti a húrt','Nincs különbség','A csembaló fúvós'],a:0},
 {q:'Melyik hangszernek nincs húrja?',o:['Trombita','Gitár','Hegedű'],a:0},
 {q:'Melyik hangszer a "timpani" csoportja?',o:['Ütős','Vonós','Fúvós'],a:0},
 {q:'Melyik hangszer legmélyebb regisztere a "kontrafagott"?',o:['Fafúvós','Rézfúvós','Vonós'],a:0},
@@ -361,7 +361,7 @@ QH_QUESTIONS['zene-hangszerek'] = [
 {q:'Hány rezgés/másodperc a normál "a" hang (kamarahang)?',o:['440 Hz','220 Hz','880 Hz'],a:0},
 {q:'Melyik hangszer húrjainak száma változó a modern koncertgitárnál?',o:['6 vagy 12','Mindig 4','Mindig 8'],a:0},
 {q:'Melyik hangszer a "theremin" különlegessége?',o:['Érintés nélkül játsszák','Vonóval','Fújással'],a:0},
-{q:'Melyik hangszer a legrégibb ismert (csont­furulya)?',o:['Furulya-féle','Zongora','Szaxofon'],a:0},
+{q:'Melyik hangszertípus a legrégibb ismert, több tízezer éves régészeti leletekből?',o:['Furulya-féle','Zongora','Szaxofon'],a:0},
 {q:'Ki találta fel a szaxofont?',o:['Adolphe Sax','Theobald Boehm','Bartolomeo Cristofori'],a:0},
 ],
 ];

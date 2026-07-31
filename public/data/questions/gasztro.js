@@ -11,7 +11,7 @@ QH_QUESTIONS['gasztro-magyar'] = [
 ],
 [ // 2
 {q:'Melyik magyar étel a "halászlé" alapja?',o:['Hal','Marha','Csirke'],a:0},
-{q:'Melyik magyar tésztaétel a "túrós csusza"?',o:['Túrós-tepertős tészta','Édes sütemény','Leves'],a:0},
+{q:'Milyen étel a túrós csusza?',o:['Túrós-tepertős tészta','Édes sütemény','Leves'],a:0},
 {q:'Melyik magyar édesség a "somlói galuska"?',o:['Piskótás desszert','Sós rágcsa','Leves'],a:0},
 {q:'Melyik magyar étel a "pörkölt"?',o:['Paprikás húsétel','Sütemény','Saláta'],a:0},
 {q:'Melyik magyar étel a "gulyás" eredetileg?',o:['Pásztorétel','Halászétel','Városi étel'],a:0},
@@ -27,7 +27,7 @@ QH_QUESTIONS['gasztro-magyar'] = [
 {q:'Melyik magyar leves a "Jókai-bableves"?',o:['Füstölt csülkös bableves','Halleves','Zöldségleves'],a:0},
 {q:'Melyik magyar étel a "paprikás csirke" kísérője gyakran?',o:['Nokedli','Rizs','Sült krumpli'],a:0},
 {q:'Melyik magyar sütemény a "kürtőskalács" jellemzője?',o:['Hengeres, karamellizált','Rétegzett torta','Fánk'],a:0},
-{q:'Melyik magyar városról nevezték el a "debreceni" kolbászt?',o:['Debrecen','Gyula','Szeged'],a:0},
+{q:'Melyik kelet-magyarországi nagyvárosról kapta a nevét az egyik legismertebb, párban sült magyar kolbász?',o:['Debrecen','Gyula','Szeged'],a:0},
 {q:'Melyik magyar városról híres a csabai kolbász?',o:['Békéscsaba','Debrecen','Szeged'],a:0},
 ],
 [ // 5
@@ -156,7 +156,7 @@ QH_QUESTIONS['gasztro-edessegek'] = [
 {q:'Melyik magyar desszert rétegzett tésztájú?',o:['Rétes','Fánk','Palacsinta'],a:0},
 ],
 [ // 2
-{q:'Melyik francia sütemény réteges és krémes?',o:['Krémes','Macaron','Éclair'],a:0},
+{q:'Melyik leveles tésztájú, vaníliás töltelékű, porcukros tetejű klasszikus sütemény?',o:['Krémes','Macaron','Éclair'],a:0},
 {q:'Melyik olasz fagylalt-változat sűrűbb?',o:['Gelato','Sorbet','Parfait'],a:0},
 {q:'Melyik desszert francia és habos (crème brûlée) teteje?',o:['Karamellizált cukor','Csokoládé','Gyümölcs'],a:0},
 {q:'Melyik magyar sütemény diós-mákos, karácsonyi?',o:['Bejgli','Rétes','Fánk'],a:0},
@@ -193,7 +193,7 @@ QH_QUESTIONS['gasztro-edessegek'] = [
 [ // 7
 {q:'Melyik francia sütemény kagyló alakú, vajas?',o:['Madeleine','Macaron','Financier'],a:0},
 {q:'Melyik desszert amerikai, gyümölcsös rácsos?',o:['Pite','Muffin','Donut'],a:0},
-{q:'Melyik desszert osztrák, barackgombóc (Marillenknödel)?',o:['Barackgombóc','Kaiserschmarrn','Strudel'],a:0},
+{q:'Melyik osztrák-magyar desszert egy egész sárgabarackot burkoló, morzsába forgatott gombóc (Marillenknödel)?',o:['Barackgombóc','Kaiserschmarrn','Strudel'],a:0},
 {q:'Melyik osztrák desszert tépett palacsinta?',o:['Kaiserschmarrn','Sacher','Apfelstrudel'],a:0},
 {q:'Melyik desszert francia, égetett tésztás gyűrű?',o:['Paris-Brest','Éclair','Croquembouche'],a:0},
 ],
@@ -216,7 +216,7 @@ QH_QUESTIONS['gasztro-edessegek'] = [
 {q:'Melyik olasz kávés fagylalt forró eszpresszóval leöntve?',o:['Affogato','Gelato','Granita'],a:0},
 {q:'Melyik közel-keleti sajtos, sziruppal átitatott meleg desszert?',o:['Künefe','Baklava','Lokum'],a:0},
 {q:'Melyik francia habos, könnyű csokoládé­desszert (mousse au chocolat)?',o:['Csokoládémousse','Ganache','Crème brûlée'],a:0},
-{q:'Melyik magyar cukrászdinasztiáról nevezték el a "Gerbeaud-szeletet"?',o:['Gerbeaud','Auguszt','Ruszwurm'],a:0},
+{q:'Melyik híres budapesti cukrászdináról nevezték el a diós-baracklekváros, csokoládémázas szeletet?',o:['Gerbeaud','Auguszt','Ruszwurm'],a:0},
 ],
 ];
 
@@ -237,7 +237,7 @@ QH_QUESTIONS['gasztro-italok'] = [
 ],
 [ // 3
 {q:'Melyik ital pezsgő és francia régióból ered?',o:['Champagne','Prosecco','Cava'],a:0},
-{q:'Melyik olasz pezsgő a "prosecco"?',o:['Olasz','Spanyol','Francia'],a:0},
+{q:'Melyik ország habzóbora a prosecco?',o:['Olasz','Spanyol','Francia'],a:0},
 {q:'Melyik koktél alapja rum, menta, lime?',o:['Mojito','Margarita','Martini'],a:0},
 {q:'Melyik koktél alapja tequila, lime?',o:['Margarita','Mojito','Cosmopolitan'],a:0},
 {q:'Miből készül a tequila?',o:['Agávé','Cukornád','Gabona'],a:0},
@@ -337,7 +337,7 @@ QH_QUESTIONS['gasztro-alapanyagok'] = [
 {q:'Melyik alapanyag a "matcha"?',o:['Zöld tea por','Kávé','Kakaó'],a:0},
 ],
 [ // 7
-{q:'Melyik fűszernövény a "kakukkfű" (thyme)?',o:['Egy fűszernövény','Egy gyümölcs','Egy hús'],a:0},
+{q:'Mi a kakukkfű (thyme)?',o:['Egy fűszernövény','Egy gyümölcs','Egy hús'],a:0},
 {q:'Melyik alapanyag a "szójaszósz" fő eleme (erjesztett szója)?',o:['Szójabab','Rizs','Kukorica'],a:0},
 {q:'Melyik alapanyag a "balzsamecet" forrása?',o:['Szőlőmust','Alma','Rizs'],a:0},
 {q:'Melyik alapanyag a "kapribogyó"?',o:['Egy növény bimbója','Egy hal','Egy mag'],a:0},
@@ -358,7 +358,7 @@ QH_QUESTIONS['gasztro-alapanyagok'] = [
 {q:'Melyik alapanyag a "vaníliarúd" forrása?',o:['Orchidea termése','Egy fűszerfa kérge','Egy mag'],a:0},
 ],
 [ // 10
-{q:'Melyik fűszer forrása a fahéjfa kérge?',o:['Fahéj','Szegfűszeg','Bors'],a:0},
+{q:'Melyik fűszert egy trópusi fa lehántott, feltekeredő kérgéből nyerik?',o:['Fahéj','Szegfűszeg','Bors'],a:0},
 {q:'Melyik alapanyag a "kapor"?',o:['Egy fűszernövény','Egy hal','Egy mag'],a:0},
 {q:'Melyik alapanyag a "sáfrány" forrása?',o:['Krókusz bibeszála','Egy gyökér','Egy kéreg'],a:0},
 {q:'Melyik alapanyag a "gyömbér" felhasznált része?',o:['Gyöktörzs','Levél','Virág'],a:0},

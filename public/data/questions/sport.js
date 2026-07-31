@@ -299,7 +299,7 @@ QH_QUESTIONS['sport-egyeni'] = [
 {q:'Milyen távú a klasszikus sprintfutás?',o:['100 m','1000 m','5000 m'],a:0},
 {q:'Milyen sport a Forma-1?',o:['Autóverseny','Kerékpár','Motorcsónak'],a:0},
 {q:'Milyen ütővel játsszák a teniszt?',o:['Teniszütővel','Baseballütővel','Golfütővel'],a:0},
-{q:'Melyik sportban van "úszásnem" pl. mellúszás?',o:['Úszás','Atlétika','Vívás'],a:0},
+{q:'Melyik sportághoz tartozik a mellúszás, a gyorsúszás és a pillangó?',o:['Úszás','Atlétika','Vívás'],a:0},
 ],
 [ // 2
 {q:'Melyik a leghosszabb futótáv az olimpián a pályán?',o:['10 000 m','5000 m','1500 m'],a:0},
@@ -312,7 +312,7 @@ QH_QUESTIONS['sport-egyeni'] = [
 {q:'Melyik teniszverseny füves pályás Grand Slam?',o:['Wimbledon','Roland Garros','US Open'],a:0},
 {q:'Melyik F1-csapat a legendás olasz?',o:['Ferrari','McLaren','Red Bull'],a:0},
 {q:'Melyik sportban van "hole in one"?',o:['Golf','Tenisz','Íjászat'],a:0},
-{q:'Milyen úszásnem a "pillangó"?',o:['Egy úszásnem','Egy vívásfajta','Egy futószám'],a:0},
+{q:'Mi a pillangó a sportban?',o:['Egy úszásnem','Egy vívásfajta','Egy futószám'],a:0},
 {q:'Melyik atléta a leggyorsabb 100 m-en?',o:['Usain Bolt','Carl Lewis','Justin Gatlin'],a:0},
 ],
 [ // 4
@@ -325,7 +325,7 @@ QH_QUESTIONS['sport-egyeni'] = [
 [ // 5
 {q:'Melyik teniszező nyerte a legtöbb Grand Slamet férfiaknál?',o:['Djokovic','Federer','Nadal'],a:0},
 {q:'Melyik F1-versenyző a legtöbb bajnoki címmel holtversenyben?',o:['Hamilton és Schumacher','Csak Verstappen','Csak Alonso'],a:0},
-{q:'Melyik sportban van "birkózás" görög-római stílus?',o:['Birkózás','Cselgáncs','Ökölvívás'],a:0},
+{q:'Melyik küzdősportnak van görög-római és szabadfogású stílusa?',o:['Birkózás','Cselgáncs','Ökölvívás'],a:0},
 {q:'Melyik atlétikai szám a "rúdugrás"?',o:['Ugrószám','Dobószám','Futószám'],a:0},
 {q:'Melyik teniszezőnő nyerte a legtöbb Grand Slam-egyéni címet a nyílt érában (23)?',o:['Serena Williams','Steffi Graf','Martina Hingis'],a:0},
 ],

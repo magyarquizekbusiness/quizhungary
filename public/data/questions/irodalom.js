@@ -12,7 +12,7 @@ QH_QUESTIONS['irodalom-magyar'] = [
 [ // 2
 {q:'Ki írta a Szózatot?',o:['Vörösmarty Mihály','Kölcsey','Petőfi'],a:0},
 {q:'Ki írta a Himnuszt (a verset)?',o:['Kölcsey Ferenc','Vörösmarty','Petőfi'],a:0},
-{q:'Melyik Jókai-regény címe "Az arany ember"?',o:['Az arany ember','A kőszívű ember fiai','Fekete gyémántok'],a:0},
+{q:'Melyik Jókai-regény főhőse a Duna hajósa, Tímár Mihály, aki egy titkos kincs révén gazdagszik meg?',o:['Az arany ember','A kőszívű ember fiai','Fekete gyémántok'],a:0},
 {q:'Ki írta A kőszívű ember fiait?',o:['Jókai Mór','Mikszáth','Gárdonyi'],a:0},
 {q:'Melyik költő verse a "Szeptember végén"?',o:['Petőfi Sándor','Arany','Vörösmarty'],a:0},
 ],
@@ -26,8 +26,8 @@ QH_QUESTIONS['irodalom-magyar'] = [
 [ // 4
 {q:'Ki írta a Bánk bán drámát?',o:['Katona József','Vörösmarty','Madách'],a:0},
 {q:'Ki írta Az ember tragédiáját?',o:['Madách Imre','Katona','Vörösmarty'],a:0},
-{q:'Melyik Móricz-regény címe "Rokonok"?',o:['Rokonok','Sárarany','Úri muri'],a:0},
-{q:'Ki írta a Pacsirta és az Aranysárkány szerzője?',o:['Kosztolányi Dezső','Babits','Krúdy'],a:0},
+{q:'Melyik Móricz-regény főhőse Kopjáss István, akit ügyészi kinevezése után elárasztanak a hivatalt kérő atyafiak?',o:['Rokonok','Sárarany','Úri muri'],a:0},
+{q:'Ki a Pacsirta és az Aranysárkány szerzője?',o:['Kosztolányi Dezső','Babits','Krúdy'],a:0},
 {q:'Melyik költő halt meg munkaszolgálatban, a "Razglednicák" szerzője?',o:['Radnóti Miklós','József Attila','Ady'],a:0},
 ],
 [ // 5
@@ -47,26 +47,26 @@ QH_QUESTIONS['irodalom-magyar'] = [
 [ // 7
 {q:'Ki írta a Szigeti veszedelem eposzt?',o:['Zrínyi Miklós','Gyöngyösi','Balassi'],a:0},
 {q:'Melyik költő a magyar reneszánsz lírikusa, katonaénekek szerzője?',o:['Balassi Bálint','Janus Pannonius','Csokonai'],a:0},
-{q:'Ki írta A méla Tempefői és a Dorottya szerzője?',o:['Csokonai Vitéz Mihály','Berzsenyi','Kazinczy'],a:0},
+{q:'Ki A méla Tempefői és a Dorottya szerzője?',o:['Csokonai Vitéz Mihály','Berzsenyi','Kazinczy'],a:0},
 {q:'Melyik költő a "A Reményhez" szerzője?',o:['Csokonai','Berzsenyi','Kölcsey'],a:0},
 {q:'Ki a nyelvújítás vezéralakja?',o:['Kazinczy Ferenc','Kölcsey','Vörösmarty'],a:0},
 ],
 [ // 8
 {q:'Melyik Márai-mű a "A gyertyák csonkig égnek"?',o:['Márai Sándor','Kosztolányi','Krúdy'],a:0},
-{q:'Ki írta az Egy polgár vallomásai szerzője?',o:['Márai Sándor','Móricz','Németh László'],a:0},
+{q:'Ki az Egy polgár vallomásai szerzője?',o:['Márai Sándor','Móricz','Németh László'],a:0},
 {q:'Melyik Krúdy-hős a "Szindbád"?',o:['Krúdy Gyula','Kosztolányi','Babits'],a:0},
 {q:'Ki írta a Sorstalanság című regényt, ami Nobel-díjat kapott?',o:['Kertész Imre','Esterházy','Nádas'],a:0},
 {q:'Melyik évben kapott Kertész Imre Nobel-díjat?',o:['2002','1996','2010'],a:0},
 ],
 [ // 9
-{q:'Ki írta a Harmonia Caelestis szerzője?',o:['Esterházy Péter','Nádas Péter','Krasznahorkai'],a:0},
+{q:'Ki a Harmonia Caelestis szerzője?',o:['Esterházy Péter','Nádas Péter','Krasznahorkai'],a:0},
 {q:'Melyik Nádas-regény az "Emlékiratok könyve"?',o:['Nádas Péter','Esterházy','Kertész'],a:0},
 {q:'Ki írta a Sátántangó regényt?',o:['Krasznahorkai László','Nádas','Esterházy'],a:0},
 {q:'Melyik magyar költő a "Pilinszky János" korszaka?',o:['20. századi','19. századi','18. századi'],a:0},
 {q:'Melyik költő az "Egy mondat a zsarnokságról" szerzője?',o:['Illyés Gyula','József Attila','Radnóti'],a:0},
 ],
 [ // 10
-{q:'Ki írta A puszták népe szerzője?',o:['Illyés Gyula','Móricz','Németh László'],a:0},
+{q:'Ki A puszták népe szerzője?',o:['Illyés Gyula','Móricz','Németh László'],a:0},
 {q:'Ki írta a "Macskajáték" című drámát?',o:['Örkény István','Molnár Ferenc','Katona József'],a:0},
 {q:'Melyik Örkény-műfaj az "Egyperces novellák"?',o:['Rövid novella','Regény','Eposz'],a:0},
 {q:'Melyik magyar Nobel-díjas író 2002-ből?',o:['Kertész Imre','Márai','Illyés'],a:0},
@@ -91,7 +91,7 @@ QH_QUESTIONS['irodalom-vilag'] = [
 ],
 [ // 3
 {q:'Ki írta a Nagy Gatsby című regényt?',o:['F. Scott Fitzgerald','Hemingway','Steinbeck'],a:0},
-{q:'Ki írta Az öreg halász és a tenger szerzője?',o:['Hemingway','Faulkner','Fitzgerald'],a:0},
+{q:'Ki Az öreg halász és a tenger szerzője?',o:['Hemingway','Faulkner','Fitzgerald'],a:0},
 {q:'Ki írta a Száz év magány című regényt?',o:['Gabriel García Márquez','Borges','Cortázar'],a:0},
 {q:'Ki írta az 1984 című disztópiát?',o:['George Orwell','Aldous Huxley','Ray Bradbury'],a:0},
 {q:'Ki írta a Szép új világot?',o:['Aldous Huxley','Orwell','Bradbury'],a:0},
@@ -105,15 +105,15 @@ QH_QUESTIONS['irodalom-vilag'] = [
 ],
 [ // 5
 {q:'Ki írta az Anna Karenina című regényt?',o:['Tolsztoj','Dosztojevszkij','Turgenyev'],a:0},
-{q:'Ki írta a Karamazov testvérek szerzője?',o:['Dosztojevszkij','Tolsztoj','Csehov'],a:0},
+{q:'Ki a Karamazov testvérek szerzője?',o:['Dosztojevszkij','Tolsztoj','Csehov'],a:0},
 {q:'Ki írta A Mester és Margarita című regényt?',o:['Bulgakov','Paszternak','Solohov'],a:0},
 {q:'Ki írta a Doktor Zsivágót?',o:['Paszternak','Bulgakov','Nabokov'],a:0},
 {q:'Ki írta a Holt lelkek című művet?',o:['Gogol','Turgenyev','Csehov'],a:0},
 ],
 [ // 6
 {q:'Ki írta A per (Der Prozess) című regényt?',o:['Franz Kafka','Thomas Mann','Hesse'],a:0},
-{q:'Melyik Kafka-mű az "Átváltozás" (egy féreggé válás)?',o:['Kafka','Mann','Musil'],a:0},
-{q:'Ki írta A varázshegy szerzője?',o:['Thomas Mann','Hesse','Böll'],a:0},
+{q:'Melyik Kafka-mű főhőse, Gregor Samsa egy reggel óriási rovarrá változva ébred?',o:['Az átváltozás','A per','A kastély'],a:0},
+{q:'Ki A varázshegy szerzője?',o:['Thomas Mann','Hesse','Böll'],a:0},
 {q:'Ki írta a Buddenbrook ház?',o:['Thomas Mann','Hesse','Grass'],a:0},
 {q:'Ki írta a Bádogdob?',o:['Günter Grass','Böll','Mann'],a:0},
 ],
@@ -122,13 +122,13 @@ QH_QUESTIONS['irodalom-vilag'] = [
 {q:'Ki írta Az eltűnt idő nyomában sorozatot?',o:['Marcel Proust','Flaubert','Zola'],a:0},
 {q:'Ki írta a Bovaryné című regényt?',o:['Flaubert','Balzac','Stendhal'],a:0},
 {q:'Ki írta a Vörös és fekete című regényt?',o:['Stendhal','Balzac','Flaubert'],a:0},
-{q:'Ki írta A vörös és a fekete mellett a Goriot apó szerzője?',o:['Balzac','Zola','Maupassant'],a:0},
+{q:'Ki a Goriot apó (Le Père Goriot) című regény szerzője?',o:['Balzac','Zola','Maupassant'],a:0},
 ],
 [ // 8
 {q:'Ki írta a Moby Dick című regényt?',o:['Herman Melville','Nathaniel Hawthorne','Poe'],a:0},
 {q:'Ki írta A holló című verset?',o:['Edgar Allan Poe','Walt Whitman','Emily Dickinson'],a:0},
 {q:'Ki írta a Zabhegyező (Rozsban a fogó) című regényt?',o:['J. D. Salinger','Kerouac','Vonnegut'],a:0},
-{q:'Ki írta Az ötös számú vágóhíd szerzője?',o:['Kurt Vonnegut','Heller','Pynchon'],a:0},
+{q:'Ki Az ötös számú vágóhíd szerzője?',o:['Kurt Vonnegut','Heller','Pynchon'],a:0},
 {q:'Ki írta A 22-es csapdája című regényt?',o:['Joseph Heller','Vonnegut','Mailer'],a:0},
 ],
 [ // 9
@@ -143,7 +143,7 @@ QH_QUESTIONS['irodalom-vilag'] = [
 {q:'Ki írta A kopasz énekesnő?',o:['Eugène Ionesco','Beckett','Brecht'],a:0},
 {q:'Ki írta a Kurázsi mama?',o:['Bertolt Brecht','Ibsen','Csehov'],a:0},
 {q:'Ki írta a Babaház (Nóra) című drámát?',o:['Henrik Ibsen','Strindberg','Csehov'],a:0},
-{q:'Ki írta a Sirály és a Cseresznyéskert szerzője?',o:['Anton Csehov','Gogol','Gorkij'],a:0},
+{q:'Ki a Sirály és a Cseresznyéskert szerzője?',o:['Anton Csehov','Gogol','Gorkij'],a:0},
 ],
 ];
 
@@ -252,7 +252,7 @@ QH_QUESTIONS['irodalom-ifjusagi'] = [
 [ // 5
 {q:'Ki írta A kis herceget?',o:['Antoine de Saint-Exupéry','Verne','Dumas'],a:0},
 {q:'Melyik bolygóról érkezett a kis herceg?',o:['Egy aszteroidáról','A Marsról','A Holdról'],a:0},
-{q:'Ki írte a Pinokkió történetét?',o:['Carlo Collodi','Andersen','Grimm'],a:0},
+{q:'Ki írta a Pinokkió történetét?',o:['Carlo Collodi','Andersen','Grimm'],a:0},
 {q:'Ki írta az Alice Csodaországban című művet?',o:['Lewis Carroll','Barrie','Milne'],a:0},
 {q:'Ki írta a Pán Péter (Peter Pan) történetét?',o:['J. M. Barrie','Carroll','Grahame'],a:0},
 ],
@@ -266,21 +266,21 @@ QH_QUESTIONS['irodalom-ifjusagi'] = [
 [ // 7
 {q:'Ki írta a Nyolcvan nap alatt a Föld körül című regényt?',o:['Jules Verne','Alexandre Dumas','Victor Hugo'],a:0},
 {q:'Melyik Verne-regény a "Nyolcvan nap alatt a Föld körül"?',o:['Jules Verne','Wells','Stevenson'],a:0},
-{q:'Ki írta a Húszezer mérföld a tenger alatt szerzője?',o:['Jules Verne','Wells','Doyle'],a:0},
+{q:'Ki a Húszezer mérföld a tenger alatt szerzője?',o:['Jules Verne','Wells','Doyle'],a:0},
 {q:'Melyik kapitány a Nautilus tengeralattjáró parancsnoka?',o:['Nemo kapitány','Ahab','Hook'],a:0},
-{q:'Ki írta a Grant kapitány gyermekei szerzője?',o:['Jules Verne','Stevenson','Defoe'],a:0},
+{q:'Ki a Grant kapitány gyermekei szerzője?',o:['Jules Verne','Stevenson','Defoe'],a:0},
 ],
 [ // 8
 {q:'Ki írta a Percy Jackson sorozatot?',o:['Rick Riordan','Rowling','Collins'],a:0},
 {q:'Melyik mitológián alapul a Percy Jackson?',o:['Görög','Egyiptomi','Skandináv'],a:0},
 {q:'Ki írta az Eragon (Örökség) sorozatot?',o:['Christopher Paolini','Pullman','Sanderson'],a:0},
 {q:'Ki írta Az Úr sötét anyagai (Arany iránytű) trilógiát?',o:['Philip Pullman','Lewis','Tolkien'],a:0},
-{q:'Ki írta a Végtelen történet (Die unendliche Geschichte) szerzője?',o:['Michael Ende','Preußler','Kästner'],a:0},
+{q:'Ki a Végtelen történet (Die unendliche Geschichte) szerzője?',o:['Michael Ende','Preußler','Kästner'],a:0},
 ],
 [ // 9
 {q:'Ki írta a Momo című regényt?',o:['Michael Ende','Kästner','Preußler'],a:0},
-{q:'Ki írta A kis boszorkány szerzője?',o:['Otfried Preußler','Ende','Kästner'],a:0},
-{q:'Ki írta az Emil és a detektívek szerzője?',o:['Erich Kästner','Ende','Preußler'],a:0},
+{q:'Ki A kis boszorkány szerzője?',o:['Otfried Preußler','Ende','Kästner'],a:0},
+{q:'Ki az Emil és a detektívek szerzője?',o:['Erich Kästner','Ende','Preußler'],a:0},
 {q:'Melyik svéd írónő alkotta Harisnyás Pippit?',o:['Astrid Lindgren','Tove Jansson','Selma Lagerlöf'],a:0},
 {q:'Ki alkotta a Múmin-völgy szereplőit?',o:['Tove Jansson','Lindgren','Andersen'],a:0},
 ],
@@ -289,14 +289,14 @@ QH_QUESTIONS['irodalom-ifjusagi'] = [
 {q:'Melyik szerzőpáros gyűjtötte össze németül a Piroska és a farkas mesét?',o:['Grimm testvérek','Andersen','Verne'],a:0},
 {q:'Ki írta A rút kiskacsa és A rendíthetetlen ólomkatona meséket?',o:['Andersen','Grimm','Perrault'],a:0},
 {q:'Melyik meseíró pár gyűjtötte a Hamupipőke, Jancsi és Juliska meséket?',o:['Grimm testvérek','Andersen','Perrault'],a:0},
-{q:'Ki írta a Fűzfa-fújta szél (The Wind in the Willows) szerzője?',o:['Kenneth Grahame','Milne','Carroll'],a:0},
+{q:'Ki a Fűzfa-fújta szél (The Wind in the Willows) szerzője?',o:['Kenneth Grahame','Milne','Carroll'],a:0},
 ],
 ];
 
 QH_QUESTIONS['irodalom-drama'] = [
 [ // 1
 {q:'Ki írta a Hamletet?',o:['Shakespeare','Molière','Ibsen'],a:0},
-{q:'Melyik Shakespeare-dráma szerelmespárja Rómeó és Júlia?',o:['Rómeó és Júlia','Othello','Lear király'],a:0},
+{q:'Melyik Shakespeare-dráma két veronai fiatal tragikus szerelmét meséli el?',o:['Rómeó és Júlia','Othello','Lear király'],a:0},
 {q:'Ki írta a Bánk bán című drámát?',o:['Katona József','Madách','Vörösmarty'],a:0},
 {q:'Ki írta Az ember tragédiáját?',o:['Madách Imre','Katona','Vörösmarty'],a:0},
 {q:'Melyik műfaj a "tragédia" ellentéte?',o:['Komédia','Eposz','Óda'],a:0},
@@ -305,11 +305,11 @@ QH_QUESTIONS['irodalom-drama'] = [
 {q:'Melyik Shakespeare-tragédia hőse a mór hadvezér?',o:['Othello','Macbeth','Hamlet'],a:0},
 {q:'Melyik Shakespeare-dráma skót királya?',o:['Macbeth','Lear','Hamlet'],a:0},
 {q:'Melyik Shakespeare-mű a "Lear király"?',o:['Tragédia','Vígjáték','Történelmi'],a:0},
-{q:'Melyik Shakespeare-vígjáték a "Szentivánéji álom"?',o:['Vígjáték','Tragédia','Királydráma'],a:0},
+{q:'Melyik műfajba tartozik Shakespeare Szentivánéji álom című darabja?',o:['Vígjáték','Tragédia','Királydráma'],a:0},
 {q:'Melyik francia komédiaszerző a "Tartuffe" alkotója?',o:['Molière','Racine','Corneille'],a:0},
 ],
 [ // 3
-{q:'Melyik Molière-komédia hőse a fösvény?',o:['A fösvény','A mizantróp','Don Juan'],a:0},
+{q:'Melyik Molière-komédia főhőse a pénzét mindennél jobban szerető, zsugori Harpagon?',o:['A fösvény','A mizantróp','Don Juan'],a:0},
 {q:'Melyik francia klasszicista drámaíró a "Phaedra" alkotója?',o:['Racine','Molière','Corneille'],a:0},
 {q:'Melyik görög tragédia hőse megöli apját és anyját veszi el?',o:['Oidipusz király','Antigoné','Médeia'],a:0},
 {q:'Ki írta az Oidipusz királyt?',o:['Szophoklész','Aiszkhülosz','Euripidész'],a:0},
@@ -320,20 +320,20 @@ QH_QUESTIONS['irodalom-drama'] = [
 {q:'Ki írta a Médeia című tragédiát?',o:['Euripidész','Szophoklész','Aiszkhülosz'],a:0},
 {q:'Melyik norvég drámaíró a "Babaház" (Nóra) alkotója?',o:['Ibsen','Strindberg','Csehov'],a:0},
 {q:'Melyik orosz drámaíró a "Cseresznyéskert" alkotója?',o:['Csehov','Gorkij','Gogol'],a:0},
-{q:'Melyik Csehov-dráma a "Ványa bácsi"?',o:['Csehov','Gorkij','Turgenyev'],a:0},
+{q:'Melyik Csehov-dráma címszereplője egy vidéki birtokon élő, csalódott, idősödő férfi?',o:['Ványa bácsi','A sirály','Három nővér'],a:0},
 ],
 [ // 5
 {q:'Ki írta a Peer Gynt drámai költeményt?',o:['Henrik Ibsen','Strindberg','Bjørnson'],a:0},
-{q:'Melyik magyar dráma hőse Az ember tragédiájában Ádám és Éva?',o:['Az ember tragédiája','Bánk bán','Csongor és Tünde'],a:0},
+{q:'Melyik Madách-mű főszereplője Ádám és Éva, akik különböző történelmi korokon utaznak át?',o:['Az ember tragédiája','Bánk bán','Csongor és Tünde'],a:0},
 {q:'Ki írta a Csongor és Tünde című drámai költeményt?',o:['Vörösmarty Mihály','Madách','Katona'],a:0},
 {q:'Melyik amerikai drámaíró Az ügynök halála alkotója?',o:['Arthur Miller','Tennessee Williams','O\'Neill'],a:0},
-{q:'Melyik Tennessee Williams-dráma a "A vágy villamosa"?',o:['A vágy villamosa','Az üvegfigurák','Macska a forró bádogtetőn'],a:0},
+{q:'Melyik Tennessee Williams-dráma főhőse Blanche DuBois, aki New Orleans-i húgáékhoz költözik?',o:['A vágy villamosa','Az üvegfigurák','Macska a forró bádogtetőn'],a:0},
 ],
 [ // 6
 {q:'Melyik ír drámaíró a "Godot-ra várva" alkotója?',o:['Samuel Beckett','Shaw','Wilde'],a:0},
 {q:'Melyik ír szerző a "Bunbury" (The Importance of Being Earnest) alkotója?',o:['Oscar Wilde','Shaw','Yeats'],a:0},
 {q:'Melyik német drámaíró az epikus színház megteremtője?',o:['Bertolt Brecht','Dürrenmatt','Frisch'],a:0},
-{q:'Melyik Brecht-mű a "Kurázsi mama"?',o:['Brecht','Ibsen','Csehov'],a:0},
+{q:'Melyik Brecht-dráma egy markotányosnőről szól, aki a harmincéves háborúban követi szekerével a katonákat?',o:['Kurázsi mama','Galilei élete','Koldusopera'],a:0},
 {q:'Melyik svájci drámaíró "A fizikusok" alkotója?',o:['Dürrenmatt','Frisch','Brecht'],a:0},
 ],
 [ // 7
@@ -344,9 +344,9 @@ QH_QUESTIONS['irodalom-drama'] = [
 {q:'Melyik angol drámaíró a modern "fenyegetés komédiája" mestere?',o:['Harold Pinter','Stoppard','Osborne'],a:0},
 ],
 [ // 8
-{q:'Melyik Shakespeare-dráma a velencei kalmár témája (uzsora, per)?',o:['A velencei kalmár','Othello','Hamlet'],a:0},
-{q:'Melyik Shakespeare-vígjáték a "Ahogy tetszik" (As You Like It)?',o:['Vígjáték','Tragédia','Királydráma'],a:0},
-{q:'Melyik Shakespeare-királydráma III. Richárdról szól?',o:['III. Richárd','V. Henrik','János király'],a:0},
+{q:'Melyik Shakespeare-dráma az uzsorás Shylockot és az "egy font hús" fejében kötött kölcsön perét állítja középpontba?',o:['A velencei kalmár','Othello','Hamlet'],a:0},
+{q:'Milyen műfajú Shakespeare Ahogy tetszik (As You Like It) című darabja?',o:['Vígjáték','Tragédia','Királydráma'],a:0},
+{q:'Melyik Shakespeare-királydráma főhőse a trónért gyilkoló, púpos angol király?',o:['III. Richárd','V. Henrik','János király'],a:0},
 {q:'Hány felvonásból áll egy klasszikus dráma általában?',o:['5','3','7'],a:0},
 {q:'Melyik dramaturgiai fogalom a "katarzis"?',o:['Érzelmi megtisztulás','Cselekmény csúcspontja','Színpadi díszlet'],a:0},
 ],
@@ -362,7 +362,7 @@ QH_QUESTIONS['irodalom-drama'] = [
 {q:'Melyik cseh drámaíró-elnök abszurd drámaíró volt?',o:['Václav Havel','Kundera','Hrabal'],a:0},
 {q:'Melyik brit drámaíró a "Rosencrantz és Guildenstern halott" alkotója?',o:['Tom Stoppard','Pinter','Osborne'],a:0},
 {q:'Melyik dráma a "Dühöngő ifjúság"?',o:['John Osborne','Pinter','Beckett'],a:0},
-{q:'Melyik magyar rendező-drámaíró a Katona József Színház névadója?',o:['Katona József','Madách Imre','Vörösmarty'],a:0},
+{q:'Melyik magyar drámaíróról, a Bánk bán szerzőjéről nevezték el a híres budapesti kőszínházat?',o:['Katona József','Madách Imre','Vörösmarty'],a:0},
 ],
 ];
 

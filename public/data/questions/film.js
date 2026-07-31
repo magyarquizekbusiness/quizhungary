@@ -7,7 +7,7 @@ QH_QUESTIONS['film-klasszikus'] = [
 {q:'Melyik filmben mondják: "May the Force be with you"?',o:['Star Wars','Star Trek','Alien'],a:0},
 {q:'Melyik állat a Jurassic Park főszereplője?',o:['Dinoszaurusz','Oroszlán','Cápa'],a:0},
 {q:'Ki rendezte a Cápa című filmet?',o:['Spielberg','Lucas','Cameron'],a:0},
-{q:'Melyik film hajója a Titanic?',o:['Titanic','Poszeidón','Ben-Hur'],a:0},
+{q:'Melyik James Cameron-film játszódik egy 1912-ben elsüllyedt óceánjárón?',o:['Titanic','Poszeidón','Ben-Hur'],a:0},
 ],
 [ // 2
 {q:'Ki rendezte a Star Wars eredeti trilógiáját?',o:['George Lucas','Spielberg','Kubrick'],a:0},
@@ -76,7 +76,7 @@ QH_QUESTIONS['film-klasszikus'] = [
 
 QH_QUESTIONS['film-modern'] = [
 [ // 1
-{q:'Melyik filmsorozat főhőse Harry Potter?',o:['Harry Potter','Gyűrűk Ura','Narnia'],a:0},
+{q:'Melyik filmsorozat főhőse egy fiatal varázsló, aki a Roxfort iskolába jár?',o:['Harry Potter','Gyűrűk Ura','Narnia'],a:0},
 {q:'Melyik szuperhős zöld és nagy erejű?',o:['Hulk','Vasember','Pókember'],a:0},
 {q:'Melyik filmben szerepel Jack Sparrow kapitány?',o:['A Karib-tenger kalózai','Kincses sziget','Hook'],a:0},
 {q:'Ki játssza Jack Sparrow-t?',o:['Johnny Depp','Orlando Bloom','Brad Pitt'],a:0},
@@ -178,7 +178,7 @@ QH_QUESTIONS['film-animacios'] = [
 ],
 [ // 5
 {q:'Melyik Miyazaki-film a Totoro (Szomszédom, Totoro)?',o:['1988-as','1997-es','2001-es'],a:0},
-{q:'Melyik Disney-film hercegnője Mulan?',o:['Mulan','Pocahontas','Vaiana'],a:0},
+{q:'Melyik Disney-film hősnője férfinak álcázza magát, hogy a kínai hadseregben harcolhasson?',o:['Mulan','Pocahontas','Vaiana'],a:0},
 {q:'Melyik Pixar-film szörnyekről szól, akik gyerekeket ijesztgetnek?',o:['Szörny Rt.','Toy Story','Verdák'],a:0},
 {q:'Melyik animációs sorozat sárga bőrű családja?',o:['A Simpson család','Family Guy','South Park'],a:0},
 {q:'Melyik évben indult a Simpson család?',o:['1989','1995','1985'],a:0},
@@ -266,14 +266,14 @@ QH_QUESTIONS['film-sorozatok'] = [
 [ // 7
 {q:'Melyik sorozat egy vegyész rákos diagnózisával indul?',o:['Breaking Bad','The Shield','Weeds'],a:0},
 {q:'Hány évadból áll a Breaking Bad?',o:['5','7','3'],a:0},
-{q:'Melyik sorozat a Vikingek főhőse (Ragnar)?',o:['Vikingek','The Last Kingdom','Barbarok'],a:0},
-{q:'Melyik sorozat főhőse egy nyomozó páros a True Detective első évadában?',o:['True Detective','Fargo','Mindhunter'],a:0},
+{q:'Melyik történelmi sorozat főhőse Ragnar Lothbrok, a legendás skandináv harcos?',o:['Vikingek','The Last Kingdom','Barbarok'],a:0},
+{q:'Melyik antológiasorozat első évadában Rust Cohle és Marty Hart nyomozópáros egy rejtélyes gyilkosságsorozatot old fel?',o:['True Detective','Fargo','Mindhunter'],a:0},
 {q:'Melyik színész játszotta Rust Cohle-t a True Detective-ben?',o:['Matthew McConaughey','Woody Harrelson','Colin Farrell'],a:0},
 ],
 [ // 8
 {q:'Melyik sorozat FBI-profilozókról szól a 70-es években?',o:['Mindhunter','Criminal Minds','The Fall'],a:0},
 {q:'Melyik sorozat Csernobil katasztrófájáról szól (HBO, 2019)?',o:['Chernobyl','The Terror','Band of Brothers'],a:0},
-{q:'Melyik sorozat a Fargo filmből készült (antológia)?',o:['Fargo','Bosch','True Detective'],a:0},
+{q:'Melyik antológiasorozat a Coen testvérek havas Minnesotában játszódó bűnügyi filmjén alapul?',o:['Fargo','Bosch','True Detective'],a:0},
 {q:'Melyik sorozat a Better Call Saul előzménye/kapcsolódója?',o:['Breaking Bad','Ozark','Narcos'],a:0},
 {q:'Melyik sorozat főhőse Marty Byrde pénzmosó?',o:['Ozark','Bloodline','Animal Kingdom'],a:0},
 ],
@@ -296,17 +296,17 @@ QH_QUESTIONS['film-sorozatok'] = [
 QH_QUESTIONS['film-magyar'] = [
 [ // 1
 {q:'Melyik klasszikus magyar rajzfilmsorozat dolgozza fel a népmeséket?',o:['Magyar népmesék','Tom és Jerry','Scooby-Doo'],a:0},
-{q:'Melyik magyar rajzfilmfigura kék és Gusztáv nevű?',o:['Gusztáv','Pom Pom','Vízipók'],a:0},
+{q:'Melyik klasszikus magyar rajzfilmsorozat kopasz, kisemberi főhőse folyton a hétköznapok abszurd helyzeteibe keveredik?',o:['Gusztáv','Pom Pom','Vízipók'],a:0},
 {q:'Melyik magyar mesesorozat a "Vízipók-csodapók"?',o:['Egy magyar rajzfilm','Amerikai sorozat','Japán anime'],a:0},
 {q:'Melyik magyar rajzfilm hőse Pom Pom?',o:['Pom Pom meséi','Mekk Elek','Frakk'],a:0},
 {q:'Melyik magyar rajzfilm főhőse egy ezermester kecske?',o:['Mekk Elek','Frakk','Kукори'],a:0},
 ],
 [ // 2
-{q:'Melyik magyar rajzfilm macskája Frakk ellensége?',o:['Frakk','Vuk','Pom Pom'],a:0},
+{q:'Melyik magyar rajzfilm címszereplője a Károly bácsiéknál élő, macskákkal hadakozó kutya?',o:['Frakk','Vuk','Pom Pom'],a:0},
 {q:'Melyik magyar rajzfilm főhőse egy kisróka?',o:['Vuk','Frakk','Süsü'],a:0},
 {q:'Melyik magyar mesehős egy egyfejű sárkány?',o:['Süsü','Vuk','Pom Pom'],a:0},
 {q:'Melyik magyar rendező készítette a Vukot?',o:['Dargay Attila','Jankovics Marcell','Nepp József'],a:0},
-{q:'Melyik magyar animációs film a Fehérlófia (Jankovics Marcell)?',o:['Fehérlófia','Vuk','Macskafogó'],a:0},
+{q:'Melyik Jankovics Marcell-rendezte egészestés magyar rajzfilm épül a népmesék és a nomád művészet motívumaira?',o:['Fehérlófia','Vuk','Macskafogó'],a:0},
 ],
 [ // 3
 {q:'Melyik magyar animációs film egerekről és macskákról szól?',o:['Macskafogó','Vuk','Fehérlófia'],a:0},
@@ -333,7 +333,7 @@ QH_QUESTIONS['film-magyar'] = [
 {q:'Melyik magyar rendező filmje a Szegénylegények?',o:['Jancsó Miklós','Szabó István','Fábri Zoltán'],a:0},
 {q:'Ki rendezte a Körhintát?',o:['Fábri Zoltán','Jancsó','Makk Károly'],a:0},
 {q:'Melyik magyar film a Szerelem?',o:['Makk Károly filmje','Jancsó filmje','Szabó filmje'],a:0},
-{q:'Melyik magyar színész a Latinovits Zoltán szakmája?',o:['Színész','Rendező','Operatőr'],a:0},
+{q:'Mi volt Latinovits Zoltán foglalkozása?',o:['Színész','Rendező','Operatőr'],a:0},
 {q:'Melyik magyar vígjáték a "Régi idők focija"?',o:['Sándor Pál filmje','Bacsó filmje','Gothár filmje'],a:0},
 ],
 [ // 7
@@ -348,7 +348,7 @@ QH_QUESTIONS['film-magyar'] = [
 {q:'Melyik magyar operatőr fényképezte a Saul fiát?',o:['Erdély Mátyás','Ragályi Elemér','Pados Gyula'],a:0},
 {q:'Melyik magyar film nyert a cannes-i fesztiválon nagydíjat?',o:['Saul fia','Testről és lélekről','Fehér isten'],a:0},
 {q:'Ki rendezte Az ember tragédiája című egész estés magyar animációs filmet?',o:['Jankovics Marcell','Dargay Attila','Ternovszky Béla'],a:0},
-{q:'Melyik magyar színésznő a Törőcsik Mari szakmája?',o:['Színésznő','Rendező','Producer'],a:0},
+{q:'Mi volt Törőcsik Mari foglalkozása?',o:['Színésznő','Rendező','Producer'],a:0},
 ],
 [ // 9
 {q:'Melyik évben nyert a Saul fia Oscart és Golden Globe-ot is?',o:['2016','2014','2018'],a:0},

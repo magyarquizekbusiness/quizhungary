@@ -83,7 +83,7 @@ QH_QUESTIONS['tudomany-biologia'] = [
 {q:'Mi a méhek terméke?',o:['Méz','Tej','Selyem'],a:0},
 ],
 [ // 2
-{q:'Mi a sejt alapvető építőköve az élőlényeknek?',o:['Az atom','A sejt','A molekula'],a:1},
+{q:'Mi az élőlények legkisebb, önálló életre képes szerkezeti és működési egysége?',o:['Az atom','A sejt','A molekula'],a:1},
 {q:'Melyik folyamattal készítenek a növények tápanyagot?',o:['Fotoszintézis','Légzés','Erjedés'],a:0},
 {q:'Hány kamrája van a hüllők többségének a szívében?',o:['2','3','4'],a:1},
 {q:'Mi a DNS teljes neve?',o:['Dezoxiribonukleinsav','Ribonukleinsav','Aminosav'],a:0},
@@ -233,7 +233,7 @@ QH_QUESTIONS['tudomany-fizika'] = [
 {q:'Hány Newton-féle mozgástörvény van?',o:['2','3','4'],a:1},
 {q:'Mi az erő mértékegysége?',o:['Newton','Joule','Pascal'],a:0},
 {q:'Milyen gyorsan gyorsul egy szabadon eső test (g)?',o:['kb. 9,8 m/s²','kb. 1 m/s²','kb. 100 m/s²'],a:0},
-{q:'Melyik hangszer hozza létre a legmélyebb hangot rezgésszám szerint?',o:['Alacsony frekvencia','Magas frekvencia','Nincs összefüggés'],a:0},
+{q:'Milyen rezgésszámú (frekvenciájú) a mély hang?',o:['Alacsony frekvencia','Magas frekvencia','Nincs összefüggés'],a:0},
 ],
 [ // 3
 {q:'Mi az E=mc² képletben az "m"?',o:['Mozgás','Tömeg','Mágnesesség'],a:1},
@@ -296,7 +296,7 @@ QH_QUESTIONS['tudomany-fizika'] = [
 QH_QUESTIONS['tudomany-csillagaszat'] = [
 [ // 1
 {q:'Melyik bolygón élünk?',o:['Mars','Föld','Vénusz'],a:1},
-{q:'Mi a Föld egyetlen természetes holdja?',o:['A Hold','A Nap','A Mars'],a:0},
+{q:'Mi a Föld egyetlen természetes égi kísérője?',o:['A Hold','A Nap','A Mars'],a:0},
 {q:'Melyik égitest körül kering a Föld?',o:['A Hold','A Nap','A Jupiter'],a:1},
 {q:'Melyik a Naphoz legközelebbi bolygó?',o:['Vénusz','Merkúr','Mars'],a:1},
 {q:'Milyen égitest a Nap?',o:['Bolygó','Csillag','Hold'],a:1},

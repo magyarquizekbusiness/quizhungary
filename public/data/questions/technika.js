@@ -48,7 +48,7 @@ QH_QUESTIONS['technika-szamitastechnika'] = [
 {q:'Melyik cég a "Nvidia" fő terméke?',o:['Grafikus kártyák','Operációs rendszerek','Okostelefonok'],a:0},
 {q:'Melyik programozási nyelvet használják gyakran adatelemzéshez?',o:['Python','HTML','CSS'],a:0},
 {q:'Mit jelent az "SQL"?',o:['Structured Query Language','Simple Question Logic','System Quality Level'],a:0},
-{q:'Melyik adatbázistípus a "relációs" (táblák)?',o:['Relációs','Kulcs-érték csak','Gráf csak'],a:0},
+{q:'Melyik adatbázistípus tárolja az adatokat sorokból és oszlopokból álló, egymással kapcsolatban lévő táblákban?',o:['Relációs','Kulcs-érték csak','Gráf csak'],a:0},
 {q:'Mit jelent a "cloud computing"?',o:['Felhőalapú számítástechnika','Időjárás-előrejelzés','Vezeték nélküli töltés'],a:0},
 ],
 [ // 8
@@ -134,8 +134,8 @@ QH_QUESTIONS['technika-talalmanyok'] = [
 [ // 9
 {q:'Melyik magyar orvos ismerte fel a kézmosás jelentőségét?',o:['Semmelweis Ignác','Szent-Györgyi','Bíró'],a:0},
 {q:'Ki fejlesztette az első programozható számítógépet elméletben?',o:['Charles Babbage','Turing','Neumann'],a:0},
-{q:'Melyik magyar mérnök a Bay Zoltán a Hold-radar kísérletről híres?',o:['Bay Zoltán','Kármán','Rubik'],a:0},
-{q:'Melyik találmány a "vasbeton" alkalmazása az építészetben (19. sz.)?',o:['Vasbeton','Acélváz','Üvegtégla'],a:0},
+{q:'Melyik magyar fizikus végzett 1946-ban elsőként sikeres Hold-radar kísérletet?',o:['Bay Zoltán','Kármán','Rubik'],a:0},
+{q:'Melyik 19. századi építőanyag a betonba ágyazott acélbetétektől nyeri szilárdságát?',o:['Vasbeton','Acélváz','Üvegtégla'],a:0},
 {q:'Ki készítette az első tartós fényképet az 1820-as években?',o:['Nicéphore Niépce','Thomas Edison','Louis Lumière'],a:0},
 ],
 [ // 10
@@ -199,7 +199,7 @@ QH_QUESTIONS['technika-autok'] = [
 ],
 [ // 8
 {q:'Melyik alkatrész továbbítja a fékerőt hidraulikusan (fékfolyadék rendszer)?',o:['Hidraulikus fékrendszer','A kuplung','A generátor'],a:0},
-{q:'Melyik motorelrendezés a "boxer" (szemben fekvő dugattyúk, Porsche/Subaru)?',o:['Boxer','V-motor','Soros'],a:0},
+{q:'Melyik motorelrendezésben fekszenek vízszintesen, egymással szemben a dugattyúk (Porsche, Subaru)?',o:['Boxer','V-motor','Soros'],a:0},
 {q:'Melyik technológia teszi lehetővé az önvezetést (LIDAR, kamerák, AI)?',o:['Szenzorok + AI','Csak GPS','Csak rádió'],a:0},
 {q:'Melyik alkatrész tölti az akkumulátort menet közben?',o:['Generátor','Turbó','Katalizátor'],a:0},
 {q:'Melyik autós szabvány méri a fogyasztást?',o:['WLTP','ABS','OBD'],a:0},
@@ -320,7 +320,7 @@ QH_QUESTIONS['technika-jatekok'] = [
 {q:'Melyik cég készíti a World of Warcraftot?',o:['Blizzard','Valve','EA'],a:0},
 {q:'Melyik játékfajta az "RPG"?',o:['Szerepjáték','Lövöldözős','Sport'],a:0},
 {q:'Melyik túlélőjátékból készült sikeres HBO-sorozat 2023-ban?',o:['The Last of Us','Tetris','Pac-Man'],a:0},
-{q:'Melyik nyílt világú kalandsorozat "The Legend of Zelda"?',o:['The Legend of Zelda','Final Fantasy','Metroid'],a:0},
+{q:'Melyik Nintendo-kalandsorozat főhőse Link, aki Zelda hercegnőt és Hyrule földjét menti?',o:['The Legend of Zelda','Final Fantasy','Metroid'],a:0},
 ],
 [ // 5
 {q:'Melyik id Software-játék az FPS úttörője?',o:['Doom','Halo','Call of Duty'],a:0},
@@ -330,7 +330,7 @@ QH_QUESTIONS['technika-jatekok'] = [
 {q:'Melyik nyílt világú szerepjáték a The Elder Scrolls sorozat ötödik része?',o:['Skyrim','Fortnite','FIFA'],a:0},
 ],
 [ // 6
-{q:'Melyik e-sport MOBA a "League of Legends"?',o:['MOBA','FPS','Autóverseny'],a:0},
+{q:'Melyik játékműfajba tartozik a League of Legends?',o:['MOBA','FPS','Autóverseny'],a:0},
 {q:'Melyik cég a League of Legends fejlesztője?',o:['Riot Games','Valve','Blizzard'],a:0},
 {q:'Melyik MOBA a Valve-tól?',o:['Dota 2','LoL','Smite'],a:0},
 {q:'Melyik taktikai lövölde a "Counter-Strike"?',o:['CS','Fortnite','Apex'],a:0},

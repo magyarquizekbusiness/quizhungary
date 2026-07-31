@@ -6,7 +6,7 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  const { token } = req.query;
+  const token = req.query.token || (req.body && req.body.token);
 
   if (!token) {
     return res.status(400).send('Hiányzó token.');
@@ -18,6 +18,13 @@ export default async function handler(req, res) {
       .update({ email_reminders: false })
       .eq('unsubscribe_token', token)
       .select('username');
+
+    // Gmail/Yahoo egykattintásos leiratkozás (RFC 8058): POST-ra nem HTML-t
+    // várnak, csak a leiratkozás végrehajtását és egy sima 200-as választ.
+    if (req.method === 'POST') {
+      if (error) return res.status(500).json({ ok: false });
+      return res.status(200).json({ ok: true });
+    }
 
     const html = `
       <!DOCTYPE html>

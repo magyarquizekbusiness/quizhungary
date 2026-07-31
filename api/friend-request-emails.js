@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { buildEmail, sendEmail } from '../lib/email.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -73,42 +74,29 @@ export default async function handler(req, res) {
 
       const unsubUrl = `${process.env.SITE_URL}/api/unsubscribe?token=${addressee.unsubscribe_token}`;
       const playUrl = process.env.SITE_URL;
+      const name = addressee.username || 'Játékos';
 
-      const html = `
-        <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;background:#0a0a0a;color:#fff;padding:0;border-radius:8px;overflow:hidden;">
-          <div style="background:linear-gradient(135deg,#e8192c,#a01020);padding:2rem 1.5rem;text-align:center;">
-            <h1 style="margin:0;font-size:1.8rem;letter-spacing:1px;">QUIZ<span style="color:#fff;">HUNGARY</span></h1>
-          </div>
-          <div style="padding:2rem 1.5rem;">
-            <h2 style="color:#fff;margin-top:0;">Szia ${addressee.username || 'Játékos'}! 👋</h2>
-            <p style="color:#ccc;font-size:1rem;line-height:1.6;"><strong style="color:#fff;">${requester.username}</strong> barátnak jelölt a QuizHungary-n! 🤝</p>
-            <p style="color:#ccc;font-size:1rem;line-height:1.6;">Fogadd el a kérelmet, és máris cseveghettek, vagy kihívhatjátok egymást egy párbajra!</p>
-            <div style="text-align:center;margin:2rem 0;">
-              <a href="${playUrl}" style="background:#e8192c;color:#fff;text-decoration:none;padding:0.9rem 2.5rem;border-radius:4px;font-weight:bold;font-size:1rem;display:inline-block;">Kérelem megtekintése →</a>
-            </div>
-          </div>
-          <div style="padding:1.5rem;text-align:center;border-top:1px solid #222;">
-            <p style="color:#666;font-size:0.75rem;margin:0;">QuizHungary – Magyarország #1 kvíz oldala</p>
-            <p style="color:#666;font-size:0.75rem;margin:0.5rem 0 0;">
-              <a href="${unsubUrl}" style="color:#888;text-decoration:underline;">Leiratkozás az értesítésekről</a>
-            </p>
-          </div>
-        </div>
-      `;
+      const { html, text } = buildEmail({
+        greeting: `Szia ${name}!`,
+        paragraphs: [
+          `<strong>${requester.username}</strong> barátnak jelölt téged a QuizHungary-n.`,
+          'Ha elfogadod a kérelmet, cseveghettek egymással, és kihívhatjátok egymást egy párbajra.'
+        ],
+        ctaLabel: 'Kérelem megtekintése',
+        ctaUrl: playUrl,
+        signoff: 'Üdv,<br>a QuizHungary csapata',
+        footerNote: 'Ezt az értesítést azért kapod, mert feliratkoztál a QuizHungary értesítéseire.',
+        unsubUrl,
+        unsubLabel: 'Leiratkozás'
+      });
 
       try {
-        const resp = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            from: 'QuizHungary <info@quizhungary.com>',
-            to: email,
-            subject: `🤝 ${requester.username} barátnak jelölt!`,
-            html
-          })
+        const resp = await sendEmail({
+          to: email,
+          subject: `${requester.username} barátnak jelölt téged`,
+          html,
+          text,
+          unsubUrl
         });
 
         if (resp.ok) {

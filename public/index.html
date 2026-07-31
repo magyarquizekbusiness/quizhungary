@@ -909,6 +909,43 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
       <button class="share-btn" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="shareRoomCode()">Meghívó megosztása</button>
       <button class="btn-p" style="width:100%;margin-bottom:1rem;background:rgba(74,144,217,0.15);color:#4a90d9;border:1px solid rgba(74,144,217,0.3);" onclick="openInviteFriends()">👥 Barát meghívása</button>
       <div id="mp-settings-summary" style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem;letter-spacing:1px;"></div>
+      <div id="mp-host-settings" style="display:none;text-align:left;margin-bottom:1rem;">
+        <div style="margin-bottom:0.75rem;">
+          <span class="flbl">Téma</span>
+          <select id="mpw-topic-sel" class="finp" style="cursor:pointer;" onchange="onMpSettingsChange()">
+            <option value="random">🎲 Véletlen</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+          <div>
+            <span class="flbl">Nehézség</span>
+            <select id="mpw-diff-sel" class="finp" style="cursor:pointer;" onchange="onMpSettingsChange()">
+              <option value="easy">🟢 Könnyű</option>
+              <option value="medium">🟡 Közepes</option>
+              <option value="hard">🔴 Nehéz</option>
+            </select>
+          </div>
+          <div>
+            <span class="flbl">Kérdések száma</span>
+            <select id="mpw-qcount-sel" class="finp" style="cursor:pointer;" onchange="onMpSettingsChange()">
+              <option value="5">5 kérdés</option>
+              <option value="10">10 kérdés</option>
+              <option value="15">15 kérdés</option>
+              <option value="20">20 kérdés</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <span class="flbl">Max játékosok</span>
+          <select id="mpw-maxplayers-sel" class="finp" style="cursor:pointer;" onchange="onMpSettingsChange()">
+            <option value="2">2 játékos</option>
+            <option value="3">3 játékos</option>
+            <option value="4">4 játékos</option>
+            <option value="6">6 játékos</option>
+            <option value="10">10 játékos</option>
+          </select>
+        </div>
+      </div>
       <div id="mp-players-list" style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1rem;margin-bottom:1rem;text-align:left;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
           <div style="font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);">Játékosok</div>
@@ -2048,7 +2085,7 @@ async function openLongQuiz(){
 }
 
 // ── MULTIPLAYER ───────────────────────────────────────────────────────────────
-let mpRoom=null,mpChannel=null,mpQuestions=[],mpI=0,mpMyScore=0,mpPlayers={},mpTimer=null,mpSeconds=8,mpIsHost=false,mpMaxPlayers=2,mpQCount=5,mpRestartVotes={};
+let mpRoom=null,mpChannel=null,mpQuestions=[],mpI=0,mpMyScore=0,mpPlayers={},mpTimer=null,mpSeconds=8,mpIsHost=false,mpMaxPlayers=2,mpQCount=5,mpRestartVotes={},mpTopicId='random',mpDiff='medium';
 
 function openMultiplayer(){
   if(!CU){toast('Bejelentkezés szükséges a párbajhoz!','err');openAuth();return;}
@@ -2075,6 +2112,7 @@ async function createRoom(){
   const code=Math.random().toString(36).substring(2,8).toUpperCase();
   const topicId=document.getElementById('mp-topic-sel').value;
   const diff=document.getElementById('mp-diff-sel').value;
+  mpTopicId=topicId;mpDiff=diff;
   mpMaxPlayers=parseInt(document.getElementById('mp-maxplayers-sel').value)||2;
   mpQCount=parseInt(document.getElementById('mp-qcount-sel').value)||5;
   const t=topicId==='random'?QH_CATALOG[Math.floor(Math.random()*QH_CATALOG.length)]:QH_CATALOG.find(x=>x.id===topicId);
@@ -2087,6 +2125,7 @@ async function createRoom(){
   document.getElementById('mp-waiting').style.display='block';
   document.getElementById('mp-room-code').textContent=code;
   document.getElementById('mp-start-btn').style.display='block';
+  showMpHostSettings(true);
   renderMpPlayers();
   updateMpSettings();
 }
@@ -2095,6 +2134,40 @@ function updateMpSettings(){
   // Show settings summary in waiting room
   const el=document.getElementById('mp-settings-summary');
   if(el)el.textContent=`${mpQCount} kérdés · max ${mpMaxPlayers} játékos`;
+}
+
+// A várószobában a host szerkesztheti a beállításokat; a vendégek csak az összefoglalót látják.
+function showMpHostSettings(isHost){
+  const box=document.getElementById('mp-host-settings');
+  const sum=document.getElementById('mp-settings-summary');
+  if(isHost){
+    const sel=document.getElementById('mpw-topic-sel');
+    if(sel){
+      sel.innerHTML='<option value="random">🎲 Véletlen</option>';
+      QH_CATALOG.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=`${c.icon} ${c.name}`;sel.appendChild(o);});
+      sel.value=mpTopicId;
+    }
+    const d=document.getElementById('mpw-diff-sel');if(d)d.value=mpDiff;
+    const q=document.getElementById('mpw-qcount-sel');if(q)q.value=String(mpQCount);
+    const m=document.getElementById('mpw-maxplayers-sel');if(m)m.value=String(mpMaxPlayers);
+    if(box)box.style.display='block';
+    if(sum)sum.style.display='none';
+  } else {
+    if(box)box.style.display='none';
+    if(sum)sum.style.display='block';
+  }
+}
+
+// A host beállítás-változtatásakor frissítjük az állapotot és megosztjuk a többiekkel.
+function onMpSettingsChange(){
+  mpTopicId=document.getElementById('mpw-topic-sel').value;
+  mpDiff=document.getElementById('mpw-diff-sel').value;
+  mpQCount=parseInt(document.getElementById('mpw-qcount-sel').value)||5;
+  mpMaxPlayers=parseInt(document.getElementById('mpw-maxplayers-sel').value)||2;
+  updateMpSettings();
+  renderMpPlayers();
+  // A létszám- és kérdésszám-változást elküldjük a vendégeknek (az összefoglalóhoz).
+  mpChannel?.send({type:'broadcast',event:'players',payload:{players:mpPlayers,maxPlayers:mpMaxPlayers,qCount:mpQCount}});
 }
 
 async function joinRoom(){
@@ -2107,6 +2180,7 @@ async function joinRoom(){
   document.getElementById('mp-waiting').style.display='block';
   document.getElementById('mp-room-code').textContent=code;
   document.getElementById('mp-start-btn').style.display='none';
+  showMpHostSettings(false);
   renderMpPlayers();
   setTimeout(()=>{
     mpChannel.send({type:'broadcast',event:'join',payload:{userId:CU.id,name:CP?.username||CU.email.split('@')[0]}});
@@ -2186,6 +2260,7 @@ function goBackToLobby(){
   document.getElementById('mp-waiting').style.display='block';
   document.getElementById('mp-room-code').textContent=mpRoom;
   document.getElementById('mp-start-btn').style.display='block';
+  showMpHostSettings(true);
   const statusEl=document.getElementById('mp-restart-status');
   if(statusEl)statusEl.textContent='';
   renderMpPlayers();
@@ -2202,6 +2277,7 @@ function goBackToLobbyGuest(){
   document.getElementById('mp-waiting').style.display='block';
   document.getElementById('mp-room-code').textContent=mpRoom;
   document.getElementById('mp-start-btn').style.display='none';
+  showMpHostSettings(false);
   const statusEl=document.getElementById('mp-restart-status');
   if(statusEl)statusEl.textContent='';
   renderMpPlayers();
@@ -2226,9 +2302,15 @@ function renderMpPlayers(){
   }
 }
 
-function startMpGame(){
+async function startMpGame(){
+  const startBtn=document.getElementById('mp-start-btn');
+  if(startBtn)startBtn.disabled=true;
   mpI=0;mpMyScore=0;mpRestartVotes={};
   Object.keys(mpPlayers).forEach(id=>mpPlayers[id].score=0);
+  // Friss kérdések generálása az aktuális beállításokból — minden játék új kérdéseket kap.
+  const t=mpTopicId==='random'?QH_CATALOG[Math.floor(Math.random()*QH_CATALOG.length)]:QH_CATALOG.find(x=>x.id===mpTopicId);
+  mpQuestions=await poolRandom(mpQCount,(t&&t.id)||null,mpDiff);
+  if(startBtn)startBtn.disabled=false;
   mpChannel.send({type:'broadcast',event:'start',payload:{questions:mpQuestions}});
   document.getElementById('mp-lobby').style.display='none';
   document.getElementById('mp-waiting').style.display='none';

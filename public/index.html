@@ -909,6 +909,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
       <button class="share-btn" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="shareRoomCode()">Meghívó megosztása</button>
       <button class="btn-p" style="width:100%;margin-bottom:1rem;background:rgba(74,144,217,0.15);color:#4a90d9;border:1px solid rgba(74,144,217,0.3);" onclick="openInviteFriends()">👥 Barát meghívása</button>
       <div id="mp-settings-summary" style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem;letter-spacing:1px;"></div>
+      <button class="btn-o" id="mp-settings-toggle" style="width:100%;display:none;margin-bottom:0.75rem;" onclick="toggleMpSettings()">⚙️ Beállítások módosítása</button>
       <div id="mp-host-settings" style="display:none;text-align:left;margin-bottom:1rem;">
         <div style="margin-bottom:0.75rem;">
           <span class="flbl">Téma</span>
@@ -2136,11 +2137,15 @@ function updateMpSettings(){
   if(el)el.textContent=`${mpQCount} kérdés · max ${mpMaxPlayers} játékos`;
 }
 
-// A várószobában a host szerkesztheti a beállításokat; a vendégek csak az összefoglalót látják.
+// A várószobában a host egy gombbal nyithatja meg a beállítás-panelt; a vendégek csak az összefoglalót látják.
 function showMpHostSettings(isHost){
   const box=document.getElementById('mp-host-settings');
+  const toggle=document.getElementById('mp-settings-toggle');
   const sum=document.getElementById('mp-settings-summary');
+  if(box)box.style.display='none';   // a panel alapból zárva van
+  if(sum)sum.style.display='block';  // az összefoglaló mindig látszik
   if(isHost){
+    // A panel vezérlőit feltöltjük az aktuális beállításokkal (megnyitáskor ezek látszanak).
     const sel=document.getElementById('mpw-topic-sel');
     if(sel){
       sel.innerHTML='<option value="random">🎲 Véletlen</option>';
@@ -2150,12 +2155,21 @@ function showMpHostSettings(isHost){
     const d=document.getElementById('mpw-diff-sel');if(d)d.value=mpDiff;
     const q=document.getElementById('mpw-qcount-sel');if(q)q.value=String(mpQCount);
     const m=document.getElementById('mpw-maxplayers-sel');if(m)m.value=String(mpMaxPlayers);
-    if(box)box.style.display='block';
-    if(sum)sum.style.display='none';
+    if(toggle){toggle.style.display='block';toggle.textContent='⚙️ Beállítások módosítása';}
   } else {
-    if(box)box.style.display='none';
-    if(sum)sum.style.display='block';
+    if(toggle)toggle.style.display='none';
   }
+  updateMpSettings();
+}
+
+// A "Beállítások módosítása" gomb ki-be kapcsolja a panelt.
+function toggleMpSettings(){
+  const box=document.getElementById('mp-host-settings');
+  const toggle=document.getElementById('mp-settings-toggle');
+  if(!box)return;
+  const open=box.style.display==='none';
+  box.style.display=open?'block':'none';
+  if(toggle)toggle.textContent=open?'✓ Kész':'⚙️ Beállítások módosítása';
 }
 
 // A host beállítás-változtatásakor frissítjük az állapotot és megosztjuk a többiekkel.

@@ -56,8 +56,12 @@
   ]
 }
 </script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23e8192c'/><text y='0.9em' font-size='75' text-anchor='middle' x='50'>🧠</text></svg>">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="data:application/json,{}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data/catalog.js"></script>
@@ -471,7 +475,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
 <!-- HOGYAN MŰKÖDIK -->
 <div class="sw" style="padding-bottom:1rem;">
   <div class="slbl">Egyszerű, mint egy játék</div>
-  <div class="stit" style="margin-bottom:2rem;">Hogyan működik?</div>
+  <h2 class="stit" style="margin-bottom:2rem;">Hogyan működik?</h2>
   <div class="how">
     <div class="how-step">
       <span class="how-num">1</span>
@@ -512,7 +516,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
 <!-- TOPICS -->
 <div id="temak" class="sw">
   <div class="slbl">Szintezett kihívás</div>
-  <div class="stit">Kategóriák</div>
+  <h2 class="stit">Kategóriák</h2>
   <p style="color:var(--text-muted);font-size:0.95rem;max-width:560px;margin-bottom:1.5rem;"><span id="cat-intro"></span>Teljesíts egy szintet legalább 4/5 helyes válasszal, és oldd fel a következőt!</p>
   <a id="resume-card" class="resume-card" href="#" style="display:none;">
     <span class="resume-ic">▶️</span>
@@ -555,7 +559,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
 <!-- DAILY QUIZ -->
 <div id="napi-kviz" class="sw">
   <div class="slbl">Napi kihívás</div>
-  <div class="stit">Mai kvíz</div>
+  <h2 class="stit">Mai kvíz</h2>
 
   <!-- STREAK -->
   <div class="streak-display" id="streak-display" style="display:none">
@@ -623,7 +627,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
 <!-- LEADERBOARD -->
 <div id="rangsor" class="sw">
   <div class="slbl">Verseny</div>
-  <div class="stit">Ranglista</div>
+  <h2 class="stit">Ranglista</h2>
   <div class="lbw">
     <div class="lbh">
       <div class="lbt">Top játékosok</div>

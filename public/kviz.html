@@ -215,6 +215,7 @@ async function nextQ(){
 
 async function showResult(){
   document.getElementById('quiz-content').style.display='none';
+  QH.markStreak(); // a napi sorozat minden befejezett kvíztől nő, típustól függetlenül
   const passed=score>=R.PASS_MIN;
   document.getElementById('rs').textContent=`${score} / ${QL.length}`;
   document.getElementById('stars').textContent=score>=5?'⭐⭐⭐':score===4?'⭐⭐':score===3?'⭐':'';

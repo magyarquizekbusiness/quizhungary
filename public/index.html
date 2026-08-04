@@ -1481,7 +1481,20 @@ function dMarkPlayed(){
   updateStreak();
   renderStreak();
 }
-function getStreak(){return parseInt(localStorage.getItem('qh_streak')||'0');}
+function getStreak(){
+  const s=parseInt(localStorage.getItem('qh_streak')||'0');
+  if(s<1)return 0;
+  const last=localStorage.getItem('qh_streak_date');
+  const today=todayStr();
+  const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  // Ha az utolsó játék se nem ma, se nem tegnap volt, a sorozat megszakadt → nullázzuk.
+  if(last!==today&&last!==yesterday){
+    localStorage.setItem('qh_streak','0');
+    localStorage.removeItem('qh_streak_date');
+    return 0;
+  }
+  return s;
+}
 function updateStreak(){
   const last=localStorage.getItem('qh_streak_date');
   const today=todayStr();
@@ -1490,6 +1503,14 @@ function updateStreak(){
   if(last===yesterday){localStorage.setItem('qh_streak',(getStreak()+1).toString());}
   else{localStorage.setItem('qh_streak','1');}
   localStorage.setItem('qh_streak_date',today);
+}
+// Bármilyen kvíz teljesítésekor hívható: növeli a napi sorozatot és frissíti a felületet.
+function markStreak(){
+  updateStreak();
+  renderStreak();
+  const s=getStreak();
+  const badge=document.getElementById('nav-streak');
+  if(badge&&CU&&s>0){badge.style.display='inline-flex';document.getElementById('nav-streak-num').textContent=s;}
 }
 function renderStreak(){
   const s=getStreak();
@@ -1855,6 +1876,7 @@ async function tqNext(){
     if(perfect)toast('🎯 Tökéletes! +10% bónusz pont!','ok');
     if(CU)await saveScore(tqTitle||tqid,finalPts);
     else toast('Jelentkezz be a pontjaid mentéséhez!','err');
+    markStreak();
     loadLB();
   }else tqLoad();
 }
@@ -2043,6 +2065,7 @@ async function mqResult(){
   const finalPts=perfect?Math.round(basePts*1.1):basePts;
   if(perfect)toast('🎯 Tökéletes Maraton! +10% bónusz!','ok');
   if(CU)await saveScore('Vegyes Maraton',finalPts);
+  markStreak();
   loadLB();
 }
 
@@ -2433,6 +2456,7 @@ async function showMpResult(){
   if(mpBtn){mpBtn.disabled=false;mpBtn.textContent='🔄 Újra játszom';}
   renderMpResultList();
   if(CU)await saveScore('Párbaj',mpMyScore);
+  markStreak();
   loadLB();
 }
 

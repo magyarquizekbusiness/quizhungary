@@ -278,6 +278,7 @@ function showResult(score){
   if(typeof score!=='number'){ score=answers.reduce((s,a,k)=>s+(a===IQ[k].a?1:0),0); }
   lastScore=score;
   lastIQ=iqEstimate(score);
+  QH.markStreak(); // a napi sorozat minden befejezett kvíztől nő, típustól függetlenül
   document.getElementById('iq-intro-screen').style.display='none';
   document.getElementById('iq-quiz-screen').style.display='none';
   document.getElementById('iq-result-screen').style.display='block';

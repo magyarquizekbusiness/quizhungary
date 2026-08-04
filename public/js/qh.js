@@ -164,7 +164,21 @@
 
   function qs(name){return new URLSearchParams(location.search).get(name);}
 
+  // ── Napi sorozat (streak) ──────────────────────────────────────────────────
+  // Ugyanazokat a localStorage kulcsokat használja, mint a főoldal. Bármely kvíz
+  // (szint, IQ teszt stb.) teljesítésekor meghívható, hogy a sorozat a kvíz
+  // típusától függetlenül nőjön — nem csak a napi kvíztől.
+  function markStreak(){
+    const today=new Date().toISOString().slice(0,10);
+    const last=localStorage.getItem('qh_streak_date');
+    if(last===today)return; // ma már számoltuk
+    const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+    const cur=parseInt(localStorage.getItem('qh_streak')||'0');
+    localStorage.setItem('qh_streak',(last===yesterday?cur+1:1).toString());
+    localStorage.setItem('qh_streak_date',today);
+  }
+
   window.QH={init,getLevel,completeLevel,isSubUnlocked,isLevelUnlocked,catProgress,
-    loadQuestions,loadAllQuestions,getLevelQuestions,toast,qs,
+    loadQuestions,loadAllQuestions,getLevelQuestions,toast,qs,markStreak,
     get user(){return user;},get sb(){return sb;}};
 })();

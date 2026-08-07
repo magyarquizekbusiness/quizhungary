@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getAuthedUser } from '../lib/auth.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -8,15 +9,18 @@ const supabase = createClient(
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Cache-Control', 'no-store, max-age=0');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { userId } = req.body;
-  if (!userId) return res.status(400).json({ error: 'Missing userId' });
+  // ── BIZTONSÁG: a kérőt a hitelesített tokenből azonosítjuk (nem a törzsből),
+  // majd ellenőrizzük, hogy tényleg admin-e. Így egy admin UUID ismerete nem
+  // elég a felhasználói adatok (pl. e-mailek) lekéréséhez. ──
+  const authUser = await getAuthedUser(req);
+  if (!authUser) return res.status(401).json({ error: 'Unauthorized' });
+  const userId = authUser.id;
 
-  // ── BIZTONSÁG: ellenőrizzük hogy a kérő tényleg admin-e ──
   const { data: requester } = await supabase
     .from('profiles')
     .select('is_admin')

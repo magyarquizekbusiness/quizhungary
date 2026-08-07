@@ -1,17 +1,20 @@
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
+import { getAuthedUser } from '../lib/auth.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { userId, email } = req.body;
-  if (!userId) return res.status(400).json({ error: 'Missing userId' });
+  // A felhasználót a hitelesített tokenből vesszük, nem a kérés törzséből.
+  const authUser = await getAuthedUser(req);
+  if (!authUser) return res.status(401).json({ error: 'Unauthorized' });
+  const userId = authUser.id;
+  const email = authUser.email;
 
   try {
     const session = await stripe.checkout.sessions.create({

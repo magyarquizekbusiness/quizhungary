@@ -12,6 +12,20 @@
     try{return JSON.parse(localStorage.getItem(LS_KEY))||{};}catch(e){return {};}
   }
   function writeLocal(){localStorage.setItem(LS_KEY,JSON.stringify(prog));}
+  function esc(s){const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+
+  // A haladás/streak localStorage-ban él. Hogy egy böngészőn több fiók / vendég
+  // ne örökölje egymás adatait, minden kulcshoz "tulajdonost" rendelünk; ha az
+  // változik (másik fiók vagy vendég), a korábbi játékadatokat kitöröljük.
+  function resetLocalPlayData(){
+    ['qh_levels','qh_streak','qh_streak_date','qh_daily','qh_daily_state','qh_guest_plays']
+      .forEach(k=>localStorage.removeItem(k));
+    prog={};
+  }
+  function claimLocalDataFor(ownerId){
+    const cur=localStorage.getItem('qh_owner');
+    if(cur!==ownerId){resetLocalPlayData();localStorage.setItem('qh_owner',ownerId);}
+  }
 
   async function init(){
     if(sb){
@@ -19,9 +33,12 @@
         const{data:{session}}=await sb.auth.getSession();
         if(session?.user){
           user=session.user;
+          claimLocalDataFor(user.id);
           const{data}=await sb.from('profiles').select('username,is_admin,is_premium,subscription_status,subscription_end').eq('id',user.id).single();
           profile=data;
           await syncFromServer();
+        }else{
+          claimLocalDataFor('guest');
         }
       }catch(e){console.warn('QH auth:',e.message);}
     }
@@ -132,7 +149,7 @@
 
     const drop=document.createElement('div');
     drop.className='udrop';
-    const label=isPremium()?name+' <span style="color:var(--gold)">✨ Premium</span>':name;
+    const label=isPremium()?esc(name)+' <span style="color:var(--gold)">✨ Premium</span>':esc(name);
     let html='<div class="udlabel">'+label+'</div><div class="uddiv"></div>';
     html+='<button class="udi" data-go="#profil">👤 Profilom</button>';
     html+='<button class="udi" data-go="#premium">✨ Premium</button>';

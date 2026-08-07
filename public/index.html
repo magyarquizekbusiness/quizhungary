@@ -714,9 +714,20 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     </div>
     <!-- Forgot password -->
     <div class="fg" id="ff" style="display:none">
-      <div><span class="flbl">Email cím</span><input class="finp" type="email" id="fe" placeholder="email@example.com"></div>
+      <div><span class="flbl">Email cím</span><input class="finp" type="email" id="fe" placeholder="email@example.com" onkeydown="if(event.key==='Enter')doForgot()"></div>
       <button class="btn-p" style="width:100%;margin-top:0.5rem" onclick="doForgot()">Jelszó visszaállítása →</button>
       <div style="font-size:0.82rem;color:var(--text-dim);cursor:pointer;margin-top:0.5rem;" onclick="showLogin()">← Vissza a bejelentkezéshez</div>
+    </div>
+    <!-- New password (recovery link után) -->
+    <div class="fg" id="nf" style="display:none">
+      <div>
+        <span class="flbl">Új jelszó</span>
+        <div style="position:relative;">
+          <input class="finp" type="password" id="np" placeholder="Min. 6 karakter" style="padding-right:2.8rem" onkeydown="if(event.key==='Enter')doReset()">
+          <button type="button" onclick="togglePw('np',this)" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:1rem;padding:0;line-height:1;">👁</button>
+        </div>
+      </div>
+      <button class="btn-p" style="width:100%;margin-top:0.5rem" onclick="doReset()">Új jelszó mentése →</button>
     </div>
   </div>
 </div>
@@ -1251,11 +1262,19 @@ async function init(){
 
   // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){CU=session.user;await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();}
-  else{navGuest();loadLB();loadPC();}
+  if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();}
+  else{claimLocalDataFor('guest');navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
   checkCookieConsent();
   captureReferralCode();
+
+  // Jelszó-visszaállító linkről érkezve (?recovery=1) kérjük az új jelszót.
+  // Tartalék az onAuthStateChange PASSWORD_RECOVERY eseménye mellett, ha az a
+  // figyelő beállítása előtt sülne el.
+  if(new URLSearchParams(location.search).get('recovery')==='1'){
+    showReset();
+    history.replaceState(null,'',location.pathname);
+  }
 
   // Aloldalról (#login / #register) érkezve nyissuk meg az auth-ablakot
   if(!CU&&(location.hash==='#login'||location.hash==='#register')){
@@ -1280,15 +1299,19 @@ async function init(){
   loadDailyQuestions().then(()=>{restoreDailyProgress();dLoad();});
 
   sb.auth.onAuthStateChange(async(event,ses)=>{
+    // A jelszó-visszaállító linkről érkezve a Supabase ideiglenes munkamenetet nyit
+    // és ezt az eseményt küldi — ilyenkor az új jelszó megadását kérjük.
+    if(event==='PASSWORD_RECOVERY'){showReset();return;}
     if(event==='SIGNED_IN'&&ses?.user){
       const newLogin=!CU||CU.id!==ses.user.id; // token-frissítés NEM új login
-      CU=ses.user;localStorage.removeItem('qh_guest_plays');await loadP();navUser();loadLB();loadPC();renderTopics();
+      CU=ses.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();
       if(newLogin){ // csak valódi belépéskor indítsuk újra a napi kvízt
         di=0;ds=0;clearDailyState();
         document.getElementById('dqa').style.display='block';document.getElementById('dqr').className='qr';dLoad();
+        renderStreak();
       }
     }
-    else if(event==='SIGNED_OUT'){CU=null;CP=null;navGuest();loadLB();}
+    else if(event==='SIGNED_OUT'){CU=null;CP=null;resetLocalPlayData();localStorage.setItem('qh_owner','guest');navGuest();renderStreak();renderTopics();loadLB();}
   });
 }
 
@@ -1311,7 +1334,7 @@ function navUser(){
   }
   // Premium badge in dropdown label
   if(isPremium()){
-    document.getElementById('udlbl').innerHTML=n+' <span class="premium-active-badge">✨ Premium</span>';
+    document.getElementById('udlbl').innerHTML=escapeHtml(n)+' <span class="premium-active-badge">✨ Premium</span>';
   } else {
     document.getElementById('udlbl').textContent=n;
   }
@@ -1332,6 +1355,7 @@ function openAuth(tab='login'){
     document.getElementById('lf').style.display='none';
     document.getElementById('rf').style.display='flex';
     document.getElementById('ff').style.display='none';
+    document.getElementById('nf').style.display='none';
   } else showLogin();
 }
 function closeAuth(){document.getElementById('aov').classList.remove('show');clearAF();}
@@ -1342,12 +1366,14 @@ function aTab(t,el){
   document.getElementById('lf').style.display=t==='login'?'flex':'none';
   document.getElementById('rf').style.display=t==='reg'?'flex':'none';
   document.getElementById('ff').style.display='none';
+  document.getElementById('nf').style.display='none';
   clearAF();
 }
 function showLogin(){
   document.getElementById('lf').style.display='flex';
   document.getElementById('rf').style.display='none';
   document.getElementById('ff').style.display='none';
+  document.getElementById('nf').style.display='none';
   document.getElementById('auth-title').textContent='Üdvözlünk!';
   document.getElementById('auth-sub').textContent='Jelentkezz be a pontszámok mentéséhez';
   document.getElementById('auth-tabs').style.display='flex';
@@ -1357,10 +1383,34 @@ function showForgot(){
   document.getElementById('lf').style.display='none';
   document.getElementById('rf').style.display='none';
   document.getElementById('ff').style.display='flex';
+  document.getElementById('nf').style.display='none';
   document.getElementById('auth-title').textContent='Jelszó visszaállítás';
   document.getElementById('auth-sub').textContent='Küldjük el a visszaállító linket emailben';
   document.getElementById('auth-tabs').style.display='none';
   clearAF();
+}
+// A visszaállító linkről érkezve: új jelszó megadása.
+function showReset(){
+  document.getElementById('aov').classList.add('show');
+  document.getElementById('lf').style.display='none';
+  document.getElementById('rf').style.display='none';
+  document.getElementById('ff').style.display='none';
+  document.getElementById('nf').style.display='flex';
+  document.getElementById('auth-title').textContent='Új jelszó beállítása';
+  document.getElementById('auth-sub').textContent='Adj meg egy új jelszót a fiókodhoz';
+  document.getElementById('auth-tabs').style.display='none';
+  clearAF();
+}
+async function doReset(){
+  clearAF();
+  const p=document.getElementById('np').value;
+  if(!p){aErr('Add meg az új jelszót!');return;}
+  if(p.length<6){aErr('A jelszó legalább 6 karakter!');return;}
+  const{error}=await sb.auth.updateUser({password:p});
+  if(error){aErr(error.message);return;}
+  document.getElementById('np').value='';
+  closeAuth();
+  toast('A jelszavad frissítve! 🎉','ok');
 }
 function aErr(m){const e=document.getElementById('aerr');e.textContent=m;e.className='aerr show';}
 function aOK(m){const e=document.getElementById('aok');e.textContent=m;e.className='aok show';}
@@ -1381,6 +1431,7 @@ async function doReg(){
   const e=document.getElementById('re').value.trim();
   const p=document.getElementById('rp').value;
   if(!u||!e||!p){aErr('Töltsd ki az összes mezőt!');return;}
+  if(!/^[\p{L}\p{N} _-]{3,20}$/u.test(u)){aErr('A becenév 3–20 karakter legyen, csak betű, szám, szóköz, _ és - megengedett.');return;}
   if(p.length<6){aErr('A jelszó legalább 6 karakter!');return;}
   const wantsReminders=document.getElementById('r-reminders')?.checked||false;
   const{data,error}=await sb.auth.signUp({email:e,password:p,options:{data:{username:u}}});
@@ -1402,7 +1453,7 @@ async function doForgot(){
   clearAF();
   const email=document.getElementById('fe').value.trim();
   if(!email){aErr('Add meg az email címedet!');return;}
-  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/?recovery=1'});
   if(error){aErr(error.message);return;}
   aOK('Elküldtük a visszaállító linket! Nézd meg az emailt.');
 }
@@ -1472,6 +1523,21 @@ async function openProfile(){
   }catch(e){console.warn(e);}
 }
 function closePov(){document.getElementById('pov').classList.remove('show');}
+
+// ── HALADÁS-TULAJDONOS ───────────────────────────────────────────────────────
+// A haladás (szintek) és a napi sorozat localStorage-ban él. Hogy egy böngészőn
+// több fiók / vendég ne lássa egymás adatait, minden kulcshoz "tulajdonost"
+// rendelünk. Ha másik fiók (vagy vendég) jelentkezik be, a korábbi játékadatokat
+// kitöröljük, így az új felhasználó tiszta lappal (majd a szerverről szinkronizált
+// saját haladással) indul.
+function resetLocalPlayData(){
+  ['qh_levels','qh_streak','qh_streak_date','qh_daily','qh_daily_state','qh_guest_plays']
+    .forEach(k=>localStorage.removeItem(k));
+}
+function claimLocalDataFor(ownerId){
+  const cur=localStorage.getItem('qh_owner');
+  if(cur!==ownerId){resetLocalPlayData();localStorage.setItem('qh_owner',ownerId);}
+}
 
 // ── STREAK ────────────────────────────────────────────────────────────────────
 function todayStr(){return new Date().toISOString().slice(0,10);}
@@ -1900,7 +1966,7 @@ async function loadLB(){
     return `<div class="lbr${me?' me':''}" style="cursor:pointer" onclick="viewProfile('${row.id}')">
       <div class="lbrank ${rc[i]||'o'}">${med[i]||i+1}</div>
       <div class="lbav" style="background:${bg};color:#fff">${init}</div>
-      <div class="lbname">${row.username}${me?' (te)':''}${row.is_premium?' ✨':''}</div>
+      <div class="lbname">${escapeHtml(row.username)}${me?' (te)':''}${row.is_premium?' ✨':''}</div>
       <div style="text-align:right"><div class="lbsc">${row.total_points}</div><div class="lbpt">pont</div></div>
     </div>`;
   }).join('');
@@ -2512,13 +2578,22 @@ async function toggleReminders(enabled){
   toast(enabled?'Emlékeztetők bekapcsolva 📧':'Emlékeztetők kikapcsolva','ok');
 }
 
+// A védett API-khoz a bejelentkezett munkamenet access tokenjét küldjük –
+// a szerver ebből azonosítja a felhasználót (nem a kérés törzséből).
+async function authHeaders(){
+  const{data:{session}}=await sb.auth.getSession();
+  const h={'Content-Type':'application/json'};
+  if(session?.access_token)h['Authorization']='Bearer '+session.access_token;
+  return h;
+}
+
 async function openCustomerPortal(){
   if(!CU)return;
   try{
     const res=await fetch('/api/customer-portal',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({userId:CU.id})
+      headers:await authHeaders(),
+      body:JSON.stringify({})
     });
     const data=await res.json();
     if(data.url){window.location.href=data.url;}
@@ -2534,8 +2609,8 @@ async function startCheckout(){
   try{
     const res=await fetch('/api/create-checkout',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({userId:CU.id,email:CU.email})
+      headers:await authHeaders(),
+      body:JSON.stringify({})
     });
     const data=await res.json();
     if(data.url){window.location.href=data.url;}
@@ -2573,8 +2648,8 @@ async function openAdmin(){
     const res=await fetch('/api/admin-stats?_='+Date.now(),{
       method:'POST',
       cache:'no-store',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({userId:CU.id})
+      headers:await authHeaders(),
+      body:JSON.stringify({})
     });
     const data=await res.json();
     if(!res.ok)throw new Error(data.error||'Hiba');
@@ -2592,7 +2667,7 @@ async function openAdmin(){
     document.getElementById('adm-user-count').textContent=data.users.length;
     document.getElementById('adm-users-table').innerHTML=data.users.map(u=>`
       <tr style="border-top:1px solid var(--border);">
-        <td style="padding:0.6rem;font-weight:500;">${u.username||'—'}</td>
+        <td style="padding:0.6rem;font-weight:500;">${escapeHtml(u.username||'—')}</td>
         <td style="padding:0.6rem;color:var(--text-muted);font-size:0.78rem;">${u.email}</td>
         <td style="padding:0.6rem;">${u.is_premium?'<span style="color:var(--gold)">✨ Igen</span>':'<span style="color:var(--text-dim)">Nem</span>'}</td>
         <td style="padding:0.6rem;">${u.games}</td>
@@ -2718,12 +2793,12 @@ async function loadFriends(){
   friendsCache=profiles||[];
   el.innerHTML=(profiles||[]).map(p=>`
     <div class="friend-row">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${p.username.slice(0,2).toUpperCase()}</div>
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info" onclick="viewProfile('${p.id}')">
-        <div class="friend-name">${p.username}${p.is_premium?' ✨':''}</div>
+        <div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div>
         <div class="friend-meta">Barát</div>
       </div>
-      <button class="friend-btn fb-chat" onclick="openChat('${p.id}','${p.username.replace(/'/g,"")}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>
+      <button class="friend-btn fb-chat" onclick="openChat('${p.id}','${escapeHtml(p.username.replace(/['"<>\\]/g,''))}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>
     </div>`).join('');
 }
 
@@ -2745,8 +2820,8 @@ async function loadRequests(){
   el.innerHTML=data.map(f=>{
     const p=pmap[f.requester_id];if(!p)return'';
     return `<div class="friend-row">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}">${p.username.slice(0,2).toUpperCase()}</div>
-      <div class="friend-info"><div class="friend-name">${p.username}</div><div class="friend-meta">Barátnak jelölt</div></div>
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <div class="friend-info"><div class="friend-name">${escapeHtml(p.username)}</div><div class="friend-meta">Barátnak jelölt</div></div>
       <div style="display:flex;gap:0.4rem;">
         <button class="friend-btn fb-accept" onclick="respondRequest(${f.id},'accepted')">Elfogad</button>
         <button class="friend-btn fb-decline" onclick="respondRequest(${f.id},'declined')">Elutasít</button>
@@ -2781,8 +2856,8 @@ async function searchUsers(){
     else if(rel&&rel.status==='pending')btn='<button class="friend-btn fb-pending">Függőben</button>';
     else btn=`<button class="friend-btn fb-add" onclick="addFriend('${p.id}',this)">+ Bejelölés</button>`;
     return `<div class="search-result">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${p.username.slice(0,2).toUpperCase()}</div>
-      <div class="friend-info" onclick="viewProfile('${p.id}')"><div class="friend-name">${p.username}${p.is_premium?' ✨':''}</div></div>
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <div class="friend-info" onclick="viewProfile('${p.id}')"><div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div></div>
       ${btn}
     </div>`;
   }).join('');
@@ -2816,7 +2891,7 @@ async function viewProfile(id){
     const{data:existing}=await sb.from('friendships').select('*');
     const rel=(existing||[]).find(f=>(f.requester_id===CU.id&&f.addressee_id===id)||(f.addressee_id===CU.id&&f.requester_id===id));
     if(rel&&rel.status==='accepted'){
-      actEl.innerHTML=`<button class="btn-p" style="width:100%" onclick="closePV();openChat('${id}','${p.username.replace(/'/g,"")}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>`;
+      actEl.innerHTML=`<button class="btn-p" style="width:100%" onclick="closePV();openChat('${id}','${escapeHtml(p.username.replace(/['"<>\\]/g,''))}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>`;
     } else if(rel&&rel.status==='pending'){
       actEl.innerHTML='<button class="btn-o" style="width:100%" disabled>Kérelem függőben</button>';
     } else {
@@ -2950,9 +3025,9 @@ async function openInviteFriends(){
   const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',friendIds);
   el.innerHTML=(profiles||[]).map(p=>`
     <div class="friend-row">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'};cursor:default;">${p.username.slice(0,2).toUpperCase()}</div>
+      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'};cursor:default;">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info" style="cursor:default;">
-        <div class="friend-name">${p.username}${p.is_premium?' ✨':''}</div>
+        <div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div>
       </div>
       <button class="friend-btn fb-add" id="inv-${p.id}" onclick="sendDuelInvite('${p.id}',this)">⚔️ Meghívás</button>
     </div>`).join('');

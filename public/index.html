@@ -326,6 +326,9 @@ footer a{color:var(--red);text-decoration:none;}
 .nav-friends-btn svg{display:block;}
 .nav-friends-btn:hover{color:var(--red)!important;}
 .nav-friends-dot{position:absolute;top:-2px;right:-2px;background:var(--red);width:9px;height:9px;border-radius:50%;border:2px solid var(--bg);}
+.nav-friends-badge{position:absolute;top:-7px;right:-9px;background:var(--red);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;min-width:17px;height:17px;padding:0 4px;border-radius:9px;display:none;align-items:center;justify-content:center;line-height:1;border:2px solid var(--bg);box-shadow:0 0 0 1px var(--red);}
+@keyframes badgePop{0%{transform:scale(0);}60%{transform:scale(1.25);}100%{transform:scale(1);}}
+.nav-friends-badge.pop{animation:badgePop 0.35s ease;}
 
 /* REFERRAL BANNER (főoldal) */
 .referral-banner{position:relative;background:linear-gradient(135deg,rgba(245,197,24,0.12),rgba(20,20,20,0.6));border:1px solid rgba(245,197,24,0.35);border-radius:8px;padding:1.5rem 2rem;cursor:pointer;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;}
@@ -413,7 +416,8 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     <div id="nav-user" style="display:flex;align-items:center;gap:0.9rem;">
       <button class="nav-friends-btn" onclick="openFriends()" title="Barátok" style="color:var(--text-muted);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        <span class="nav-friends-dot" id="friends-dot" style="display:none"></span></button>
+        <span class="nav-friends-dot" id="friends-dot" style="display:none"></span>
+        <span class="nav-friends-badge" id="friends-badge" style="display:none">0</span></button>
       <div class="user-menu">
         <div style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;" onclick="toggleDrop()">
           <div class="nav-avatar" id="nava">?</div>
@@ -1150,6 +1154,24 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
   </div>
 </div>
 
+<!-- PÁRBAJ MEGHÍVÓ FELUGRÓ -->
+<div class="overlay" id="duelinvov" onclick="if(event.target===this)declineDuelInvite()">
+  <div class="mbox" style="max-width:400px;text-align:center;">
+    <button class="mcl" onclick="declineDuelInvite()">×</button>
+    <div style="font-size:2.8rem;margin-bottom:0.4rem;">⚔️</div>
+    <div class="mtit" style="font-size:1.6rem;"><span id="duel-invite-name">Egy barátod</span> párbajra hív!</div>
+    <div class="msub" style="margin-top:0.5rem;">Ugyanazokkal a kérdésekkel mérhetitek össze a tudásotokat.</div>
+    <div style="background:var(--bg3);border-radius:4px;padding:0.8rem;margin:1.2rem 0;">
+      <span style="font-size:0.8rem;color:var(--text-muted);">Szobakód</span>
+      <div id="duel-invite-code" style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:4px;color:#4a90d9;">------</div>
+    </div>
+    <div style="display:flex;gap:0.6rem;">
+      <button class="btn-o" style="flex:1;" onclick="declineDuelInvite()">Elutasítom</button>
+      <button class="btn-p" style="flex:1.4;background:rgba(74,144,217,0.9);border-color:#4a90d9;" onclick="acceptDuelInvite()">⚔️ Elfogadom</button>
+    </div>
+  </div>
+</div>
+
 <!-- REFERRAL MODAL -->
 <div class="overlay" id="referralov" onclick="if(event.target===this)closeReferral()">
   <div class="mbox" style="max-width:480px">
@@ -1262,7 +1284,7 @@ async function init(){
 
   // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();}
+  if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();loadUnreadCount();subscribeInbox();}
   else{claimLocalDataFor('guest');navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
   checkCookieConsent();
@@ -1310,8 +1332,9 @@ async function init(){
         document.getElementById('dqa').style.display='block';document.getElementById('dqr').className='qr';dLoad();
         renderStreak();
       }
+      checkFriendRequests();loadUnreadCount();subscribeInbox();
     }
-    else if(event==='SIGNED_OUT'){CU=null;CP=null;resetLocalPlayData();localStorage.setItem('qh_owner','guest');navGuest();renderStreak();renderTopics();loadLB();}
+    else if(event==='SIGNED_OUT'){CU=null;CP=null;resetLocalPlayData();localStorage.setItem('qh_owner','guest');navGuest();renderStreak();renderTopics();loadLB();unsubscribeInbox();unreadMsgCount=0;pendingReqCount=0;renderNavBadge();}
   });
 }
 
@@ -2770,6 +2793,7 @@ function openFriends(){
   friendsTab('list',document.querySelector('.friends-tab'));
   loadFriends();
   loadRequests();
+  markInboxSeen(); // a badge üzenet-részét megtekintettnek jelöljük
 }
 function closeFriends(){document.getElementById('friendsov').classList.remove('show');}
 
@@ -2806,14 +2830,14 @@ async function loadRequests(){
   const{data}=await sb.from('friendships').select('*').eq('addressee_id',CU.id).eq('status','pending');
   const el=document.getElementById('friends-requests');
   const badge=document.getElementById('req-badge');
-  const navDot=document.getElementById('friends-dot');
   if(!data||!data.length){
     el.innerHTML='<div class="lbempty">Nincsenek függőben lévő kérelmek.</div>';
-    badge.style.display='none';navDot.style.display='none';
+    badge.style.display='none';
+    pendingReqCount=0;renderNavBadge();
     return;
   }
   badge.style.display='flex';badge.textContent=data.length;
-  navDot.style.display='block';
+  pendingReqCount=data.length;renderNavBadge();
   const reqIds=data.map(f=>f.requester_id);
   const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color').in('id',reqIds);
   const pmap={};(profiles||[]).forEach(p=>pmap[p.id]=p);
@@ -2908,6 +2932,7 @@ async function openChat(partnerId,partnerName,partnerColor){
   document.getElementById('chat-av').style.background=partnerColor;
   document.getElementById('chat-av').textContent=partnerName.slice(0,2).toUpperCase();
   document.getElementById('chatov').classList.add('show');
+  markInboxSeen(); // megnyitott beszélgetés = megtekintett üzenetek
   await loadMessages();
   // Subscribe to realtime
   if(chatChannel)sb.removeChannel(chatChannel);
@@ -2982,13 +3007,96 @@ function joinDuelFromChat(code){
 
 function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-// Check for pending requests on load (nav dot)
-async function checkFriendRequests(){
+// ── ÉRTESÍTÉSEK: bejövő üzenetek + párbaj meghívók ────────────────────────────
+// A nav "Barátok" gombján megjelenő piros badge két forrásból táplálkozik:
+// a függőben lévő barátkérelmek és az olvasatlan üzenetek/meghívók számából.
+let inboxChannel=null,unreadMsgCount=0,pendingReqCount=0,pendingInviteCode=null;
+const INBOX_SEEN_KEY='qh_inbox_seen';
+
+function renderNavBadge(){
+  const badge=document.getElementById('friends-badge');
+  const dot=document.getElementById('friends-dot');
+  if(dot)dot.style.display='none'; // a numerikus badge váltja le a régi pontot
+  if(!badge)return;
+  const total=(unreadMsgCount||0)+(pendingReqCount||0);
+  if(total>0){
+    badge.textContent=total>9?'9+':String(total);
+    if(badge.style.display==='none'){badge.classList.remove('pop');void badge.offsetWidth;badge.classList.add('pop');}
+    badge.style.display='flex';
+  } else {
+    badge.style.display='none';
+  }
+}
+
+function getInboxSeen(){return localStorage.getItem(INBOX_SEEN_KEY)||'1970-01-01T00:00:00.000Z';}
+function markInboxSeen(){localStorage.setItem(INBOX_SEEN_KEY,new Date().toISOString());unreadMsgCount=0;renderNavBadge();}
+
+// Betöltéskor megszámoljuk, hány üzenet érkezett az utolsó megtekintés óta.
+async function loadUnreadCount(){
+  if(!CU){unreadMsgCount=0;renderNavBadge();return;}
+  const{data}=await sb.from('messages').select('id').eq('receiver_id',CU.id).gt('created_at',getInboxSeen());
+  unreadMsgCount=(data&&data.length)?data.length:0;
+  renderNavBadge();
+}
+
+// Élő feliratkozás a saját bejövő üzenetekre (párbaj meghívó vagy sima chat).
+function subscribeInbox(){
   if(!CU)return;
+  if(inboxChannel){sb.removeChannel(inboxChannel);inboxChannel=null;}
+  inboxChannel=sb.channel('inbox:'+CU.id)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'receiver_id=eq.'+CU.id},({new:m})=>{
+      handleIncomingMessage(m);
+    }).subscribe();
+}
+function unsubscribeInbox(){
+  if(inboxChannel){sb.removeChannel(inboxChannel);inboxChannel=null;}
+}
+
+function isDuelInviteMsg(content){
+  return content.includes('⚔️')||content.toLowerCase().includes('párbaj');
+}
+
+function handleIncomingMessage(m){
+  if(!m||!CU||m.receiver_id!==CU.id)return;
+  // Ha épp nyitva a beszélgetés a küldővel, ott már látja — nincs badge/popup.
+  const chatOpen=chatPartner&&chatPartner.id===m.sender_id&&document.getElementById('chatov').classList.contains('show');
+  if(chatOpen){markInboxSeen();return;}
+  unreadMsgCount++;renderNavBadge();
+  const codeMatch=m.content.match(/([A-Z0-9]{6})/);
+  if(isDuelInviteMsg(m.content)&&codeMatch){
+    showDuelInvitePopup(m.sender_id,codeMatch[1].toUpperCase());
+  } else {
+    toast('📨 Új üzenet érkezett!','info');
+  }
+}
+
+// Párbaj meghívó felugró ablak — elfogadás esetén bedob a szoba lobbijába.
+async function showDuelInvitePopup(senderId,code){
+  pendingInviteCode=code;
+  let name='Egy barátod';
+  try{const{data}=await sb.from('profiles').select('username').eq('id',senderId).single();if(data?.username)name=data.username;}catch(e){}
+  document.getElementById('duel-invite-name').textContent=name;
+  document.getElementById('duel-invite-code').textContent=code;
+  document.getElementById('duelinvov').classList.add('show');
+}
+function declineDuelInvite(){
+  document.getElementById('duelinvov').classList.remove('show');
+  pendingInviteCode=null;
+}
+function acceptDuelInvite(){
+  const code=pendingInviteCode;
+  document.getElementById('duelinvov').classList.remove('show');
+  pendingInviteCode=null;
+  markInboxSeen();
+  if(code)joinDuelFromChat(code);
+}
+
+// Check for pending requests on load (nav badge)
+async function checkFriendRequests(){
+  if(!CU){pendingReqCount=0;renderNavBadge();return;}
   const{data}=await sb.from('friendships').select('id').eq('addressee_id',CU.id).eq('status','pending');
-  const navDot=document.getElementById('friends-dot');
-  if(data&&data.length>0){navDot.style.display='block';}
-  else{navDot.style.display='none';}
+  pendingReqCount=(data&&data.length)?data.length:0;
+  renderNavBadge();
 }
 
 

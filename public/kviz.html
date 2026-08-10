@@ -55,6 +55,7 @@
     <div class="qr" id="qr">
       <div class="rs" id="rs"></div>
       <div class="star-row" id="stars"></div>
+      <div class="rpts" id="rpts"></div>
       <div class="rm" id="rm"></div>
       <div><span class="rpass" id="rpass"></span></div>
       <div class="ra" id="ra"></div>
@@ -223,7 +224,13 @@ async function showResult(){
   const ra=document.getElementById('ra');
   let btns='';
   if(passed){
-    const advanced=await QH.completeLevel(SUB.id,LEVEL,score);
+    const {advanced,points,saved}=await QH.completeLevel(SUB.id,LEVEL,score);
+    // Szerzett pont kiírása a helyes válaszok mellé; bejelentkezve a ranglistához adódik.
+    const rpts=document.getElementById('rpts');
+    if(saved)
+      rpts.innerHTML=`<span style="color:var(--gold);font-weight:700;">+${points} pont</span> <span style="color:var(--text-muted);">a ranglistádhoz</span>`;
+    else
+      rpts.innerHTML=`<span style="color:var(--gold);font-weight:700;">+${points} pont</span> <span style="color:var(--text-muted);">— jelentkezz be, hogy a ranglistára kerüljön</span>`;
     rp.className='rpass ok';rp.textContent='✓ Szint teljesítve!';
     document.getElementById('rm').textContent=score===QL.length?'Hibátlan! Zseniális!':'Szép munka!';
     const subIdx=CAT.subs.indexOf(SUB);

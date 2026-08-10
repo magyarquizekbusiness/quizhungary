@@ -68,19 +68,22 @@
   async function completeLevel(subId,level,correct){
     let advanced=false;
     if(level>getLevel(subId)){prog[subId]=level;writeLocal();advanced=true;}
+    // pont: szint × 20 alap + minden jó válasz 10 (első teljesítéskor teljes, ismétléskor fele)
+    const base=level*20+correct*10;
+    const pts=advanced?base:Math.round(base/2);
+    let saved=false;
     if(user&&sb){
       try{
         if(advanced)await sb.from('level_progress').upsert({user_id:user.id,sub_id:subId,completed_level:prog[subId]},{onConflict:'user_id,sub_id'});
         const cat=QH_CATALOG.find(c=>c.id===QH_SUB_TO_CAT[subId]);
         const sub=cat?.subs.find(s=>s.id===subId);
-        // pont: szint × 20 alap + minden jó válasz 10 (első teljesítéskor teljes, ismétléskor fele)
-        const base=level*20+correct*10;
-        const pts=advanced?base:Math.round(base/2);
         await sb.from('scores').insert({user_id:user.id,topic:(cat?.name||'Kvíz')+' – '+(sub?.name||subId),points:pts});
         await sb.from('profiles').update({last_played_date:new Date().toISOString().split('T')[0]}).eq('id',user.id);
+        saved=true;
       }catch(e){console.warn('QH save:',e.message);}
     }
-    return advanced;
+    // saved: a pont ténylegesen jóváíródott-e a ranglistán (bejelentkezett felhasználónál)
+    return {advanced,points:pts,saved};
   }
 
   // ── Feloldási szabályok ────────────────────────────────────────────────────

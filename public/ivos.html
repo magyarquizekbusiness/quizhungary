@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ivós kvíz – QuizHungary | Party kvízjáték baráti társaságnak</title>
+<meta name="description" content="Ivós kvíz party mód a QuizHungaryn: válaszd ki a témákat és a játékosokat, oldd fel a helyes választ, pörgesd meg, hány felest iszik a vesztes, és kövesd a scoreboardon, ki mennyit ivott. Csak 18 éven felülieknek!">
+<meta name="keywords" content="ivós kvíz, ivós játék, party játék, ivós party, kvíz baráti társaságnak, ivós kártya, buli játék">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://quizhungary.com/ivos">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://quizhungary.com/ivos">
+<meta property="og:title" content="Ivós kvíz – QuizHungary">
+<meta property="og:description" content="Party kvízjáték baráti társaságnak: témák, játékosok, helyes válasz feloldás és egy pörgetés dönti el, hány felest iszik a vesztes. 18+">
+<meta property="og:image" content="https://quizhungary.com/og-image.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/qh.css">
+<style>
+/* Ivós kvíz: a válaszlehetőségek itt csak megjelenítők (nem időre, nincs pontozás) */
+.iv-card{max-width:720px;margin:0 auto;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:2rem;}
+.iv-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin:1.4rem 0 0.6rem;}
+.iv-lbl:first-child{margin-top:0;}
+.iv-input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.75rem 0.9rem;font-family:'Barlow',sans-serif;font-size:1rem;border-radius:4px;box-sizing:border-box;}
+.iv-input:focus{outline:none;border-color:var(--border-red);}
+.iv-prow{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.55rem;}
+.iv-prow .idx{font-family:'Bebas Neue',sans-serif;color:var(--text-dim);width:1.4rem;text-align:center;flex:none;font-size:1.1rem;}
+.iv-del{flex:none;background:none;border:1px solid var(--border);color:var(--text-muted);width:2.2rem;height:2.2rem;border-radius:4px;cursor:pointer;font-size:1.1rem;line-height:1;transition:all 0.15s;}
+.iv-del:hover{border-color:var(--red);color:var(--red);}
+.iv-add{background:none;border:1px dashed var(--border-red);color:var(--text-muted);padding:0.6rem 1rem;border-radius:4px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.85rem;transition:all 0.15s;margin-top:0.3rem;}
+.iv-add:hover{border-color:var(--red);color:var(--red);}
+.iv-topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.55rem;}
+.iv-topic{display:flex;align-items:center;gap:0.55rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:0.7rem 0.8rem;cursor:pointer;transition:all 0.15s;user-select:none;}
+.iv-topic:hover{border-color:var(--border-red);}
+.iv-topic.on{border-color:var(--red);background:rgba(232,25,44,0.1);}
+.iv-topic .tic{font-size:1.25rem;line-height:1;}
+.iv-topic .tnm{font-size:0.9rem;}
+.iv-topic .chk{margin-left:auto;color:var(--red);opacity:0;font-weight:700;}
+.iv-topic.on .chk{opacity:1;}
+.iv-maxrow{display:flex;align-items:center;gap:0.8rem;}
+.iv-maxrow input{width:5.5rem;text-align:center;font-size:1.2rem;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;}
+.iv-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;margin-top:1.2rem;}
+.iv-18{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:1.5px;border:1px solid var(--border-red);color:var(--red);border-radius:4px;padding:0.25rem 0.7rem;margin-bottom:1rem;}
+
+/* Játékmenet */
+.iv-round{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;}
+.iv-step{margin-top:1.4rem;}
+.iv-hint{text-align:center;color:var(--text-muted);font-size:0.9rem;margin-top:0.4rem;}
+.iv-spinbox{text-align:center;padding:0.6rem 0;}
+.iv-spin-num{font-family:'Bebas Neue',sans-serif;font-size:5rem;line-height:1;color:var(--gold);letter-spacing:3px;}
+.iv-spin-cap{font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-size:0.85rem;}
+.iv-losers{display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-top:0.9rem;}
+.iv-loser{background:var(--bg3);border:1px solid var(--border-red);color:var(--text);padding:0.6rem 1.2rem;border-radius:30px;cursor:pointer;font-family:'Barlow',sans-serif;font-size:1rem;transition:all 0.15s;}
+.iv-loser:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.iv-loser.picked{background:var(--red);color:#fff;border-color:var(--red);}
+.iv-loser:disabled{opacity:0.5;cursor:default;}
+
+/* Scoreboard */
+.iv-sb{max-width:720px;margin:1.4rem auto 0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.4rem 1.6rem;}
+.iv-sb h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1.5px;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem;}
+.iv-sbrow{display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0;border-top:1px solid var(--border);}
+.iv-sbrow:first-of-type{border-top:none;}
+.iv-sbrow .rk{font-family:'Bebas Neue',sans-serif;color:var(--text-dim);width:1.6rem;font-size:1.15rem;}
+.iv-sbrow .nm{flex:1;font-size:1.02rem;}
+.iv-sbrow .sc{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--gold);letter-spacing:1px;}
+.iv-sbrow.lead .nm{color:var(--red);font-weight:600;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="data/catalog.js"></script>
+<meta property="og:site_name" content="QuizHungary">
+<meta property="og:locale" content="hu_HU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ivós kvíz – QuizHungary">
+<meta name="twitter:description" content="Party kvízjáték baráti társaságnak. Válaszd a témákat, oldd fel a helyes választ, pörgesd meg, ki mennyit iszik! 18+">
+<meta name="twitter:image" content="https://quizhungary.com/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Főoldal", "item": "https://quizhungary.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Kategóriák", "item": "https://quizhungary.com/kategoriak" },
+    { "@type": "ListItem", "position": 3, "name": "Ivós kvíz", "item": "https://quizhungary.com/ivos" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/"><span>QUIZ</span>HUNGARY</a>
+  <div class="nav-links">
+    <a href="/" class="hmob">Főoldal</a>
+    <a href="kategoriak">Kategóriák</a>
+    <a href="iqteszt">IQ teszt</a>
+    <a href="ivos" style="color:var(--red)">Ivós kvíz</a>
+    <div id="nav-guest" style="display:none"><a href="/#login"><button class="btn-nav">Bejelentkezés</button></a></div>
+    <div id="nav-user" style="display:none;align-items:center;gap:0.6rem;">
+      <div class="nav-avatar" id="nava">?</div>
+      <span class="nav-uname hmob" id="navu"></span>
+    </div>
+  </div>
+</nav>
+
+<div class="sw" style="padding-top:5.5rem;">
+  <div class="crumb"><a href="kategoriak">Kategóriák</a><span>›</span><span style="color:var(--text-muted)">Ivós kvíz</span></div>
+
+  <!-- BEÁLLÍTÁS -->
+  <div id="iv-setup-screen">
+    <div class="slbl">Party mód</div>
+    <h1 class="stit">Ivós kvíz 🍻</h1>
+    <div class="iv-card">
+      <div class="iv-18">🔞 Csak 18+ · Igyál felelősséggel</div>
+
+      <div class="iv-lbl">Játékosok</div>
+      <div id="iv-players"></div>
+      <button class="iv-add" id="iv-add-player" onclick="addPlayer()">+ Játékos hozzáadása</button>
+
+      <div class="iv-lbl">Témakörök</div>
+      <div class="iv-topics" id="iv-topics"></div>
+
+      <div class="iv-lbl">Mennyi a maximum felesszám?</div>
+      <div class="iv-maxrow">
+        <input class="iv-input" id="iv-max" type="number" min="1" max="20" value="3" inputmode="numeric">
+        <span style="color:var(--text-muted);font-size:0.9rem;">A pörgetés 1 és ennyi közötti számot ad — ennyi felest iszik a vesztes.</span>
+      </div>
+
+      <div id="iv-setup-err" style="display:none;color:var(--red);font-size:0.9rem;margin-top:1rem;"></div>
+      <button class="btn-p" id="iv-start-btn" onclick="startGame()" style="width:100%;margin-top:1.5rem;">Játék indítása →</button>
+      <div class="iv-note">Ez egy helyi, egy eszközön játszható party játék — nem kell hozzá bejelentkezés. A kérdésekre nem időre kell válaszolni: nyugodtan vitatkozzatok, majd oldjátok fel a helyes választ. A társaság dönti el, ki a vesztes; a pörgetés csak a felesek számát adja. Kérünk, csak nagykorúként és felelősséggel játszd!</div>
+    </div>
+  </div>
+
+  <!-- JÁTÉK -->
+  <div id="iv-game-screen" style="display:none;">
+    <div class="quiz-box">
+      <div class="iv-round">
+        <div class="quiz-title">🍻 Ivós kvíz</div>
+        <span class="lvl-badge" id="iv-round-badge">1. kör</span>
+      </div>
+      <div class="qq" id="iv-q"></div>
+      <div class="qos" id="iv-o"></div>
+
+      <!-- 1. lépés: helyes válasz feloldása -->
+      <div class="iv-step" id="iv-reveal-step">
+        <button class="btn-p" id="iv-reveal-btn" onclick="revealAnswer()" style="width:100%;">🔓 Helyes válasz feloldása</button>
+      </div>
+
+      <!-- 2. lépés: pörgetés -->
+      <div class="iv-step" id="iv-spin-step" style="display:none;">
+        <button class="btn-p" id="iv-spin-btn" onclick="spin()" style="width:100%;">🎲 Pörgetés — hány feles?</button>
+      </div>
+
+      <!-- 3. lépés: eredmény + vesztes kiválasztása -->
+      <div class="iv-step" id="iv-result-step" style="display:none;">
+        <div class="iv-spinbox">
+          <div class="iv-spin-num" id="iv-spin-num">?</div>
+          <div class="iv-spin-cap" id="iv-spin-cap">feles</div>
+        </div>
+        <div class="iv-hint">Ki issza meg? A nyertes válassza ki a vesztest:</div>
+        <div class="iv-losers" id="iv-losers"></div>
+      </div>
+
+      <!-- 4. lépés: következő kör -->
+      <div class="iv-step" id="iv-next-step" style="display:none;">
+        <button class="btn-p" id="iv-next-btn" onclick="nextRound()" style="width:100%;">Következő kör →</button>
+      </div>
+
+      <div style="text-align:center;margin-top:1.4rem;">
+        <a href="#" onclick="newGame(event)" style="color:var(--text-dim);font-size:0.82rem;text-decoration:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;">⚙ Új játék / beállítások</a>
+      </div>
+    </div>
+
+    <!-- Scoreboard -->
+    <div class="iv-sb">
+      <h3>🏆 Scoreboard <span style="font-size:0.8rem;color:var(--text-dim);letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">(elivott felesek)</span></h3>
+      <div id="iv-scoreboard"></div>
+    </div>
+  </div>
+</div>
+
+<div class="sw" style="padding-top:1rem;">
+  <div class="slbl">Tudnivalók</div>
+  <h2 class="stit" style="font-size:1.8rem;">Hogyan működik az ivós kvíz?</h2>
+  <div style="max-width:760px;">
+    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">Az <strong style="color:var(--text);">ivós kvíz</strong> a QuizHungary party módja baráti társaságoknak. A beállításnál megadjátok a játékosok nevét, kiválasztjátok, milyen témájú kérdések jöjjenek, és beállítjátok a maximum felesszámot. Ezután a játék egyetlen eszközön, közösen zajlik.</p>
+    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">Minden kör egy kérdéssel indul, a válaszlehetőségek ott vannak — de <strong style="color:var(--text);">nem időre</strong> kell válaszolni. Amikor a társaság megegyezett, a <strong style="color:var(--text);">„Helyes válasz feloldása”</strong> gombbal jelenítitek meg a jó megoldást. Ezután egy <strong style="color:var(--text);">pörgetés</strong> ad egy véletlen számot 1 és a beállított maximum között — ennyi felest iszik a vesztes. A nyertes egy gombbal választja ki, ki a vesztes, majd a <strong style="color:var(--text);">„Következő kör”</strong> gomb indítja a következő kérdést.</p>
+    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">A scoreboard folyamatosan mutatja, ki hány felest ivott eddig. Az állás ezen az eszközön automatikusan mentődik, így egy véletlen frissítés sem szakítja félbe a bulit.</p>
+    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;"><strong style="color:var(--text);">Fontos:</strong> ez a játék kizárólag <strong style="color:var(--text);">18 éven felülieknek</strong> szól. Kérünk, igyál felelősséggel, ismerd a határaidat, és soha ne vezess ivás után! A felest bármikor helyettesítheted alkoholmentes itallal is — a lényeg a jó társaság. Ha inkább klasszikus tudáspróbára vágysz, nézd meg a <a href="kategoriak" style="color:var(--red);">kvíz kategóriáinkat</a> vagy az <a href="iqteszt" style="color:var(--red);">IQ tesztet</a>!</p>
+  </div>
+</div>
+
+<footer>
+  <span class="flogo"><span>QUIZ</span>HUNGARY</span>
+  <div style="display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;font-size:0.8rem;">
+    <a href="rolunk">Rólunk</a>
+    <a href="gyik">GYIK</a>
+    <a href="adatvedelem">Adatvédelem</a>
+    <a href="feltetelek">Felhasználási feltételek</a>
+    <a href="kapcsolat">Kapcsolat</a>
+  </div>
+  <p><a href="kategoriak">Kategóriák</a> · <a href="iqteszt">IQ teszt</a> · <a href="/">Főoldal</a> · © 2025 QuizHungary</p>
+</footer>
+
+<div class="toast" id="tst"></div>
+
+<script src="js/qh.js"></script>
+<script>
+const CATS = window.QH_CATALOG || [];
+const LS = 'qh_ivos_state';
+
+// Munkamenet állapota
+let S = null;          // {players:[], max:int, topics:[], scores:{idx:felesek}, current:{q,o,a}, phase, spinVal}
+let pool = [], poolIdx = 0;
+
+// ── Perzisztencia ────────────────────────────────────────────────────────────
+function saveState(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
+function loadState(){ try{ const s=JSON.parse(localStorage.getItem(LS)); if(s&&Array.isArray(s.players))return s; }catch(e){} return null; }
+function clearState(){ try{ localStorage.removeItem(LS); }catch(e){} }
+
+// ── Beállítás képernyő ───────────────────────────────────────────────────────
+function renderPlayerRow(name){
+  const wrap=document.getElementById('iv-players');
+  const rows=wrap.querySelectorAll('.iv-prow');
+  const i=rows.length;
+  const row=document.createElement('div');row.className='iv-prow';
+  row.innerHTML=`<span class="idx">${i+1}</span>`+
+    `<input class="iv-input iv-pname" type="text" maxlength="20" placeholder="Játékos ${i+1} neve" value="${(name||'').replace(/"/g,'&quot;')}">`+
+    `<button class="iv-del" onclick="delPlayer(this)" title="Törlés">✕</button>`;
+  wrap.appendChild(row);
+}
+function reindexPlayers(){
+  document.querySelectorAll('#iv-players .iv-prow').forEach((r,i)=>{
+    r.querySelector('.idx').textContent=i+1;
+    const inp=r.querySelector('.iv-pname');
+    if(inp&&!inp.value)inp.placeholder=`Játékos ${i+1} neve`;
+  });
+}
+function addPlayer(name){ renderPlayerRow(name); reindexPlayers(); }
+function delPlayer(btn){
+  const rows=document.querySelectorAll('#iv-players .iv-prow');
+  if(rows.length<=2){ QH.toast('Legalább 2 játékos kell!','err'); return; }
+  btn.closest('.iv-prow').remove(); reindexPlayers();
+}
+
+let selectedTopics=new Set();
+function renderTopics(){
+  const box=document.getElementById('iv-topics');box.innerHTML='';
+  CATS.forEach(c=>{
+    const d=document.createElement('div');d.className='iv-topic'+(selectedTopics.has(c.id)?' on':'');
+    d.innerHTML=`<span class="tic">${c.icon}</span><span class="tnm">${c.name}</span><span class="chk">✓</span>`;
+    d.onclick=()=>{ if(selectedTopics.has(c.id))selectedTopics.delete(c.id); else selectedTopics.add(c.id); renderTopics(); };
+    box.appendChild(d);
+  });
+}
+
+function buildSetup(){
+  document.getElementById('iv-players').innerHTML='';
+  addPlayer(); addPlayer();
+  selectedTopics=new Set();
+  renderTopics();
+}
+
+async function startGame(){
+  const err=document.getElementById('iv-setup-err');
+  const names=[...document.querySelectorAll('#iv-players .iv-pname')].map(i=>i.value.trim()).filter(Boolean);
+  if(names.length<2){ err.style.display='block'; err.textContent='Adj meg legalább 2 játékost!'; return; }
+  if(selectedTopics.size===0){ err.style.display='block'; err.textContent='Válassz legalább egy témakört!'; return; }
+  let max=parseInt(document.getElementById('iv-max').value,10);
+  if(!(max>=1)){ err.style.display='block'; err.textContent='A maximum felesszám legyen legalább 1!'; return; }
+  if(max>20)max=20;
+  err.style.display='none';
+
+  const btn=document.getElementById('iv-start-btn');
+  btn.disabled=true; btn.textContent='Kérdések betöltése…';
+
+  S={ players:names, max, topics:[...selectedTopics], scores:{}, current:null, phase:'q', spinVal:0, round:1 };
+
+  const ok=await buildPool();
+  btn.disabled=false; btn.textContent='Játék indítása →';
+  if(!ok){ err.style.display='block'; err.textContent='Nem sikerült betölteni a kérdéseket. Próbáld újra!'; return; }
+
+  saveState();
+  enterGame();
+  nextRound();
+}
+
+// ── Kérdés-pool a kiválasztott témákból ──────────────────────────────────────
+async function buildPool(){
+  try{ await Promise.allSettled(S.topics.map(id=>QH.loadQuestions(id))); }catch(e){}
+  const bank=window.QH_QUESTIONS||{};
+  const all=[];
+  CATS.filter(c=>S.topics.includes(c.id)).forEach(c=>{
+    c.subs.forEach(s=>{
+      const levels=bank[s.id]||[];
+      levels.forEach(lvl=>{ if(Array.isArray(lvl))lvl.forEach(q=>{ if(q&&q.q)all.push(q); }); });
+    });
+  });
+  if(!all.length)return false;
+  shuffle(all);
+  pool=all; poolIdx=0;
+  return true;
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function shuffleOptions(q){
+  const idx=q.o.map((_,i)=>i); shuffle(idx);
+  return { q:q.q, o:idx.map(i=>q.o[i]), a:idx.indexOf(q.a) };
+}
+function drawQuestion(){
+  if(!pool.length)return null;
+  if(poolIdx>=pool.length){ shuffle(pool); poolIdx=0; }
+  return shuffleOptions(pool[poolIdx++]);
+}
+
+// ── Játékmenet ───────────────────────────────────────────────────────────────
+function enterGame(){
+  document.getElementById('iv-setup-screen').style.display='none';
+  document.getElementById('iv-game-screen').style.display='block';
+  renderScoreboard();
+}
+
+function nextRound(){
+  if(S._advance){ S.round=(S.round||1)+1; S._advance=false; }
+  if(pool.length){ // friss kör: húzunk új kérdést
+    S.current=drawQuestion();
+  }
+  S.phase='q'; S.spinVal=0;
+  saveState();
+  renderRound();
+}
+
+function renderRound(){
+  document.getElementById('iv-round-badge').textContent=`${S.round}. kör`;
+  const q=S.current;
+  document.getElementById('iv-q').textContent=q?q.q:'';
+  const box=document.getElementById('iv-o');box.innerHTML='';
+  if(q){
+    q.o.forEach((o,i)=>{
+      const b=document.createElement('button');
+      b.className='qo'+(S.phase!=='q'&&i===q.a?' correct':'');
+      b.disabled=true;
+      b.innerHTML=`<span class="ol">${['A','B','C','D'][i]}</span>${o}`;
+      box.appendChild(b);
+    });
+  }
+  // lépések láthatósága a fázis szerint
+  show('iv-reveal-step', S.phase==='q');
+  show('iv-spin-step', S.phase==='revealed');
+  show('iv-result-step', S.phase==='spun'||S.phase==='done');
+  show('iv-next-step', S.phase==='done');
+
+  if(S.phase==='spun'||S.phase==='done'){
+    document.getElementById('iv-spin-num').textContent=S.spinVal;
+    document.getElementById('iv-spin-cap').textContent='feles';
+    renderLosers(S.phase==='done');
+  }
+  renderScoreboard();
+}
+function show(id,on){ document.getElementById(id).style.display=on?'block':'none'; }
+
+function revealAnswer(){
+  S.phase='revealed'; saveState(); renderRound();
+}
+
+function spin(){
+  const btn=document.getElementById('iv-spin-btn');
+  btn.disabled=true;
+  S.phase='spun';
+  show('iv-spin-step',false);
+  show('iv-result-step',true);
+  const numEl=document.getElementById('iv-spin-num');
+  const final=1+Math.floor(Math.random()*S.max);
+  let ticks=0;
+  const anim=setInterval(()=>{
+    numEl.textContent=1+Math.floor(Math.random()*S.max);
+    if(++ticks>=14){
+      clearInterval(anim);
+      numEl.textContent=final;
+      S.spinVal=final;
+      saveState();
+      renderLosers(false);
+    }
+  },70);
+  renderLosers(false);
+}
+
+function renderLosers(picked){
+  const box=document.getElementById('iv-losers');box.innerHTML='';
+  S.players.forEach((p,i)=>{
+    const b=document.createElement('button');
+    b.className='iv-loser';
+    b.textContent=p;
+    b.disabled=picked;
+    b.onclick=()=>pickLoser(i);
+    box.appendChild(b);
+  });
+}
+
+function pickLoser(i){
+  if(S.phase==='done')return;
+  S.scores[i]=(S.scores[i]||0)+S.spinVal;
+  S.phase='done';
+  saveState();
+  // vizuális visszajelzés
+  const btns=document.querySelectorAll('#iv-losers .iv-loser');
+  btns.forEach((b,j)=>{ b.disabled=true; if(j===i)b.classList.add('picked'); });
+  show('iv-next-step',true);
+  renderScoreboard();
+  QH.toast(`${S.players[i]} +${S.spinVal} feles 🍺`,'ok');
+  // a következő kör növeli a számlálót
+  S._advance=true;
+}
+
+function renderScoreboard(){
+  const box=document.getElementById('iv-scoreboard');box.innerHTML='';
+  const rows=S.players.map((p,i)=>({name:p,score:S.scores[i]||0}));
+  rows.sort((a,b)=>b.score-a.score);
+  const top=rows[0]?rows[0].score:0;
+  rows.forEach((r,i)=>{
+    const div=document.createElement('div');
+    div.className='iv-sbrow'+(top>0&&r.score===top?' lead':'');
+    div.innerHTML=`<span class="rk">${i+1}.</span><span class="nm">${escapeHtml(r.name)}</span><span class="sc">${r.score} 🍺</span>`;
+    box.appendChild(div);
+  });
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function newGame(e){
+  if(e)e.preventDefault();
+  if(!confirm('Új játék indítása? A jelenlegi scoreboard törlődik.'))return;
+  clearState();
+  S=null; pool=[]; poolIdx=0;
+  document.getElementById('iv-game-screen').style.display='none';
+  document.getElementById('iv-setup-screen').style.display='block';
+  buildSetup();
+}
+
+// ── Indítás ──────────────────────────────────────────────────────────────────
+async function boot(){
+  await QH.init();
+  const st=loadState();
+  if(st && st.players && st.players.length>=2 && st.topics && st.topics.length){
+    S=st; S._advance=false; if(!S.round)S.round=1;
+    const ok=await buildPool();      // pool újraépítése a mentett témákból
+    if(ok){
+      if(!S.current)S.current=drawQuestion();
+      enterGame();
+      renderRound();
+      return;
+    }
+    clearState(); S=null;
+  }
+  buildSetup();
+}
+boot();
+</script>
+</body>
+</html>

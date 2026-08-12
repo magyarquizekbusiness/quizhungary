@@ -352,6 +352,8 @@ function renderRound(){
   show('iv-spin-step', S.phase==='revealed');
   show('iv-result-step', S.phase==='spun'||S.phase==='done');
   show('iv-next-step', S.phase==='done');
+  // a pörgetés gomb új körben újra aktív (spin() letiltja, itt visszaállítjuk)
+  document.getElementById('iv-spin-btn').disabled=false;
 
   if(S.phase==='spun'||S.phase==='done'){
     document.getElementById('iv-spin-num').textContent=S.spinVal;

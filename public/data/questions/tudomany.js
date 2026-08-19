@@ -91,13 +91,13 @@ QH_QUESTIONS['tudomany-biologia'] = [
 ],
 [ // 3
 {q:'Melyik sejtszervecske végzi a fotoszintézist?',o:['Kloroplasztisz','Mitokondrium','Sejtmag'],a:0},
-{q:'Melyik tudós alkotta meg az evolúcióelméletet?',o:['Darwin','Mendel','Pasteur'],a:0},
+{q:'Melyik tudós alkotta meg az evolúcióelméletet?',o:['Charles Darwin','Gregor Mendel','Louis Pasteur'],a:0},
 {q:'Mi a gomba: növény, állat vagy külön ország?',o:['Növény','Külön ország','Állat'],a:1},
 {q:'Melyik vérsejt felel az immunitásért?',o:['Vörösvérsejt','Fehérvérsejt','Vérlemezke'],a:1},
 {q:'Hány szíve van a földigilisztának (érpumpák)?',o:['1','Több','3'],a:1},
 ],
 [ // 4
-{q:'Ki az öröklődés törvényeinek felfedezője?',o:['Mendel','Darwin','Linné'],a:0},
+{q:'Ki az öröklődés törvényeinek felfedezője?',o:['Gregor Mendel','Charles Darwin','Carl Linné'],a:0},
 {q:'Mi a fotoszintézis alapanyaga a fényen és vízen kívül?',o:['Szén-dioxid','Oxigén','Nitrogén'],a:0},
 {q:'Melyik rendszertani kategória a legtágabb?',o:['Faj','Ország','Nemzetség'],a:1},
 {q:'Hány szíve van a polipnak?',o:['1','3','5'],a:1},
@@ -120,7 +120,7 @@ QH_QUESTIONS['tudomany-biologia'] = [
 [ // 7
 {q:'Melyik nukleotid-bázis NINCS a DNS-ben?',o:['Uracil','Adenin','Citozin'],a:0},
 {q:'Melyik folyamat termel ATP-t oxigén nélkül?',o:['Erjedés','Aerob légzés','Fotoszintézis'],a:0},
-{q:'Ki alkotta meg a modern rendszertan alapjait?',o:['Linné','Darwin','Mendel'],a:0},
+{q:'Ki alkotta meg a modern rendszertan alapjait?',o:['Carl Linné','Charles Darwin','Gregor Mendel'],a:0},
 {q:'Melyik enzim bontja a keményítőt a nyálban?',o:['Amiláz','Pepszin','Lipáz'],a:0},
 {q:'Hány ATP keletkezik a glikolízisben nettó?',o:['2','8','30'],a:0},
 ],
@@ -135,7 +135,7 @@ QH_QUESTIONS['tudomany-biologia'] = [
 {q:'Melyik ciklus fixálja a szenet a fotoszintézisben?',o:['Calvin-ciklus','Krebs-ciklus','Urea-ciklus'],a:0},
 {q:'Mi a citoplazma?',o:['A sejt belső anyaga','A sejtmag','A sejtfal'],a:0},
 {q:'Melyik szakaszban kettőződik meg a kromoszómakészlet a sejtciklusban?',o:['S-fázis','G1-fázis','M-fázis'],a:0},
-{q:'Ki írta le a sejtelméletet Schwann mellett?',o:['Schleiden','Hooke','Virchow'],a:0},
+{q:'Ki írta le a sejtelméletet Theodor Schwann mellett?',o:['Matthias Schleiden','Robert Hooke','Rudolf Virchow'],a:0},
 {q:'Melyik molekula az élő sejtek fő energiapénze?',o:['ATP','DNS','NADH'],a:0},
 ],
 [ // 10
@@ -184,7 +184,7 @@ QH_QUESTIONS['tudomany-kemia'] = [
 {q:'Melyik elem szükséges az égéshez?',o:['Oxigén','Nitrogén','Hélium'],a:0},
 ],
 [ // 6
-{q:'Ki alkotta meg a periódusos rendszert?',o:['Mengyelejev','Curie','Dalton'],a:0},
+{q:'Ki alkotta meg a periódusos rendszert?',o:['Dmitrij Mengyelejev','Marie Curie','John Dalton'],a:0},
 {q:'Mi a kálium vegyjele?',o:['K','Ka','Po'],a:0},
 {q:'Melyik pH alatt savas egy oldat?',o:['7 alatt','7 felett','Pontosan 7'],a:0},
 {q:'Melyik részecske határozza meg az elem rendszámát?',o:['Proton','Neutron','Elektron'],a:0},
@@ -229,7 +229,7 @@ QH_QUESTIONS['tudomany-fizika'] = [
 {q:'Milyen színű fényből áll a fehér fény?',o:['Egyféle','Minden szín keveréke','Csak piros'],a:1},
 ],
 [ // 2
-{q:'Ki fogalmazta meg a gravitáció törvényét?',o:['Newton','Einstein','Galilei'],a:0},
+{q:'Ki fogalmazta meg a gravitáció törvényét?',o:['Isaac Newton','Albert Einstein','Galileo Galilei'],a:0},
 {q:'Hány Newton-féle mozgástörvény van?',o:['2','3','4'],a:1},
 {q:'Mi az erő mértékegysége?',o:['Newton','Joule','Pascal'],a:0},
 {q:'Milyen gyorsan gyorsul egy szabadon eső test (g)?',o:['kb. 9,8 m/s²','kb. 1 m/s²','kb. 100 m/s²'],a:0},
@@ -237,7 +237,7 @@ QH_QUESTIONS['tudomany-fizika'] = [
 ],
 [ // 3
 {q:'Mi az E=mc² képletben az "m"?',o:['Mozgás','Tömeg','Mágnesesség'],a:1},
-{q:'Ki alkotta a relativitáselméletet?',o:['Newton','Einstein','Bohr'],a:1},
+{q:'Ki alkotta a relativitáselméletet?',o:['Isaac Newton','Albert Einstein','Niels Bohr'],a:1},
 {q:'Mi a teljesítmény mértékegysége?',o:['Watt','Joule','Newton'],a:0},
 {q:'Melyik energia a mozgási energia neve?',o:['Kinetikus','Potenciális','Termikus'],a:0},
 {q:'Melyik hőmérsékleti skálán 0 az abszolút nulla?',o:['Kelvin','Celsius','Fahrenheit'],a:0},
@@ -251,7 +251,7 @@ QH_QUESTIONS['tudomany-fizika'] = [
 ],
 [ // 5
 {q:'Mi az elektromos áram mértékegysége?',o:['Amper','Volt','Ohm'],a:0},
-{q:'Ki fedezte fel a rádióaktivitást (részben)?',o:['Marie Curie','Newton','Faraday'],a:0},
+{q:'Ki fedezte fel a rádióaktivitást (részben)?',o:['Marie Curie','Isaac Newton','Michael Faraday'],a:0},
 {q:'Mi az elektromos feszültség mértékegysége?',o:['Volt','Amper','Watt'],a:0},
 {q:'Milyen lencse gyűjti a fényt egy pontba?',o:['Domború','Homorú','Sík'],a:0},
 {q:'Melyik törvény: U = I × R?',o:['Ohm törvénye','Newton törvénye','Hooke törvénye'],a:0},

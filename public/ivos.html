@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ivós kvíz – QuizHungary | Party kvízjáték baráti társaságnak</title>
-<meta name="description" content="Ivós kvíz party mód a QuizHungaryn: válaszd ki a témákat és a játékosokat, oldd fel a helyes választ, pörgesd meg, hány felest iszik a vesztes, és kövesd a scoreboardon, ki mennyit ivott. Csak 18 éven felülieknek!">
-<meta name="keywords" content="ivós kvíz, ivós játék, party játék, ivós party, kvíz baráti társaságnak, ivós kártya, buli játék">
+<title>Ivós kvíz – QuizHungary | Online party kvíz baráti társaságnak</title>
+<meta name="description" content="Online ivós kvíz a QuizHungaryn: hozz létre szobát, hívd meg a barátaidat a barátlistádról, és mindenki a saját telefonjáról válaszol időre. A leggyorsabb helyes válasz a kör nyertese – ő dönti el, ki és mennyit iszik. Csak 18 éven felülieknek!">
+<meta name="keywords" content="ivós kvíz, online ivós játék, party játék, ivós party, kvíz baráti társaságnak, multiplayer ivós kvíz, buli játék">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://quizhungary.com/ivos">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://quizhungary.com/ivos">
 <meta property="og:title" content="Ivós kvíz – QuizHungary">
-<meta property="og:description" content="Party kvízjáték baráti társaságnak: témák, játékosok, helyes válasz feloldás és egy pörgetés dönti el, hány felest iszik a vesztes. 18+">
+<meta property="og:description" content="Online party kvíz: hívd meg a barátaidat, válaszoljatok időre, és a leggyorsabb helyes válasz dönti el, ki iszik. 18+">
 <meta property="og:image" content="https://quizhungary.com/og-image.png">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -21,18 +21,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/qh.css">
 <style>
-/* Ivós kvíz: a válaszlehetőségek itt csak megjelenítők (nem időre, nincs pontozás) */
+/* Ivós kvíz – online party mód */
 .iv-card{max-width:720px;margin:0 auto;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:2rem;}
 .iv-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin:1.4rem 0 0.6rem;}
 .iv-lbl:first-child{margin-top:0;}
 .iv-input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.75rem 0.9rem;font-family:'Barlow',sans-serif;font-size:1rem;border-radius:4px;box-sizing:border-box;}
 .iv-input:focus{outline:none;border-color:var(--border-red);}
-.iv-prow{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.55rem;}
-.iv-prow .idx{font-family:'Bebas Neue',sans-serif;color:var(--text-dim);width:1.4rem;text-align:center;flex:none;font-size:1.1rem;}
-.iv-del{flex:none;background:none;border:1px solid var(--border);color:var(--text-muted);width:2.2rem;height:2.2rem;border-radius:4px;cursor:pointer;font-size:1.1rem;line-height:1;transition:all 0.15s;}
-.iv-del:hover{border-color:var(--red);color:var(--red);}
-.iv-add{background:none;border:1px dashed var(--border-red);color:var(--text-muted);padding:0.6rem 1rem;border-radius:4px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.85rem;transition:all 0.15s;margin-top:0.3rem;}
+.iv-add{background:none;border:1px dashed var(--border-red);color:var(--text-muted);padding:0.6rem 1rem;border-radius:4px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:0.85rem;transition:all 0.15s;}
 .iv-add:hover{border-color:var(--red);color:var(--red);}
+.iv-add:disabled{opacity:0.5;cursor:default;}
 .iv-topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.55rem;}
 .iv-topic{display:flex;align-items:center;gap:0.55rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:0.7rem 0.8rem;cursor:pointer;transition:all 0.15s;user-select:none;}
 .iv-topic:hover{border-color:var(--border-red);}
@@ -41,10 +38,20 @@
 .iv-topic .tnm{font-size:0.9rem;}
 .iv-topic .chk{margin-left:auto;color:var(--red);opacity:0;font-weight:700;}
 .iv-topic.on .chk{opacity:1;}
-.iv-maxrow{display:flex;align-items:center;gap:0.8rem;}
-.iv-maxrow input{width:5.5rem;text-align:center;font-size:1.2rem;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;}
+.iv-maxrow{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;}
+.iv-maxrow input,.iv-maxrow select{width:auto;min-width:5rem;text-align:center;font-size:1.1rem;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;}
 .iv-note{font-size:0.8rem;color:var(--text-dim);line-height:1.5;margin-top:1.2rem;}
 .iv-18{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:1.5px;border:1px solid var(--border-red);color:var(--red);border-radius:4px;padding:0.25rem 0.7rem;margin-bottom:1rem;}
+.iv-or{text-align:center;color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;font-size:0.8rem;margin:1.6rem 0 0.4rem;}
+
+/* Várószoba */
+.iv-codebox{text-align:center;background:var(--bg3);border:1px solid var(--border-red);border-radius:8px;padding:1rem;margin:0.4rem 0 1rem;}
+.iv-code-lbl{font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;font-size:0.75rem;color:var(--text-muted);}
+.iv-code{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:6px;color:var(--red);margin:0.2rem 0 0.6rem;}
+.iv-lobby-row,.iv-invite-row{display:flex;align-items:center;gap:0.7rem;padding:0.5rem 0;border-top:1px solid var(--border);}
+.iv-lobby-row:first-child,.iv-invite-row:first-child{border-top:none;}
+.iv-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;color:#fff;font-size:0.95rem;flex:none;}
+.iv-invite-row .nm,.iv-lobby-row .nm{flex:1;font-size:0.98rem;}
 
 /* Játékmenet */
 .iv-round{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;}
@@ -55,19 +62,44 @@
 .iv-spin-cap{font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-size:0.85rem;}
 .iv-losers{display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-top:0.9rem;}
 .iv-loser{background:var(--bg3);border:1px solid var(--border-red);color:var(--text);padding:0.6rem 1.2rem;border-radius:30px;cursor:pointer;font-family:'Barlow',sans-serif;font-size:1rem;transition:all 0.15s;}
-.iv-loser:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.iv-loser:hover:not(:disabled){background:var(--red);color:#fff;border-color:var(--red);}
 .iv-loser.picked{background:var(--red);color:#fff;border-color:var(--red);}
 .iv-loser:disabled{opacity:0.5;cursor:default;}
+.iv-resrow{display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0;border-top:1px solid var(--border);}
+.iv-resrow:first-of-type{border-top:none;}
+.iv-resrow .ic{font-size:1rem;flex:none;}
+.iv-resrow .nm{flex:1;font-size:0.95rem;}
+.iv-resrow .tm{font-family:'Bebas Neue',sans-serif;color:var(--text-dim);letter-spacing:1px;}
+.iv-resrow.win{color:var(--gold);font-weight:600;}
+.iv-leave{color:var(--text-dim);font-size:0.82rem;text-decoration:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;}
+.iv-leave:hover{color:var(--red);}
 
 /* Scoreboard */
 .iv-sb{max-width:720px;margin:1.4rem auto 0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.4rem 1.6rem;}
-.iv-sb h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1.5px;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem;}
+.iv-sb h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1.5px;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
 .iv-sbrow{display:flex;align-items:center;gap:0.7rem;padding:0.55rem 0;border-top:1px solid var(--border);}
 .iv-sbrow:first-of-type{border-top:none;}
 .iv-sbrow .rk{font-family:'Bebas Neue',sans-serif;color:var(--text-dim);width:1.6rem;font-size:1.15rem;}
 .iv-sbrow .nm{flex:1;font-size:1.02rem;}
-.iv-sbrow .sc{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--gold);letter-spacing:1px;}
-.iv-sbrow.lead .nm{color:var(--red);font-weight:600;}
+.iv-sbrow .wins{font-family:'Bebas Neue',sans-serif;color:var(--gold);letter-spacing:1px;font-size:1.05rem;}
+.iv-sbrow .sc{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--text);letter-spacing:1px;min-width:3.2rem;text-align:right;}
+.iv-sbrow.lead .nm{color:var(--gold);font-weight:600;}
+
+/* Overlay / modal (önálló, nem a főoldal stílusaira épül) */
+.iv-ov{position:fixed;inset:0;background:rgba(0,0,0,0.72);display:none;align-items:center;justify-content:center;z-index:400;padding:1rem;}
+.iv-ov.show{display:flex;}
+.iv-modal{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.6rem;max-width:420px;width:100%;max-height:82vh;overflow:auto;position:relative;text-align:center;}
+.iv-mcl{position:absolute;top:0.5rem;right:0.8rem;background:none;border:none;color:var(--text-muted);font-size:1.6rem;cursor:pointer;line-height:1;}
+.iv-mtit{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;margin-bottom:0.3rem;}
+.iv-msub{color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;}
+.lbempty{color:var(--text-dim);font-size:0.9rem;text-align:center;padding:1rem;}
+
+/* Timer */
+.timer-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;color:var(--green);}
+.timer-danger .timer-num{color:var(--red);}
+.timer-bar-bg{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.timer-bar-fill{height:100%;width:100%;background:var(--green);border-radius:3px;}
+.timer-danger .timer-bar-fill{background:var(--red)!important;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data/catalog.js"></script>
@@ -75,7 +107,7 @@
 <meta property="og:locale" content="hu_HU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ivós kvíz – QuizHungary">
-<meta name="twitter:description" content="Party kvízjáték baráti társaságnak. Válaszd a témákat, oldd fel a helyes választ, pörgesd meg, ki mennyit iszik! 18+">
+<meta name="twitter:description" content="Online party kvíz baráti társaságnak. Hívd meg a barátaidat, válaszoljatok időre, a leggyorsabb helyes válasz dönt! 18+">
 <meta name="twitter:image" content="https://quizhungary.com/og-image.png">
 <script type="application/ld+json">
 {
@@ -109,29 +141,79 @@
 <div class="sw" style="padding-top:5.5rem;">
   <div class="crumb"><a href="kategoriak">Kategóriák</a><span>›</span><span style="color:var(--text-muted)">Ivós kvíz</span></div>
 
-  <!-- BEÁLLÍTÁS -->
-  <div id="iv-setup-screen">
-    <div class="slbl">Party mód</div>
+  <!-- BEJELENTKEZÉS SZÜKSÉGES -->
+  <div id="iv-login-screen" style="display:none;">
+    <div class="slbl">Online party mód</div>
+    <h1 class="stit">Ivós kvíz 🍻</h1>
+    <div class="iv-card" style="text-align:center;">
+      <div class="iv-18">🔞 Csak 18+ · Igyál felelősséggel</div>
+      <p style="color:var(--text-muted);line-height:1.6;margin:0.6rem 0 1.4rem;">Az ivós kvíz mostantól <strong style="color:var(--text)">online</strong>: hozz létre egy szobát, hívd meg a barátaidat a barátlistádról, és mindenki a saját telefonjáról válaszol. Ehhez be kell jelentkezned.</p>
+      <a class="btn-p" href="/#login" style="width:100%;box-sizing:border-box;">Bejelentkezés / Regisztráció →</a>
+    </div>
+  </div>
+
+  <!-- BEÁLLÍTÁS: szoba létrehozása / csatlakozás -->
+  <div id="iv-setup-screen" style="display:none;">
+    <div class="slbl">Online party mód</div>
     <h1 class="stit">Ivós kvíz 🍻</h1>
     <div class="iv-card">
       <div class="iv-18">🔞 Csak 18+ · Igyál felelősséggel</div>
 
-      <div class="iv-lbl">Játékosok</div>
-      <div id="iv-players"></div>
-      <button class="iv-add" id="iv-add-player" onclick="addPlayer()">+ Játékos hozzáadása</button>
-
       <div class="iv-lbl">Témakörök</div>
       <div class="iv-topics" id="iv-topics"></div>
 
-      <div class="iv-lbl">Mennyi a maximum felesszám?</div>
+      <div class="iv-lbl">Maximum felesszám</div>
       <div class="iv-maxrow">
         <input class="iv-input" id="iv-max" type="number" min="1" max="20" value="3" inputmode="numeric">
         <span style="color:var(--text-muted);font-size:0.9rem;">A pörgetés 1 és ennyi közötti számot ad — ennyi felest iszik a vesztes.</span>
       </div>
 
+      <div class="iv-lbl">Válaszidő körönként</div>
+      <div class="iv-maxrow">
+        <select class="iv-input" id="iv-time">
+          <option value="10">10 mp</option>
+          <option value="15" selected>15 mp</option>
+          <option value="20">20 mp</option>
+          <option value="30">30 mp</option>
+        </select>
+        <span style="color:var(--text-muted);font-size:0.9rem;">Ennyi időn belül kell válaszolni. A leggyorsabb helyes válasz a kör nyertese.</span>
+      </div>
+
       <div id="iv-setup-err" style="display:none;color:var(--red);font-size:0.9rem;margin-top:1rem;"></div>
-      <button class="btn-p" id="iv-start-btn" onclick="startGame()" style="width:100%;margin-top:1.5rem;">Játék indítása →</button>
-      <div class="iv-note">Ez egy helyi, egy eszközön játszható party játék — nem kell hozzá bejelentkezés. A kérdésekre nem időre kell válaszolni: nyugodtan vitatkozzatok, majd oldjátok fel a helyes választ. A társaság dönti el, ki a vesztes; a pörgetés csak a felesek számát adja. Kérünk, csak nagykorúként és felelősséggel játszd!</div>
+      <button class="btn-p" id="iv-create-btn" onclick="createRoom()" style="width:100%;margin-top:1.5rem;">Szoba létrehozása →</button>
+
+      <div class="iv-or">— vagy —</div>
+      <div class="iv-lbl">Csatlakozás kóddal</div>
+      <div class="iv-maxrow">
+        <input class="iv-input" id="iv-join-code" type="text" maxlength="6" placeholder="ABC123" style="text-transform:uppercase;letter-spacing:3px;min-width:8rem;" onkeydown="if(event.key==='Enter')joinByInput()">
+        <button class="btn-o" onclick="joinByInput()">Csatlakozás</button>
+      </div>
+
+      <div class="iv-note">Online party játék: hozz létre egy szobát, hívd meg a barátaidat a barátlistádról, és mindenki a saját telefonjáról válaszol időre. Minden körben a <strong style="color:var(--text)">leggyorsabb helyes válasz</strong> a nyertes — ő dönti el, ki és mennyit iszik. Ha senki nem tudja a választ, mindenki iszik egyet. Csak 18+, igyál felelősséggel!</div>
+    </div>
+  </div>
+
+  <!-- VÁRÓSZOBA -->
+  <div id="iv-wait-screen" style="display:none;">
+    <div class="iv-card">
+      <div class="iv-round">
+        <div class="quiz-title">🍻 Várószoba</div>
+        <span class="lvl-badge" id="iv-host-badge"></span>
+      </div>
+      <div class="iv-codebox">
+        <div class="iv-code-lbl">Szobakód</div>
+        <div class="iv-code" id="iv-room-code">------</div>
+        <button class="iv-add" onclick="copyCode()">📋 Kód másolása</button>
+      </div>
+      <div class="iv-lbl">Játékosok <span id="iv-lobby-count" style="color:var(--text-dim)"></span></div>
+      <div id="iv-lobby-players"></div>
+      <div id="iv-settings-sum" class="iv-hint" style="margin-top:0.8rem;"></div>
+      <div id="iv-host-controls" style="display:none;">
+        <button class="btn-o" onclick="openInvite()" style="width:100%;margin-top:1rem;">🍻 Barát meghívása</button>
+        <button class="btn-p" id="iv-start-btn2" onclick="hostStart()" style="width:100%;margin-top:0.8rem;display:none;">Játék indítása →</button>
+      </div>
+      <div class="iv-hint" id="iv-lobby-wait" style="margin-top:1rem;"></div>
+      <div style="text-align:center;margin-top:1.4rem;"><a href="#" class="iv-leave" onclick="leaveGame(event)">⚙ Kilépés a szobából</a></div>
     </div>
   </div>
 
@@ -142,42 +224,53 @@
         <div class="quiz-title">🍻 Ivós kvíz</div>
         <span class="lvl-badge" id="iv-round-badge">1. kör</span>
       </div>
+
+      <div class="timer-wrap" id="iv-timer-wrap" style="display:none;margin-bottom:0.6rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+          <span style="font-size:0.8rem;color:var(--text-muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;">Válaszidő</span>
+          <span class="timer-num" id="iv-timer-num">15</span>
+        </div>
+        <div class="timer-bar-bg"><div class="timer-bar-fill" id="iv-timer-bar"></div></div>
+      </div>
+
       <div class="qq" id="iv-q"></div>
       <div class="qos" id="iv-o"></div>
+      <div class="qfb" id="iv-fb"></div>
+      <div class="iv-hint" id="iv-answer-wait" style="display:none;">Várakozás a többi játékosra…</div>
 
-      <!-- 1. lépés: helyes válasz feloldása -->
-      <div class="iv-step" id="iv-reveal-step">
-        <button class="btn-p" id="iv-reveal-btn" onclick="revealAnswer()" style="width:100%;">🔓 Helyes válasz feloldása</button>
-      </div>
+      <!-- eredmények (ki hogy válaszolt) -->
+      <div id="iv-results" style="display:none;margin-top:1.2rem;"></div>
 
-      <!-- 2. lépés: pörgetés -->
+      <!-- pörgetés -->
       <div class="iv-step" id="iv-spin-step" style="display:none;">
-        <button class="btn-p" id="iv-spin-btn" onclick="spin()" style="width:100%;">🎲 Pörgetés — hány feles?</button>
+        <div class="iv-hint" id="iv-spin-info" style="margin-bottom:0.6rem;"></div>
+        <button class="btn-p" id="iv-spin-btn" onclick="doSpin()" style="width:100%;">🎲 Pörgetés — hány feles?</button>
       </div>
 
-      <!-- 3. lépés: eredmény + vesztes kiválasztása -->
+      <!-- pörgetés eredménye + vesztes kiválasztása -->
       <div class="iv-step" id="iv-result-step" style="display:none;">
         <div class="iv-spinbox">
           <div class="iv-spin-num" id="iv-spin-num">?</div>
-          <div class="iv-spin-cap" id="iv-spin-cap">feles</div>
+          <div class="iv-spin-cap">feles</div>
         </div>
-        <div class="iv-hint">Ki issza meg? A nyertes válassza ki a vesztest:</div>
+        <div class="iv-hint" id="iv-loser-hint"></div>
         <div class="iv-losers" id="iv-losers"></div>
       </div>
 
-      <!-- 4. lépés: következő kör -->
+      <!-- következő kör (csak host) -->
       <div class="iv-step" id="iv-next-step" style="display:none;">
-        <button class="btn-p" id="iv-next-btn" onclick="nextRound()" style="width:100%;">Következő kör →</button>
+        <button class="btn-p" id="iv-next-btn" onclick="hostNext()" style="width:100%;">Következő kör →</button>
       </div>
+      <div class="iv-hint" id="iv-wait-host" style="display:none;">A host indítja a következő kört…</div>
 
       <div style="text-align:center;margin-top:1.4rem;">
-        <a href="#" onclick="newGame(event)" style="color:var(--text-dim);font-size:0.82rem;text-decoration:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;">⚙ Új játék / beállítások</a>
+        <a href="#" class="iv-leave" onclick="leaveGame(event)">⚙ Kilépés a játékból</a>
       </div>
     </div>
 
     <!-- Scoreboard -->
     <div class="iv-sb">
-      <h3>🏆 Scoreboard <span style="font-size:0.8rem;color:var(--text-dim);letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">(elivott felesek)</span></h3>
+      <h3>🏆 Állás <span style="font-size:0.78rem;color:var(--text-dim);letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">(győzelmek · elivott felesek)</span></h3>
       <div id="iv-scoreboard"></div>
     </div>
   </div>
@@ -185,11 +278,11 @@
 
 <div class="sw" style="padding-top:1rem;">
   <div class="slbl">Tudnivalók</div>
-  <h2 class="stit" style="font-size:1.8rem;">Hogyan működik az ivós kvíz?</h2>
+  <h2 class="stit" style="font-size:1.8rem;">Hogyan működik az online ivós kvíz?</h2>
   <div style="max-width:760px;">
-    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">Az <strong style="color:var(--text);">ivós kvíz</strong> a QuizHungary party módja baráti társaságoknak. A beállításnál megadjátok a játékosok nevét, kiválasztjátok, milyen témájú kérdések jöjjenek, és beállítjátok a maximum felesszámot. Ezután a játék egyetlen eszközön, közösen zajlik.</p>
-    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">Minden kör egy kérdéssel indul, a válaszlehetőségek ott vannak — de <strong style="color:var(--text);">nem időre</strong> kell válaszolni. Amikor a társaság megegyezett, a <strong style="color:var(--text);">„Helyes válasz feloldása”</strong> gombbal jelenítitek meg a jó megoldást. Ezután egy <strong style="color:var(--text);">pörgetés</strong> ad egy véletlen számot 1 és a beállított maximum között — ennyi felest iszik a vesztes. A nyertes egy gombbal választja ki, ki a vesztes, majd a <strong style="color:var(--text);">„Következő kör”</strong> gomb indítja a következő kérdést.</p>
-    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">A scoreboard folyamatosan mutatja, ki hány felest ivott eddig. Az állás ezen az eszközön automatikusan mentődik, így egy véletlen frissítés sem szakítja félbe a bulit.</p>
+    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">Az <strong style="color:var(--text);">ivós kvíz</strong> a QuizHungary online party módja baráti társaságoknak. Bejelentkezés után létrehozol egy szobát, kiválasztod a témaköröket, a maximum felesszámot és a válaszidőt, majd <strong style="color:var(--text);">meghívod a barátaidat a barátlistádról</strong>. Mindenki a saját telefonjáról csatlakozik és játszik — nem kell egy eszközön osztozni.</p>
+    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">Minden kör egy kérdéssel indul, és a beállított <strong style="color:var(--text);">időkorláton belül</strong> kell válaszolni. A rendszer figyeli, ki válaszolt <strong style="color:var(--text);">helyesen és a leggyorsabban</strong> — ő a kör nyertese. A nyertes egy <strong style="color:var(--text);">pörgetéssel</strong> kap egy számot 1 és a beállított maximum között, majd kiválasztja, ki igya meg ennyi felest. Ha egy körben senki nem tud helyesen válaszolni, <strong style="color:var(--text);">mindenki iszik egy felest</strong>.</p>
+    <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;">A scoreboard folyamatosan mutatja, ki hány kört nyert és ki mennyi felest ivott eddig. Így mindig látszik a <strong style="color:var(--text);">tényleges nyertes</strong> — az, aki a legtöbbször válaszolt elsőként helyesen.</p>
     <p style="color:var(--text-muted);line-height:1.7;margin-top:0.9rem;"><strong style="color:var(--text);">Fontos:</strong> ez a játék kizárólag <strong style="color:var(--text);">18 éven felülieknek</strong> szól. Kérünk, igyál felelősséggel, ismerd a határaidat, és soha ne vezess ivás után! A felest bármikor helyettesítheted alkoholmentes itallal is — a lényeg a jó társaság. Ha inkább klasszikus tudáspróbára vágysz, nézd meg a <a href="kategoriak" style="color:var(--red);">kvíz kategóriáinkat</a> vagy az <a href="iqteszt" style="color:var(--red);">IQ tesztet</a>!</p>
   </div>
 </div>
@@ -206,257 +299,494 @@
   <p><a href="kategoriak">Kategóriák</a> · <a href="iqteszt">IQ teszt</a> · <a href="/">Főoldal</a> · © 2025 QuizHungary</p>
 </footer>
 
+<!-- BARÁT MEGHÍVÁSA -->
+<div class="iv-ov" id="iv-invite-ov" onclick="if(event.target===this)closeInvite()">
+  <div class="iv-modal" style="text-align:left;max-width:440px;">
+    <button class="iv-mcl" onclick="closeInvite()">×</button>
+    <div class="iv-mtit">🍻 Barát meghívása</div>
+    <div class="iv-msub">Küldj ivós kvíz meghívót a barátaidnak. A meghívó megjelenik náluk, és egy kattintással csatlakozhatnak.</div>
+    <div id="iv-invite-list"><div class="lbempty">Töltés…</div></div>
+  </div>
+</div>
+
+<!-- BEJÖVŐ MEGHÍVÓ FELUGRÓ -->
+<div class="iv-ov" id="iv-inv-ov" onclick="if(event.target===this)declineIncoming()">
+  <div class="iv-modal">
+    <button class="iv-mcl" onclick="declineIncoming()">×</button>
+    <div style="font-size:2.8rem;margin-bottom:0.4rem;">🍻</div>
+    <div class="iv-mtit"><span id="iv-inv-name">Egy barátod</span> ivós kvízbe hív!</div>
+    <div class="iv-msub" style="margin-top:0.5rem;">Csatlakozz a szobához, és játssz a saját telefonodról.</div>
+    <div style="background:var(--bg3);border-radius:4px;padding:0.8rem;margin:1.2rem 0;">
+      <span style="font-size:0.8rem;color:var(--text-muted);">Szobakód</span>
+      <div id="iv-inv-code" style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:4px;color:var(--red);">------</div>
+    </div>
+    <div style="display:flex;gap:0.6rem;">
+      <button class="btn-o" style="flex:1;" onclick="declineIncoming()">Elutasítom</button>
+      <button class="btn-p" style="flex:1.4;" onclick="acceptIncoming()">🍻 Csatlakozom</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="tst"></div>
 
 <script src="js/qh.js"></script>
 <script>
 const CATS = window.QH_CATALOG || [];
-const LS = 'qh_ivos_state';
+const sb = QH.sb;
 
-// Munkamenet állapota
-let S = null;          // {players:[], max:int, topics:[], scores:{idx:felesek}, current:{q,o,a}, phase, spinVal}
-let pool = [], poolIdx = 0;
+// ── Munkamenet állapota ──────────────────────────────────────────────────────
+let CU=null, CP=null;                 // bejelentkezett felhasználó + profil
+let room=null, isHost=false, hostId=null, chan=null, inbox=null;
+let players={};                       // userId -> {name,color,drinks,wins}
+let topics=[], maxFeles=3, timeLimit=15;
+let pool=[], poolIdx=0;               // kérdés-pool (csak a host építi)
+let round=0, cur=null, phase='lobby'; // phase: lobby|question|reveal|spin|done
+let myAnswered=false, qStartTs=0, qTimer=null, hostMaster=null, spinAnim=null;
+let answers={};                       // host gyűjti: userId -> {name,correct,ms}
+let winnerId=null, spinVal=0, roundOutcome=null;
+let selectedTopics=new Set();
+let incomingCode=null;
 
-// ── Perzisztencia ────────────────────────────────────────────────────────────
-function saveState(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
-function loadState(){ try{ const s=JSON.parse(localStorage.getItem(LS)); if(s&&Array.isArray(s.players))return s; }catch(e){} return null; }
-function clearState(){ try{ localStorage.removeItem(LS); }catch(e){} }
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function show(id,on){const el=document.getElementById(id);if(el)el.style.display=on?'block':'none';}
+function showScreen(n){['login','setup','wait','game'].forEach(s=>{const el=document.getElementById('iv-'+s+'-screen');if(el)el.style.display=(s===n)?'block':'none';});}
+function send(event,payload){try{chan&&chan.send({type:'broadcast',event,payload});}catch(e){}}
+function genCode(){return Math.random().toString(36).substring(2,8).toUpperCase();}
 
 // ── Beállítás képernyő ───────────────────────────────────────────────────────
-function renderPlayerRow(name){
-  const wrap=document.getElementById('iv-players');
-  const rows=wrap.querySelectorAll('.iv-prow');
-  const i=rows.length;
-  const row=document.createElement('div');row.className='iv-prow';
-  row.innerHTML=`<span class="idx">${i+1}</span>`+
-    `<input class="iv-input iv-pname" type="text" maxlength="20" placeholder="Játékos ${i+1} neve" value="${(name||'').replace(/"/g,'&quot;')}">`+
-    `<button class="iv-del" onclick="delPlayer(this)" title="Törlés">✕</button>`;
-  wrap.appendChild(row);
-}
-function reindexPlayers(){
-  document.querySelectorAll('#iv-players .iv-prow').forEach((r,i)=>{
-    r.querySelector('.idx').textContent=i+1;
-    const inp=r.querySelector('.iv-pname');
-    if(inp&&!inp.value)inp.placeholder=`Játékos ${i+1} neve`;
-  });
-}
-function addPlayer(name){ renderPlayerRow(name); reindexPlayers(); }
-function delPlayer(btn){
-  const rows=document.querySelectorAll('#iv-players .iv-prow');
-  if(rows.length<=2){ QH.toast('Legalább 2 játékos kell!','err'); return; }
-  btn.closest('.iv-prow').remove(); reindexPlayers();
-}
-
-let selectedTopics=new Set();
 function renderTopics(){
-  const box=document.getElementById('iv-topics');box.innerHTML='';
+  const box=document.getElementById('iv-topics');if(!box)return;box.innerHTML='';
   CATS.forEach(c=>{
     const d=document.createElement('div');d.className='iv-topic'+(selectedTopics.has(c.id)?' on':'');
-    d.innerHTML=`<span class="tic">${c.icon}</span><span class="tnm">${c.name}</span><span class="chk">✓</span>`;
+    d.innerHTML=`<span class="tic">${c.icon}</span><span class="tnm">${escapeHtml(c.name)}</span><span class="chk">✓</span>`;
     d.onclick=()=>{ if(selectedTopics.has(c.id))selectedTopics.delete(c.id); else selectedTopics.add(c.id); renderTopics(); };
     box.appendChild(d);
   });
 }
 
-function buildSetup(){
-  document.getElementById('iv-players').innerHTML='';
-  addPlayer(); addPlayer();
-  selectedTopics=new Set();
-  renderTopics();
-}
-
-async function startGame(){
+// ── Szoba létrehozása / csatlakozás ──────────────────────────────────────────
+function createRoom(){
   const err=document.getElementById('iv-setup-err');
-  const names=[...document.querySelectorAll('#iv-players .iv-pname')].map(i=>i.value.trim()).filter(Boolean);
-  if(names.length<2){ err.style.display='block'; err.textContent='Adj meg legalább 2 játékost!'; return; }
-  if(selectedTopics.size===0){ err.style.display='block'; err.textContent='Válassz legalább egy témakört!'; return; }
-  let max=parseInt(document.getElementById('iv-max').value,10);
-  if(!(max>=1)){ err.style.display='block'; err.textContent='A maximum felesszám legyen legalább 1!'; return; }
-  if(max>20)max=20;
+  const t=[...selectedTopics];
+  if(!t.length){err.style.display='block';err.textContent='Válassz legalább egy témakört!';return;}
+  let max=parseInt(document.getElementById('iv-max').value,10); if(!(max>=1))max=1; if(max>20)max=20;
+  const tl=parseInt(document.getElementById('iv-time').value,10)||15;
   err.style.display='none';
-
-  const btn=document.getElementById('iv-start-btn');
-  btn.disabled=true; btn.textContent='Kérdések betöltése…';
-
-  S={ players:names, max, topics:[...selectedTopics], scores:{}, current:null, phase:'q', spinVal:0, round:1 };
-
-  const ok=await buildPool();
-  btn.disabled=false; btn.textContent='Játék indítása →';
-  if(!ok){ err.style.display='block'; err.textContent='Nem sikerült betölteni a kérdéseket. Próbáld újra!'; return; }
-
-  saveState();
-  enterGame();
-  nextRound();
+  topics=t; maxFeles=max; timeLimit=tl;
+  isHost=true; hostId=CU.id; room=genCode();
+  players={}; players[CU.id]={name:CP.username,color:CP.avatar_color,drinks:0,wins:0};
+  phase='lobby';
+  subscribeRoom(room);
+  showScreen('wait'); renderLobby(); updateSettingsSum();
 }
 
-// ── Kérdés-pool a kiválasztott témákból ──────────────────────────────────────
+function joinByInput(){
+  const code=(document.getElementById('iv-join-code').value||'').trim().toUpperCase();
+  if(code.length<4){QH.toast('Adj meg egy érvényes szobakódot!','err');return;}
+  joinRoomByCode(code);
+}
+
+function joinRoomByCode(code){
+  if(!CU){localStorage.setItem('qh_ivos_pending_join',code);showScreen('login');return;}
+  isHost=false; hostId=null; room=code; phase='lobby';
+  players={}; players[CU.id]={name:CP.username,color:CP.avatar_color,drinks:0,wins:0};
+  subscribeRoom(room);
+  showScreen('wait'); renderLobby();
+  document.getElementById('iv-settings-sum').textContent='Csatlakozás a szobához…';
+}
+
+function subscribeRoom(code){
+  if(chan)sb.removeChannel(chan);
+  chan=sb.channel('ivos:'+code)
+    .on('broadcast',{event:'join'},({payload})=>onJoin(payload))
+    .on('broadcast',{event:'state'},({payload})=>onState(payload))
+    .on('broadcast',{event:'question'},({payload})=>beginQuestion(payload))
+    .on('broadcast',{event:'answer'},({payload})=>onAnswer(payload))
+    .on('broadcast',{event:'reveal'},({payload})=>applyReveal(payload))
+    .on('broadcast',{event:'spin'},({payload})=>applySpin(payload.value))
+    .on('broadcast',{event:'drink'},({payload})=>applyDrink(payload))
+    .on('broadcast',{event:'leave'},({payload})=>onLeave(payload))
+    .subscribe(status=>{
+      if(status==='SUBSCRIBED'&&!isHost){
+        send('join',{userId:CU.id,name:CP.username,color:CP.avatar_color});
+      }
+    });
+}
+
+function onJoin(p){
+  if(!p||!p.userId)return;
+  if(!players[p.userId])players[p.userId]={name:p.name,color:p.color,drinks:0,wins:0};
+  renderLobby(); renderScoreboard();
+  if(isHost)setTimeout(()=>send('state',{players,topics,maxFeles,timeLimit,round,phase,hostId}),150);
+}
+
+function onState(p){
+  if(isHost||!p)return;
+  players=p.players||players;
+  if(!players[CU.id])players[CU.id]={name:CP.username,color:CP.avatar_color,drinks:0,wins:0};
+  topics=p.topics||topics; maxFeles=p.maxFeles||maxFeles; timeLimit=p.timeLimit||timeLimit; hostId=p.hostId||hostId;
+  renderLobby(); updateSettingsSum();
+}
+
+function onLeave(p){
+  if(!p||!p.userId)return;
+  if(players[p.userId])delete players[p.userId];
+  renderLobby(); renderScoreboard();
+  if(isHost&&phase==='question')checkAll();
+}
+
+// ── Várószoba nézet ──────────────────────────────────────────────────────────
+function renderLobby(){
+  const codeEl=document.getElementById('iv-room-code'); if(codeEl)codeEl.textContent=room||'------';
+  const badge=document.getElementById('iv-host-badge'); if(badge)badge.textContent=isHost?'Te vagy a host 👑':'Vendég';
+  const el=document.getElementById('iv-lobby-players'); const ids=Object.keys(players);
+  if(el)el.innerHTML=ids.map(id=>{const p=players[id];return `<div class="iv-lobby-row"><div class="iv-av" style="background:${p.color||'#e8192c'}">${escapeHtml((p.name||'?').slice(0,2).toUpperCase())}</div><span class="nm">${escapeHtml(p.name||'')}${id===CU.id?' (te)':''}${id===hostId?' 👑':''}</span></div>`;}).join('');
+  const cnt=document.getElementById('iv-lobby-count'); if(cnt)cnt.textContent='('+ids.length+')';
+  const hc=document.getElementById('iv-host-controls'); if(hc)hc.style.display=isHost?'block':'none';
+  const startBtn=document.getElementById('iv-start-btn2'); if(startBtn)startBtn.style.display=(isHost&&ids.length>=2)?'block':'none';
+  const wait=document.getElementById('iv-lobby-wait');
+  if(wait){
+    if(isHost){
+      wait.style.display=ids.length<2?'block':'none';
+      wait.textContent='Legalább 2 játékos kell a kezdéshez. Hívj meg barátokat! 🍻';
+    }else{
+      wait.style.display='block';
+      wait.textContent='A host indítja a játékot…';
+    }
+  }
+}
+
+function updateSettingsSum(){
+  const el=document.getElementById('iv-settings-sum'); if(!el)return;
+  const tn=topics.map(id=>{const c=CATS.find(x=>x.id===id);return c?c.icon:'';}).join(' ');
+  el.textContent=`${topics.length} téma ${tn} · max ${maxFeles} feles · ${timeLimit} mp/kör`;
+}
+
+function copyCode(){
+  if(!room)return;
+  navigator.clipboard.writeText(room).then(()=>QH.toast('Kód másolva: '+room,'ok')).catch(()=>{});
+}
+
+// ── Barát meghívása (a messages táblát használjuk, mint a párbaj) ─────────────
+async function openInvite(){
+  if(!room){return;}
+  document.getElementById('iv-invite-ov').classList.add('show');
+  const el=document.getElementById('iv-invite-list'); el.innerHTML='<div class="lbempty">Töltés…</div>';
+  const{data}=await sb.from('friendships').select('*').eq('status','accepted');
+  if(!data||!data.length){el.innerHTML='<div class="lbempty">Még nincsenek barátaid. A főoldalon a 👥 menüből adhatsz hozzá barátokat.</div>';return;}
+  const ids=data.map(f=>f.requester_id===CU.id?f.addressee_id:f.requester_id);
+  const{data:profs}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',ids);
+  el.innerHTML=(profs||[]).map(p=>`
+    <div class="iv-invite-row">
+      <div class="iv-av" style="background:${p.avatar_color||'#e8192c'}">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <span class="nm">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</span>
+      <button class="iv-add" id="ivinv-${p.id}" onclick="inviteFriend('${p.id}',this)">🍻 Meghívás</button>
+    </div>`).join('')||'<div class="lbempty">Nincs megjeleníthető barát.</div>';
+}
+function closeInvite(){document.getElementById('iv-invite-ov').classList.remove('show');}
+
+async function inviteFriend(fid,btn){
+  if(!room){QH.toast('Nincs aktív szoba!','err');return;}
+  const name=CP?.username||'Egy barátod';
+  const msg=`🍻 ${name} ivós kvízbe hív! Csatlakozz: https://quizhungary.com/ivos?join=${room} (kód: ${room})`;
+  const{error}=await sb.from('messages').insert({sender_id:CU.id,receiver_id:fid,content:msg});
+  if(error){QH.toast('Hiba: '+error.message,'err');return;}
+  if(btn)btn.outerHTML='<button class="iv-add" disabled>✓ Elküldve</button>';
+  QH.toast('Meghívó elküldve 📨','ok');
+}
+
+// ── Kérdés-pool a kiválasztott témákból (csak host) ──────────────────────────
 async function buildPool(){
-  try{ await Promise.allSettled(S.topics.map(id=>QH.loadQuestions(id))); }catch(e){}
+  try{ await Promise.allSettled(topics.map(id=>QH.loadQuestions(id))); }catch(e){}
   const bank=window.QH_QUESTIONS||{};
   const all=[];
-  CATS.filter(c=>S.topics.includes(c.id)).forEach(c=>{
+  CATS.filter(c=>topics.includes(c.id)).forEach(c=>{
     c.subs.forEach(s=>{
       const levels=bank[s.id]||[];
       levels.forEach(lvl=>{ if(Array.isArray(lvl))lvl.forEach(q=>{ if(q&&q.q)all.push(q); }); });
     });
   });
   if(!all.length)return false;
-  shuffle(all);
-  pool=all; poolIdx=0;
-  return true;
+  shuffle(all); pool=all; poolIdx=0; return true;
 }
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-function shuffleOptions(q){
-  const idx=q.o.map((_,i)=>i); shuffle(idx);
-  return { q:q.q, o:idx.map(i=>q.o[i]), a:idx.indexOf(q.a) };
-}
-function drawQuestion(){
-  if(!pool.length)return null;
-  if(poolIdx>=pool.length){ shuffle(pool); poolIdx=0; }
-  return shuffleOptions(pool[poolIdx++]);
+function shuffleOptions(q){ const idx=q.o.map((_,i)=>i); shuffle(idx); return { q:q.q, o:idx.map(i=>q.o[i]), a:idx.indexOf(q.a) }; }
+function drawQuestion(){ if(!pool.length)return null; if(poolIdx>=pool.length){ shuffle(pool); poolIdx=0; } return shuffleOptions(pool[poolIdx++]); }
+
+// ── Játék indítása / körök (host vezérli a haladást) ─────────────────────────
+async function hostStart(){
+  if(!isHost)return;
+  if(Object.keys(players).length<2){QH.toast('Legalább 2 játékos kell!','err');return;}
+  const btn=document.getElementById('iv-start-btn2'); btn.disabled=true; btn.textContent='Kérdések betöltése…';
+  const ok=await buildPool();
+  btn.disabled=false; btn.textContent='Játék indítása →';
+  if(!ok){QH.toast('Nem sikerült betölteni a kérdéseket. Próbálj más témát!','err');return;}
+  Object.values(players).forEach(p=>{p.drinks=0;p.wins=0;});
+  const q=drawQuestion();
+  const payload={round:1,q:q.q,o:q.o,a:q.a,timeLimit,maxFeles,resetScores:true};
+  send('question',payload); beginQuestion(payload);
 }
 
-// ── Játékmenet ───────────────────────────────────────────────────────────────
-function enterGame(){
-  document.getElementById('iv-setup-screen').style.display='none';
-  document.getElementById('iv-game-screen').style.display='block';
+function hostNext(){
+  if(!isHost)return;
+  const q=drawQuestion();
+  if(!q){QH.toast('Elfogytak a kérdések!','err');return;}
+  const payload={round:round+1,q:q.q,o:q.o,a:q.a,timeLimit,maxFeles};
+  send('question',payload); beginQuestion(payload);
+}
+
+function beginQuestion(p){
+  if(!p)return;
+  round=p.round||1; cur={q:p.q,o:p.o,a:p.a};
+  if(p.timeLimit)timeLimit=p.timeLimit; if(p.maxFeles)maxFeles=p.maxFeles;
+  if(p.resetScores)Object.values(players).forEach(pl=>{pl.drinks=0;pl.wins=0;});
+  phase='question'; myAnswered=false; winnerId=null; spinVal=0; roundOutcome=null;
+  if(isHost){ answers={}; clearTimeout(hostMaster); hostMaster=setTimeout(hostFinish,timeLimit*1000+1500); }
+  showScreen('game');
+  document.getElementById('iv-round-badge').textContent=round+'. kör';
+  document.getElementById('iv-q').textContent=cur.q;
+  const box=document.getElementById('iv-o'); box.innerHTML='';
+  cur.o.forEach((o,i)=>{
+    const b=document.createElement('button'); b.className='qo';
+    b.innerHTML=`<span class="ol">${['A','B','C','D'][i]}</span>${escapeHtml(o)}`;
+    b.onclick=()=>submitAnswer(i); box.appendChild(b);
+  });
+  const fb=document.getElementById('iv-fb'); fb.className='qfb'; fb.textContent='';
+  document.getElementById('iv-results').style.display='none';
+  show('iv-answer-wait',false);
+  show('iv-spin-step',false); show('iv-result-step',false); show('iv-next-step',false); show('iv-wait-host',false);
   renderScoreboard();
+  qStartTs=Date.now();
+  startTimer();
 }
 
-function nextRound(){
-  if(S._advance){ S.round=(S.round||1)+1; S._advance=false; }
-  if(pool.length){ // friss kör: húzunk új kérdést
-    S.current=drawQuestion();
+function submitAnswer(i){
+  if(myAnswered||phase!=='question')return;
+  myAnswered=true; stopTimer(); hideTimer();
+  const ms=Date.now()-qStartTs;
+  const correct=(i!=null&&i===cur.a);
+  const opts=document.querySelectorAll('#iv-o .qo'); opts.forEach(b=>b.disabled=true);
+  if(i!=null&&opts[i])opts[i].classList.add(correct?'correct':'wrong');
+  const fb=document.getElementById('iv-fb');
+  fb.className='qfb show '+(correct?'good':'bad');
+  fb.textContent=(i==null)?'⏱ Lejárt az idő!':(correct?`✓ Helyes! (${(ms/1000).toFixed(1)} mp)`:'✗ Helytelen válasz');
+  show('iv-answer-wait',true);
+  const rec={name:CP.username,correct,ms:(i==null?1e9:ms)};
+  if(isHost)answers[CU.id]=rec;
+  send('answer',{userId:CU.id,name:rec.name,correct:rec.correct,ms:rec.ms});
+  if(isHost)checkAll();
+}
+
+function onAnswer(p){
+  if(!isHost||!p||!p.userId)return;
+  answers[p.userId]={name:p.name,correct:p.correct,ms:p.ms};
+  checkAll();
+}
+
+function checkAll(){
+  if(!isHost)return;
+  if(Object.keys(answers).length>=Object.keys(players).length)hostFinish();
+}
+
+function hostFinish(){
+  if(!isHost||phase!=='question')return;
+  clearTimeout(hostMaster);
+  Object.keys(players).forEach(id=>{ if(!answers[id])answers[id]={name:players[id].name,correct:false,ms:1e9}; });
+  const corrects=Object.entries(answers).filter(([id,a])=>a.correct).sort((x,y)=>x[1].ms-y[1].ms);
+  const winner=corrects.length?corrects[0][0]:null;
+  const payload={correctIdx:cur.a,winnerId:winner,results:answers};
+  send('reveal',payload); applyReveal(payload);
+}
+
+function applyReveal(p){
+  if(phase!=='question'||!p)return;
+  phase='reveal'; winnerId=p.winnerId||null;
+  stopTimer(); hideTimer(); show('iv-answer-wait',false);
+  const opts=document.querySelectorAll('#iv-o .qo'); opts.forEach(b=>b.disabled=true);
+  if(opts[p.correctIdx])opts[p.correctIdx].classList.add('correct');
+  renderResults(p.results,winnerId);
+  const fb=document.getElementById('iv-fb');
+  if(!winnerId){
+    // Senki nem tudta → mindenki iszik 1 felest (nincs pörgetés)
+    Object.values(players).forEach(pl=>pl.drinks=(pl.drinks||0)+1);
+    fb.className='qfb show bad'; fb.textContent='😈 Senki nem tudta – mindenki iszik 1 felest! 🍺';
+    roundOutcome='alldrink'; renderScoreboard();
+    show('iv-spin-step',false); show('iv-result-step',false);
+    showNextOrWait();
+  }else{
+    if(players[winnerId])players[winnerId].wins=(players[winnerId].wins||0)+1;
+    roundOutcome='winner'; renderScoreboard();
+    phase='spin';
+    const amW=winnerId===CU.id;
+    document.getElementById('iv-spin-info').textContent=amW
+      ?'🏆 Te nyerted a kört! Pörgess, hány felest kapjon a vesztes:'
+      :`🏆 ${players[winnerId]?.name||'A nyertes'} nyert (leggyorsabb helyes válasz). Ő pörget…`;
+    const sbn=document.getElementById('iv-spin-btn'); sbn.style.display=amW?'block':'none'; sbn.disabled=false;
+    show('iv-spin-step',true); show('iv-result-step',false); show('iv-next-step',false); show('iv-wait-host',false);
   }
-  S.phase='q'; S.spinVal=0;
-  saveState();
-  renderRound();
 }
 
-function renderRound(){
-  document.getElementById('iv-round-badge').textContent=`${S.round}. kör`;
-  const q=S.current;
-  document.getElementById('iv-q').textContent=q?q.q:'';
-  const box=document.getElementById('iv-o');box.innerHTML='';
-  if(q){
-    q.o.forEach((o,i)=>{
-      const b=document.createElement('button');
-      b.className='qo'+(S.phase!=='q'&&i===q.a?' correct':'');
-      b.disabled=true;
-      b.innerHTML=`<span class="ol">${['A','B','C','D'][i]}</span>${o}`;
-      box.appendChild(b);
-    });
-  }
-  // lépések láthatósága a fázis szerint
-  show('iv-reveal-step', S.phase==='q');
-  show('iv-spin-step', S.phase==='revealed');
-  show('iv-result-step', S.phase==='spun'||S.phase==='done');
-  show('iv-next-step', S.phase==='done');
-  // a pörgetés gomb új körben újra aktív (spin() letiltja, itt visszaállítjuk)
-  document.getElementById('iv-spin-btn').disabled=false;
-
-  if(S.phase==='spun'||S.phase==='done'){
-    document.getElementById('iv-spin-num').textContent=S.spinVal;
-    document.getElementById('iv-spin-cap').textContent='feles';
-    renderLosers(S.phase==='done');
-  }
-  renderScoreboard();
-}
-function show(id,on){ document.getElementById(id).style.display=on?'block':'none'; }
-
-function revealAnswer(){
-  S.phase='revealed'; saveState(); renderRound();
+function renderResults(results,winId){
+  const box=document.getElementById('iv-results'); if(!box)return;
+  box.style.display='block';
+  const rows=Object.entries(results||{}).sort((a,b)=>a[1].ms-b[1].ms);
+  box.innerHTML='<div class="iv-lbl" style="margin-top:0">Ki hogyan válaszolt</div>'+rows.map(([id,r])=>{
+    const win=id===winId;
+    const t=(r.ms>=1e9)?'—':(r.ms/1000).toFixed(1)+' mp';
+    return `<div class="iv-resrow${win?' win':''}"><span class="ic">${r.correct?'✅':'❌'}</span><span class="nm">${escapeHtml(r.name)}${win?' 🏆':''}${id===CU.id?' (te)':''}</span><span class="tm">${t}</span></div>`;
+  }).join('');
 }
 
-function spin(){
-  const btn=document.getElementById('iv-spin-btn');
-  btn.disabled=true;
-  S.phase='spun';
-  show('iv-spin-step',false);
-  show('iv-result-step',true);
-  const numEl=document.getElementById('iv-spin-num');
-  const final=1+Math.floor(Math.random()*S.max);
-  let ticks=0;
-  const anim=setInterval(()=>{
-    numEl.textContent=1+Math.floor(Math.random()*S.max);
-    if(++ticks>=14){
-      clearInterval(anim);
-      numEl.textContent=final;
-      S.spinVal=final;
-      saveState();
-      renderLosers(false);
-    }
+// ── Pörgetés + vesztes kiválasztása (a nyertes vezérli) ──────────────────────
+function doSpin(){
+  if(winnerId!==CU.id||phase!=='spin')return;
+  document.getElementById('iv-spin-btn').disabled=true;
+  const final=1+Math.floor(Math.random()*maxFeles);
+  send('spin',{value:final}); applySpin(final);
+}
+
+function applySpin(value){
+  if(phase!=='spin')return;
+  spinVal=value;
+  show('iv-spin-step',false); show('iv-result-step',true);
+  const numEl=document.getElementById('iv-spin-num'); let ticks=0; clearInterval(spinAnim);
+  spinAnim=setInterval(()=>{
+    numEl.textContent=1+Math.floor(Math.random()*maxFeles);
+    if(++ticks>=14){ clearInterval(spinAnim); numEl.textContent=value; renderLosers(); }
   },70);
-  renderLosers(false);
+  renderLosers();
 }
 
-function renderLosers(picked){
-  const box=document.getElementById('iv-losers');box.innerHTML='';
-  S.players.forEach((p,i)=>{
-    const b=document.createElement('button');
-    b.className='iv-loser';
-    b.textContent=p;
-    b.disabled=picked;
-    b.onclick=()=>pickLoser(i);
+function renderLosers(){
+  const amW=winnerId===CU.id;
+  document.getElementById('iv-loser-hint').textContent=amW
+    ?`Válaszd ki, ki issza meg a ${spinVal} felest:`
+    :`🏆 ${players[winnerId]?.name||'A nyertes'} választja ki, ki iszik…`;
+  const box=document.getElementById('iv-losers'); box.innerHTML='';
+  Object.keys(players).forEach(id=>{
+    const b=document.createElement('button'); b.className='iv-loser'; b.textContent=players[id].name;
+    b.disabled=!amW||phase==='done';
+    b.onclick=()=>pickLoser(id);
     box.appendChild(b);
   });
 }
 
-function pickLoser(i){
-  if(S.phase==='done')return;
-  S.scores[i]=(S.scores[i]||0)+S.spinVal;
-  S.phase='done';
-  saveState();
-  // vizuális visszajelzés
-  const btns=document.querySelectorAll('#iv-losers .iv-loser');
-  btns.forEach((b,j)=>{ b.disabled=true; if(j===i)b.classList.add('picked'); });
-  show('iv-next-step',true);
+function pickLoser(id){
+  if(winnerId!==CU.id||phase!=='spin')return;
+  send('drink',{loserId:id,amount:spinVal}); applyDrink({loserId:id,amount:spinVal});
+}
+
+function applyDrink(p){
+  if(phase==='done'||!p)return;
+  phase='done';
+  if(players[p.loserId])players[p.loserId].drinks=(players[p.loserId].drinks||0)+p.amount;
   renderScoreboard();
-  QH.toast(`${S.players[i]} +${S.spinVal} feles 🍺`,'ok');
-  // a következő kör növeli a számlálót
-  S._advance=true;
+  const btns=document.querySelectorAll('#iv-losers .iv-loser'); const ids=Object.keys(players);
+  btns.forEach((b,j)=>{ b.disabled=true; if(ids[j]===p.loserId)b.classList.add('picked'); });
+  QH.toast(`${players[p.loserId]?.name||'Valaki'} +${p.amount} feles 🍺`,'ok');
+  showNextOrWait();
 }
 
+function showNextOrWait(){
+  show('iv-next-step',isHost);
+  show('iv-wait-host',!isHost);
+}
+
+// ── Timer ────────────────────────────────────────────────────────────────────
+function startTimer(){
+  const wrap=document.getElementById('iv-timer-wrap');
+  const bar=document.getElementById('iv-timer-bar');
+  const num=document.getElementById('iv-timer-num');
+  wrap.style.display='block'; wrap.classList.remove('timer-danger');
+  let s=timeLimit; num.textContent=s;
+  bar.style.transition='none'; bar.style.width='100%'; void bar.offsetWidth;
+  bar.style.transition=`width ${timeLimit}s linear`; bar.style.width='0%';
+  clearInterval(qTimer);
+  qTimer=setInterval(()=>{
+    s--; num.textContent=Math.max(0,s);
+    if(s<=Math.ceil(timeLimit*0.3))wrap.classList.add('timer-danger');
+    if(s<=0){ clearInterval(qTimer); if(!myAnswered)submitAnswer(null); }
+  },1000);
+}
+function stopTimer(){clearInterval(qTimer);}
+function hideTimer(){const w=document.getElementById('iv-timer-wrap');if(w)w.style.display='none';}
+
+// ── Scoreboard ───────────────────────────────────────────────────────────────
 function renderScoreboard(){
-  const box=document.getElementById('iv-scoreboard');box.innerHTML='';
-  const rows=S.players.map((p,i)=>({name:p,score:S.scores[i]||0}));
-  rows.sort((a,b)=>b.score-a.score);
-  const top=rows[0]?rows[0].score:0;
-  rows.forEach((r,i)=>{
-    const div=document.createElement('div');
-    div.className='iv-sbrow'+(top>0&&r.score===top?' lead':'');
-    div.innerHTML=`<span class="rk">${i+1}.</span><span class="nm">${escapeHtml(r.name)}</span><span class="sc">${r.score} 🍺</span>`;
-    box.appendChild(div);
-  });
+  const box=document.getElementById('iv-scoreboard'); if(!box)return;
+  const rows=Object.entries(players).map(([id,p])=>({id,name:p.name,wins:p.wins||0,drinks:p.drinks||0}));
+  rows.sort((a,b)=> (b.wins-a.wins) || (a.drinks-b.drinks));
+  const topWins=rows.length?rows[0].wins:0;
+  box.innerHTML=rows.map((r,i)=>`
+    <div class="iv-sbrow${topWins>0&&r.wins===topWins?' lead':''}">
+      <span class="rk">${i+1}.</span>
+      <span class="nm">${escapeHtml(r.name)}${r.id===CU.id?' (te)':''}</span>
+      <span class="wins">🏆 ${r.wins}</span>
+      <span class="sc">${r.drinks} 🍺</span>
+    </div>`).join('');
 }
-function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-function newGame(e){
+// ── Kilépés ──────────────────────────────────────────────────────────────────
+function leaveGame(e){
   if(e)e.preventDefault();
-  if(!confirm('Új játék indítása? A jelenlegi scoreboard törlődik.'))return;
-  clearState();
-  S=null; pool=[]; poolIdx=0;
-  document.getElementById('iv-game-screen').style.display='none';
-  document.getElementById('iv-setup-screen').style.display='block';
-  buildSetup();
+  if(!confirm('Biztos kilépsz a szobából?'))return;
+  leaveRoom(); showScreen('setup');
 }
+function leaveRoom(){
+  try{ if(chan){ send('leave',{userId:CU?.id}); sb.removeChannel(chan); } }catch(e){}
+  chan=null; room=null; isHost=false; hostId=null; players={}; phase='lobby';
+  clearTimeout(hostMaster); stopTimer(); clearInterval(spinAnim);
+}
+window.addEventListener('beforeunload',()=>{ try{ chan&&chan.send({type:'broadcast',event:'leave',payload:{userId:CU?.id}}); }catch(e){} });
+
+// ── Bejövő meghívók (élő) ────────────────────────────────────────────────────
+function subscribeInbox(){
+  if(!CU)return;
+  if(inbox){sb.removeChannel(inbox);inbox=null;}
+  inbox=sb.channel('inbox:'+CU.id)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'receiver_id=eq.'+CU.id},({new:m})=>{
+      if(!m||m.receiver_id!==CU.id)return;
+      const code=ivosInviteCode(m.content);
+      if(code){ if(code!==room)showIncomingInvite(m.sender_id,code); }
+      else QH.toast('📨 Új üzenet érkezett (a főoldalon olvasható)','info');
+    }).subscribe();
+}
+function ivosInviteCode(content){
+  if(!content)return null;
+  const j=content.match(/ivos\?join=([A-Za-z0-9]{6})/i); if(j)return j[1].toUpperCase();
+  if(content.includes('🍻')&&content.toLowerCase().includes('ivós')){ const m=content.match(/\b([A-Z0-9]{6})\b/); if(m)return m[1].toUpperCase(); }
+  return null;
+}
+async function showIncomingInvite(senderId,code){
+  incomingCode=code;
+  document.getElementById('iv-inv-code').textContent=code;
+  let name='Egy barátod';
+  try{const{data}=await sb.from('profiles').select('username').eq('id',senderId).single();if(data?.username)name=data.username;}catch(e){}
+  document.getElementById('iv-inv-name').textContent=name;
+  document.getElementById('iv-inv-ov').classList.add('show');
+}
+function declineIncoming(){document.getElementById('iv-inv-ov').classList.remove('show');incomingCode=null;}
+function acceptIncoming(){const c=incomingCode;document.getElementById('iv-inv-ov').classList.remove('show');incomingCode=null;if(c)joinRoomByCode(c);}
 
 // ── Indítás ──────────────────────────────────────────────────────────────────
 async function boot(){
   await QH.init();
-  const st=loadState();
-  if(st && st.players && st.players.length>=2 && st.topics && st.topics.length){
-    S=st; S._advance=false; if(!S.round)S.round=1;
-    const ok=await buildPool();      // pool újraépítése a mentett témákból
-    if(ok){
-      if(!S.current)S.current=drawQuestion();
-      enterGame();
-      renderRound();
-      return;
-    }
-    clearState(); S=null;
+  CU=QH.user;
+  if(!CU){
+    const code=QH.qs('join'); if(code)localStorage.setItem('qh_ivos_pending_join',code.toUpperCase());
+    showScreen('login'); return;
   }
-  buildSetup();
+  try{
+    const{data}=await sb.from('profiles').select('id,username,avatar_color,is_premium').eq('id',CU.id).single();
+    CP=data||{username:CU.email.split('@')[0],avatar_color:'#e8192c'};
+  }catch(e){ CP={username:CU.email.split('@')[0],avatar_color:'#e8192c'}; }
+  if(!CP.username)CP.username=CU.email.split('@')[0];
+  renderTopics();
+  subscribeInbox();
+  let code=QH.qs('join')||localStorage.getItem('qh_ivos_pending_join');
+  localStorage.removeItem('qh_ivos_pending_join');
+  if(code){ showScreen('setup'); joinRoomByCode(code.toUpperCase()); }
+  else showScreen('setup');
 }
 boot();
 </script>

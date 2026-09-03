@@ -92,6 +92,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.9
 .udlabel{padding:0.7rem 1rem;font-size:0.75rem;color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;}
 .uddiv{height:1px;background:var(--border);}
 
+/* MOBIL NAV — hamburger + becsúszó drawer */
+.nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:11px;margin-left:auto;background:none;border:none;cursor:pointer;z-index:210;}
+.nav-burger span{display:block;width:100%;height:2px;border-radius:2px;background:var(--text);transition:transform .3s ease,opacity .2s ease;}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-burger.open span:nth-child(2){opacity:0;}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.nav-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:150;}
+.nav-backdrop.show{opacity:1;pointer-events:auto;}
+.mnav{position:fixed;top:0;right:0;bottom:0;width:min(84vw,320px);background:var(--bg2);border-left:1px solid var(--border-red);box-shadow:-24px 0 60px rgba(0,0,0,0.55);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);z-index:200;display:flex;flex-direction:column;padding:4.6rem 0 2rem;overflow-y:auto;overscroll-behavior:contain;}
+.mnav.show{transform:translateX(0);}
+.mnav-acct{display:flex;align-items:center;gap:0.75rem;padding:0 1.4rem 1.1rem;margin-bottom:0.6rem;border-bottom:1px solid var(--border);}
+.mnav-avatar{width:42px;height:42px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#fff;flex-shrink:0;}
+.mnav-uname{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:1px;color:var(--text);display:flex;align-items:center;gap:0.3rem;}
+.mnav-login{display:block;margin:0 1.4rem 1rem;padding:0.85rem;text-align:center;background:var(--red);color:#fff;text-decoration:none;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;width:calc(100% - 2.8rem);}
+.mnav-links{display:flex;flex-direction:column;}
+.mnav-link{display:flex;align-items:center;gap:0.7rem;padding:0.95rem 1.4rem;color:var(--text-muted);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;letter-spacing:1px;text-transform:uppercase;background:none;border:none;width:100%;text-align:left;cursor:pointer;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.mnav-link:hover,.mnav-link:active{background:var(--bg3);color:var(--text);}
+.mnav-link.active{color:var(--red);border-left-color:var(--red);}
+.mnav-link.danger{color:var(--text-muted);}
+.mnav-link.danger:hover{color:var(--red);}
+.mnav-sep{height:1px;background:var(--border);margin:0.5rem 1.4rem;}
+
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 2rem 4rem;position:relative;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 60% 50% at 50% 60%,rgba(232,25,44,0.1) 0%,transparent 70%),repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,0.012) 60px,rgba(255,255,255,0.012) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,0.012) 60px,rgba(255,255,255,0.012) 61px);}
@@ -264,7 +286,8 @@ footer a{color:var(--red);text-decoration:none;}
   .hero-stats{gap:1.5rem;}
   .hero-actions{flex-direction:column;width:100%;max-width:300px;}
   nav{padding:0 1rem;}
-  .hmob{display:none;}
+  .nav-links{display:none!important;}
+  .nav-burger{display:flex;}
   .profile-grid{grid-template-columns:1fr;}
 }
 
@@ -440,7 +463,24 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     </div>
     <a href="https://www.facebook.com/profile.php?id=61566558176381" target="_blank" class="hmob" style="color:var(--red)">Facebook</a>
   </div>
+  <button class="nav-burger" id="navBurger" aria-label="Menü megnyitása"><span></span><span></span><span></span></button>
 </nav>
+
+<!-- MOBIL MENÜ -->
+<div class="nav-backdrop" id="navBackdrop"></div>
+<aside class="mnav" id="mnav">
+  <div id="mnav-acct"></div>
+  <div class="mnav-links">
+    <a class="mnav-link" href="kategoriak">Kategóriák</a>
+    <a class="mnav-link" href="iqteszt">IQ teszt</a>
+    <a class="mnav-link" href="ivos">Ivós kvíz</a>
+    <a class="mnav-link" data-go="napi-kviz">Napi kvíz</a>
+    <a class="mnav-link" data-go="konyv">Könyv</a>
+    <a class="mnav-link" data-go="rangsor">Rangsor</a>
+    <a class="mnav-link" href="https://www.facebook.com/profile.php?id=61566558176381" target="_blank" style="color:var(--red)">Facebook</a>
+    <div id="mnav-user-actions"></div>
+  </div>
+</aside>
 
 <!-- HERO -->
 <div class="hero" id="hero">
@@ -1386,8 +1426,52 @@ function navUser(){
   } else {
     document.getElementById('admin-menu-item').style.display='none';
   }
+  syncMobileNav();
 }
-function navGuest(){document.getElementById('nav-guest').style.display='flex';document.getElementById('nav-user').style.display='none';}
+function navGuest(){document.getElementById('nav-guest').style.display='flex';document.getElementById('nav-user').style.display='none';syncMobileNav();}
+
+// ── MOBIL MENÜ ───────────────────────────────────────────────────────────────
+function openMnav(){document.getElementById('navBurger').classList.add('open');document.getElementById('mnav').classList.add('show');document.getElementById('navBackdrop').classList.add('show');document.body.style.overflow='hidden';}
+function closeMnav(){document.getElementById('navBurger').classList.remove('open');document.getElementById('mnav').classList.remove('show');document.getElementById('navBackdrop').classList.remove('show');document.body.style.overflow='';}
+function toggleMnav(){document.getElementById('mnav').classList.contains('show')?closeMnav():openMnav();}
+function syncMobileNav(){
+  const acct=document.getElementById('mnav-acct'),acts=document.getElementById('mnav-user-actions');
+  if(!acct||!acts)return;
+  if(CU){
+    const n=CP?.username||CU.email.split('@')[0];
+    acct.innerHTML='<div class="mnav-acct"><div class="mnav-avatar">'+escapeHtml(n.slice(0,2).toUpperCase())+
+      '</div><div class="mnav-uname">'+escapeHtml(n)+(isPremium()?' <span style="color:var(--gold)">✨</span>':'')+'</div></div>';
+    acts.innerHTML='<div class="mnav-sep"></div>'+
+      '<button class="mnav-link" data-act="profil">👤 Profilom</button>'+
+      '<button class="mnav-link" data-act="premium">✨ Premium</button>'+
+      '<button class="mnav-link" data-act="referral">🎁 Hívj meg barátokat</button>'+
+      '<button class="mnav-link" data-act="friends">👥 Barátok</button>'+
+      (CP?.is_admin===true?'<button class="mnav-link" data-act="admin">🔐 Admin</button>':'')+
+      '<button class="mnav-link" data-act="rangsor">🏆 Ranglista</button>'+
+      '<div class="mnav-sep"></div>'+
+      '<button class="mnav-link danger" data-act="signout">Kijelentkezés</button>';
+  }else{
+    acct.innerHTML='<button class="mnav-login" data-act="login">Bejelentkezés</button>';
+    acts.innerHTML='';
+  }
+  document.querySelectorAll('#mnav [data-act]').forEach(el=>{
+    el.onclick=()=>{const k=el.getAttribute('data-act');closeMnav();
+      if(k==='profil')openProfile();else if(k==='premium')showPremium();
+      else if(k==='referral')openReferral();else if(k==='admin')openAdmin();
+      else if(k==='rangsor')goTo('rangsor');else if(k==='friends')openFriends();
+      else if(k==='signout')doSignOut();else if(k==='login')openAuth();};
+  });
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('navBurger')?.addEventListener('click',toggleMnav);
+  document.getElementById('navBackdrop')?.addEventListener('click',closeMnav);
+  document.querySelectorAll('#mnav [data-go]').forEach(el=>{
+    el.addEventListener('click',()=>{closeMnav();goTo(el.getAttribute('data-go'));});
+  });
+  document.querySelectorAll('#mnav .mnav-links a[href]').forEach(a=>a.addEventListener('click',closeMnav));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMnav();});
+  syncMobileNav();
+});
 
 // ── AUTH ─────────────────────────────────────────────────────────────────────
 function openAuth(tab='login'){

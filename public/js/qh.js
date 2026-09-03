@@ -43,7 +43,71 @@
       }catch(e){console.warn('QH auth:',e.message);}
     }
     renderNav();
+    buildMobileNav();
     return {user,profile};
+  }
+
+  // ── Mobil navigáció (hamburger + becsúszó drawer) ──────────────────────────
+  // A meglévő .nav-links linkekből épít egy teljes értékű mobilmenüt, így minden
+  // aloldal külön HTML-módosítás nélkül megkapja.
+  function buildMobileNav(){
+    const nav=document.querySelector('nav');
+    const links=document.querySelector('.nav-links');
+    if(!nav||!links||nav.dataset.qhMnav)return;
+    nav.dataset.qhMnav='1';
+
+    const burger=document.createElement('button');
+    burger.className='nav-burger';burger.setAttribute('aria-label','Menü megnyitása');
+    burger.innerHTML='<span></span><span></span><span></span>';
+    nav.appendChild(burger);
+
+    const backdrop=document.createElement('div');backdrop.className='nav-backdrop';
+    const drawer=document.createElement('aside');drawer.className='mnav';
+
+    // Fiók fejléc
+    let acct;
+    if(user){
+      const n=profile?.username||user.email.split('@')[0];
+      acct='<div class="mnav-acct"><div class="mnav-avatar">'+esc(n.slice(0,2).toUpperCase())+
+        '</div><div class="mnav-uname">'+esc(n)+(isPremium()?' <span style="color:var(--gold)">✨</span>':'')+'</div></div>';
+    }else{
+      acct='<a class="mnav-login" href="/#login">Bejelentkezés</a>';
+    }
+
+    // Navigációs linkek a meglévő navből átemelve (az aktuális oldal kiemelve)
+    let linksHtml='';
+    links.querySelectorAll(':scope > a').forEach(a=>{
+      const href=a.getAttribute('href')||'#';
+      const active=/var\(--red\)/.test(a.getAttribute('style')||'')?' active':'';
+      const target=a.getAttribute('target')?' target="'+a.getAttribute('target')+'"':'';
+      linksHtml+='<a class="mnav-link'+active+'" href="'+href+'"'+target+'>'+esc(a.textContent.trim())+'</a>';
+    });
+
+    // Fiókműveletek (bejelentkezve) — a főoldal megfelelő nézeteit nyitják
+    let actions='';
+    if(user){
+      actions='<div class="mnav-sep"></div>'+
+        '<a class="mnav-link" href="/#profil">👤 Profilom</a>'+
+        '<a class="mnav-link" href="/#premium">✨ Premium</a>'+
+        '<a class="mnav-link" href="/#referral">🎁 Hívj meg barátokat</a>'+
+        (profile?.is_admin===true?'<a class="mnav-link" href="/#admin">🔐 Admin</a>':'')+
+        '<a class="mnav-link" href="/#rangsor">🏆 Ranglista</a>'+
+        '<div class="mnav-sep"></div>'+
+        '<button class="mnav-link danger" data-signout="1">Kijelentkezés</button>';
+    }
+
+    drawer.innerHTML=acct+'<div class="mnav-links">'+linksHtml+actions+'</div>';
+    document.body.appendChild(backdrop);
+    document.body.appendChild(drawer);
+
+    const open=()=>{burger.classList.add('open');drawer.classList.add('show');backdrop.classList.add('show');document.body.style.overflow='hidden';};
+    const close=()=>{burger.classList.remove('open');drawer.classList.remove('show');backdrop.classList.remove('show');document.body.style.overflow='';};
+    burger.addEventListener('click',()=>drawer.classList.contains('show')?close():open());
+    backdrop.addEventListener('click',close);
+    drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+    const so=drawer.querySelector('[data-signout]');
+    if(so)so.addEventListener('click',async()=>{try{await sb.auth.signOut();}catch(e){}location.href='/';});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
   }
 
   // Szerver + helyi haladás összefésülése (mindig a nagyobb szint nyer), majd visszaírás.

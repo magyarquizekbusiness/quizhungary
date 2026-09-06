@@ -221,74 +221,74 @@ QH_QUESTIONS['technika-autok'] = [
 ];
 
 QH_QUESTIONS['technika-urkutatas'] = [
-[ // 1
+[ // 1 — Alapok, úttörők
+{q:'Ki volt az első ember az űrben?',o:['Jurij Gagarin','Neil Armstrong','John Glenn'],a:0},
 {q:'Ki lépett először a Holdra?',o:['Neil Armstrong','Buzz Aldrin','Jurij Gagarin'],a:0},
-{q:'Ki volt az első ember az űrben?',o:['Jurij Gagarin','Armstrong','Glenn'],a:0},
 {q:'Melyik amerikai űrügynökség?',o:['NASA','ESA','Roszkoszmosz'],a:0},
 {q:'Mivel jutnak az űrbe?',o:['Rakéta','Repülő','Léggömb'],a:0},
-{q:'Melyik égitesten jártak emberek?',o:['Hold','Mars','Vénusz'],a:0},
+{q:'Melyik égitesten jártak eddig emberek?',o:['Hold','Mars','Vénusz'],a:0},
 ],
-[ // 2
+[ // 2 — Holdra szállás, Apollo
 {q:'Melyik évben szállt le ember a Holdra először?',o:['1969','1961','1975'],a:0},
-{q:'Melyik küldetés vitte az embert a Holdra?',o:['Apollo 11','Gemini 4','Sojuz 1'],a:0},
-{q:'Melyik az első műhold?',o:['Szputnyik-1','Explorer','Vosztok'],a:0},
-{q:'Melyik cég a magánűrutazás úttörője?',o:['SpaceX','Boeing','Airbus'],a:0},
-{q:'Ki alapította a SpaceX-et?',o:['Elon Musk','Jeff Bezos','Richard Branson'],a:0},
+{q:'Melyik küldetés vitte először az embert a Holdra?',o:['Apollo 11','Gemini 4','Sojuz 1'],a:0},
+{q:'Melyik rakéta vitte a Holdra az Apollo-űrhajósokat?',o:['Saturn V','Falcon 9','Sojuz'],a:0},
+{q:'Ki volt a második ember, aki a Holdra lépett?',o:['Buzz Aldrin','Michael Collins','John Glenn'],a:0},
+{q:'Mit hoztak vissza az Apollo-küldetések a Holdról?',o:['Kőzet- és talajmintákat','Vizet','Növényeket'],a:0},
 ],
-[ // 3
-{q:'Melyik bolygóra küldtek rovereket?',o:['Mars','Jupiter','Szaturnusz'],a:0},
-{q:'Melyik űrállomás kering a Föld körül?',o:['ISS','Mir','Skylab'],a:0},
-{q:'Melyik teleszkóp készít mélyűri felvételeket?',o:['Hubble','Kepler','Voyager'],a:0},
-{q:'Melyik szonda hagyta el a Naprendszert?',o:['Voyager 1','Cassini','Juno'],a:0},
-{q:'Melyik ország juttatott másodikként embert az űrbe hosszú programmal?',o:['USA','Kína','India'],a:0},
+[ // 3 — Emberi űrrepülés, űrhajósok
+{q:'Ki volt az első nő az űrben?',o:['Valentyina Tyereskova','Sally Ride','Marie Curie'],a:0},
+{q:'Melyik űrállomás kering jelenleg a Föld körül?',o:['ISS (Nemzetközi Űrállomás)','Skylab','Mir'],a:0},
+{q:'Melyik volt a Szovjetunió híres, hosszú életű űrállomása?',o:['Mir','ISS','Tiangong'],a:0},
+{q:'Ki volt az első magyar űrhajós?',o:['Farkas Bertalan','Neumann János','Gábor Dénes'],a:0},
+{q:'Mit visel az űrhajós az űrséta (kilépés) során?',o:['Szkafandert (űrruhát)','Csak overallt','Búvárruhát'],a:0},
 ],
-[ // 4
-{q:'Melyik rakéta vitte a Holdra az embereket?',o:['Saturn V','Falcon 9','Sojuz'],a:0},
-{q:'Melyik szonda vizsgálta a Szaturnuszt?',o:['Cassini','Galileo','Juno'],a:0},
-{q:'Melyik szonda vizsgálta hosszan a Jupitert 2016 óta?',o:['Juno','Cassini','New Horizons'],a:0},
-{q:'Melyik szonda repült el a Plútó mellett?',o:['New Horizons','Voyager 2','Cassini'],a:0},
-{q:'Melyik ország ért elsőként a Hold túlsó oldalára?',o:['Kína','USA','Oroszország'],a:0},
+[ // 4 — Rakéták és hajtás
+{q:'Melyik SpaceX-rakéta fokozata újrahasználható és önállóan landol?',o:['Falcon 9','Saturn V','Sojuz'],a:0},
+{q:'Newton melyik törvénye magyarázza a rakéta működését?',o:['A hatás-ellenhatás törvénye','A gravitáció törvénye','A tehetetlenség törvénye'],a:0},
+{q:'Melyik óriásrakétát fejleszti a SpaceX a Marshoz?',o:['Starship','Falcon 1','Dragon'],a:0},
+{q:'Miért többfokozatúak a hordozórakéták?',o:['Az elhasznált fokozatokat ledobják, hogy könnyebbek legyenek','Hogy szebbek legyenek','Az utasok kényelméért'],a:0},
+{q:'Melyik európai hordozórakéta-család indít műholdakat?',o:['Ariane','Falcon','Sojuz'],a:0},
 ],
-[ // 5
-{q:'Melyik teleszkóp a Hubble utódja?',o:['James Webb','Kepler','Spitzer'],a:0},
-{q:'Melyik évben indult a James Webb űrteleszkóp?',o:['2021','2018','2015'],a:0},
-{q:'Melyik SpaceX rakéta újrahasználható?',o:['Falcon 9','Saturn V','Sojuz'],a:0},
+[ // 5 — Űrtávcsövek
+{q:'Melyik űrtávcső készít mélyűri felvételeket 1990 óta?',o:['Hubble','Kepler','Voyager'],a:0},
+{q:'Melyik űrtávcső a Hubble utódja?',o:['James Webb','Kepler','Spitzer'],a:0},
+{q:'Melyik évben indult a James Webb űrtávcső?',o:['2021','2018','2015'],a:0},
+{q:'Melyik űrtávcső keresett exobolygókat a csillagfény elhalványulásából?',o:['Kepler','Hubble','James Webb'],a:0},
+{q:'Miért helyeznek távcsöveket az űrbe?',o:['A légkör nem torzítja és nyeli el a fényt','Ott olcsóbb üzemeltetni','Nincs szükség áramra'],a:0},
+],
+[ // 6 — Szondák (az egyetlen szonda-szint)
+{q:'Melyik szonda hagyta el elsőként a Naprendszert?',o:['Voyager 1','Cassini','Juno'],a:0},
+{q:'Melyik szonda vizsgálta hosszan a Szaturnuszt és gyűrűit?',o:['Cassini','Galileo','Juno'],a:0},
+{q:'Melyik szonda repült el elsőként a Plútó mellett 2015-ben?',o:['New Horizons','Voyager 2','Cassini'],a:0},
+{q:'Melyik szonda tanulmányozza a Napot rekordközelségből?',o:['Parker Solar Probe','Hubble','Kepler'],a:0},
+{q:'Melyik szonda vizsgálja a Jupitert 2016 óta?',o:['Juno','Cassini','New Horizons'],a:0},
+],
+[ // 7 — Mars-kutatás, marsjárók
+{q:'Melyik bolygóra küldtek eddig a legtöbb marsjárót?',o:['Mars','Jupiter','Szaturnusz'],a:0},
 {q:'Melyik marsjáró keresi az élet nyomait 2021 óta?',o:['Perseverance','Curiosity','Opportunity'],a:0},
-{q:'Melyik kis helikopter repült a Marson?',o:['Ingenuity','Sojourner','Spirit'],a:0},
+{q:'Melyik kis szerkezet repült elsőként egy másik bolygón, a Marson?',o:['Ingenuity helikopter','Sojourner','Spirit'],a:0},
+{q:'Miért nehéz a marsi leszállás ("hét rémperc")?',o:['A vékony légkör és a nagy sebesség miatt','Az erős szél miatt','A sötétség miatt'],a:0},
+{q:'Melyik marsjáró működött rekordhosszan, 2004 és 2018 között?',o:['Opportunity','Perseverance','Zhurong'],a:0},
 ],
-[ // 6
-{q:'Melyik program célja a Holdra való visszatérés?',o:['Artemis','Apollo','Gemini'],a:0},
-{q:'Melyik magáncég visz turistákat szuborbitális űrutakra?',o:['Blue Origin','NASA','ESA'],a:0},
-{q:'Melyik szonda csapódott szándékosan egy aszteroidába?',o:['DART','Osiris-Rex','Hayabusa'],a:0},
-{q:'Melyik japán szonda hozott mintát egy aszteroidáról?',o:['Hayabusa','Voyager','Cassini'],a:0},
-{q:'Melyik ország szállt le a Hold déli pólusa közelében?',o:['India','Japán','Izrael'],a:0},
+[ // 8 — Modern űrverseny, magánűripar
+{q:'Ki alapította a SpaceX űripari céget?',o:['Elon Musk','Jeff Bezos','Richard Branson'],a:0},
+{q:'Melyik NASA-program célja az ember visszatérése a Holdra?',o:['Artemis','Apollo','Gemini'],a:0},
+{q:'Melyik magáncég visz turistákat szuborbitális űrutakra (Jeff Bezos)?',o:['Blue Origin','Roszkoszmosz','ESA'],a:0},
+{q:'Melyik ország ért elsőként a Hold túlsó oldalára?',o:['Kína','USA','Oroszország'],a:0},
+{q:'Melyik ország szállt le elsőként a Hold déli pólusa közelében 2023-ban?',o:['India','Japán','Izrael'],a:0},
 ],
-[ // 7
-{q:'Melyik rakétát fejleszti a SpaceX a Marsra?',o:['Starship','Falcon 1','Dragon'],a:0},
-{q:'Melyik erő tartja pályán a műholdakat?',o:['Gravitáció és sebesség egyensúlya','Mágnesesség','Napszél'],a:0},
-{q:'Melyik pálya a geostacionárius jellemzője?',o:['Együtt forog a Földdel','Poláris','Alacsony gyors'],a:0},
-{q:'Melyik szonda tanulmányozta a Napot közelről?',o:['Parker Solar Probe','Hubble','Kepler'],a:0},
-{q:'Melyik űrteleszkóp keresett exobolygókat a fényességcsökkenés módszerével?',o:['Kepler','Hubble','James Webb'],a:0},
-],
-[ // 8
-{q:'Melyik manőver gyorsítja a szondát bolygó gravitációjával?',o:['Gravitációs hintamanőver','Fékezés','Forgás'],a:0},
-{q:'Melyik pont stabil a két égitest gravitációja közt?',o:['Lagrange-pont','Egyenlítő','Pólus'],a:0},
-{q:'Melyik Lagrange-ponton van a James Webb?',o:['L2','L1','L4'],a:0},
-{q:'Melyik hajtómű a leghatékonyabb mély űrbeli manőverekhez?',o:['Ion-hajtómű','Vegyi rakéta csak','Vitorla csak'],a:0},
-{q:'Melyik jelenség nehezíti a marsi leszállást ("hét rémpercnyi" fékezés)?',o:['A vékony légkör és nagy sebesség','Az erős szél','A sötétség'],a:0},
-],
-[ // 9
+[ // 9 — Pályamechanika, fizika
 {q:'Mekkora sebesség kell nagyjából a Föld körüli pályára álláshoz?',o:['Kb. 7,9 km/s','Kb. 1 km/s','Kb. 30 km/s'],a:0},
 {q:'Mekkora a szökési sebesség a Föld gravitációjából?',o:['Kb. 11,2 km/s','Kb. 7,9 km/s','Kb. 300 000 km/s'],a:0},
-{q:'Melyik szonda keringett a Merkúr körül 2011 és 2015 között?',o:['MESSENGER','Cassini','Juno'],a:0},
-{q:'Melyik technológia véd a légkörbe lépéskor a hőtől?',o:['Hőpajzs','Ejtőernyő csak','Napelem'],a:0},
-{q:'Melyik anyag nyom nélkül elpárolog a hőpajzson?',o:['Ablatív hővédő','Alumínium','Üveg'],a:0},
+{q:'Melyik pálya forog együtt a Földdel, így a műhold egy helyben áll az égen?',o:['Geostacionárius','Poláris','Alacsony Föld körüli'],a:0},
+{q:'Melyik manőver gyorsítja fel az űreszközt egy bolygó gravitációjával?',o:['Gravitációs hintamanőver','Légköri fékezés','Forgatás'],a:0},
+{q:'Melyik Lagrange-ponton helyezkedik el a James Webb űrtávcső?',o:['L2','L1','L4'],a:0},
 ],
-[ // 10
-{q:'Melyik jelenség a "mikrogravitáció" az űrállomáson?',o:['Szabadesés miatti súlytalanság-érzet','Nincs gravitáció egyáltalán','Erős mágnesesség'],a:0},
+[ // 10 — Űrélet és jövő
+{q:'Mi a "mikrogravitáció" az űrállomáson?',o:['A szabadesés miatti súlytalanság-érzet','A gravitáció teljes hiánya','Egy erős mágneses mező'],a:0},
 {q:'Mi a hosszú űrutazás egyik fő egészségügyi kockázata?',o:['Csont- és izomsorvadás','Túl sok oxigén','Zajártalom'],a:0},
+{q:'Melyik technológia véd az űreszközt a légkörbe lépéskor a hőtől?',o:['Hőpajzs','Csak az ejtőernyő','A napelem'],a:0},
 {q:'Melyik elméleti hajtómű merül fel csillagközi utazáshoz?',o:['Fúziós hajtómű','Gőzgép','Dízelmotor'],a:0},
-{q:'Melyik teleszkóp figyeli a gravitációs hullámokat földön?',o:['LIGO','Hubble','Webb'],a:0},
 {q:'Melyik évben észlelték először a gravitációs hullámokat?',o:['2015','2005','2020'],a:0},
 ],
 ];

@@ -18,6 +18,9 @@ export default async function handler(req, res) {
 
   const APP_ID = process.env.ONESIGNAL_APP_ID;
   const API_KEY = process.env.ONESIGNAL_REST_API_KEY;
+  // A napi kvíz push tartalma a OneSignal sablonban él (dashboardon szerkeszthető,
+  // újradeploy nélkül). Env-ből felülírható, ha új sablont hoznál létre.
+  const TEMPLATE_ID = process.env.ONESIGNAL_TEMPLATE_ID || '072f8ea4-780e-4a39-9273-70736ddf4bfd';
   if (!APP_ID || !API_KEY) {
     return res.status(500).json({ error: 'ONESIGNAL_APP_ID / ONESIGNAL_REST_API_KEY nincs beállítva' });
   }
@@ -32,14 +35,10 @@ export default async function handler(req, res) {
 
   const payload = {
     app_id: APP_ID,
+    // A cím/szöveg/URL a OneSignal sablonból jön (dashboardon szerkeszthető).
+    template_id: TEMPLATE_ID,
     // Csak azok kapják, akik a profiljukban bekapcsolták a napi kvíz értesítést.
     filters: [{ field: 'tag', key: 'daily_quiz', relation: '=', value: 'on' }],
-    headings: { en: 'Itt a napi kvíz! 🧠', hu: 'Itt a napi kvíz! 🧠' },
-    contents: {
-      en: 'Friss kérdések várnak — tartsd meg a sorozatod! 🔥',
-      hu: 'Friss kérdések várnak — tartsd meg a sorozatod! 🔥'
-    },
-    url: process.env.SITE_URL || 'https://quizhungary.com/',
     // Ha a mai 17:00 budapesti időpont még a jövőben van, akkorra ütemezzük; különben azonnal megy.
     ...(sendAt.getTime() > Date.now() ? { send_after: sendAt.toISOString() } : {})
   };

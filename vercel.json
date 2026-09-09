@@ -10,6 +10,10 @@
     {
       "path": "/api/friend-request-emails",
       "schedule": "0 16 * * *"
+    },
+    {
+      "path": "/api/send-push",
+      "schedule": "0 14 * * *"
     }
   ]
 }

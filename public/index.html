@@ -73,6 +73,28 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- OneSignal Web Push SDK — napi kvíz böngésző-értesítés (csak bejelentkezett felhasználóknak) -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  // IDE ÍRD BE a OneSignal App ID-t (OneSignal Dashboard → Settings → Keys & IDs).
+  // Amíg üres, a push funkció csendben ki van kapcsolva (a többi oldal működik).
+  window.QH_ONESIGNAL_APP_ID = '0670be8e-9417-43e9-9cc1-d9b82b43e192';
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  if (window.QH_ONESIGNAL_APP_ID) {
+    window.OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: window.QH_ONESIGNAL_APP_ID,
+        allowLocalhostAsSecureOrigin: true
+      });
+    });
+  }
+  // Segéd: bárhonnan futtatható OneSignal-művelet (init után sül el).
+  window.withOneSignal = function(fn) {
+    if (!window.QH_ONESIGNAL_APP_ID) return;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(fn);
+  };
+</script>
 <script src="data/catalog.js"></script>
 <style>
 :root{--red:#e8192c;--red-dark:#b01020;--bg:#0a0a0a;--bg2:#111;--bg3:#181818;--bg4:#222;--text:#f0ede8;--text-muted:#888;--text-dim:#444;--border:rgba(255,255,255,0.07);--border-red:rgba(232,25,44,0.35);--gold:#f5c518;--silver:#aaa;--bronze:#cd7f32;--green:#2ecc71;--orange:#f39c12;}
@@ -812,6 +834,10 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
       <span>📧 Emlékeztető e-mailek</span>
       <input type="checkbox" id="prof-reminders" style="cursor:pointer;accent-color:var(--red);width:18px;height:18px;" onchange="toggleReminders(this.checked)">
     </label>
+    <label style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;cursor:pointer;font-size:0.88rem;color:var(--text-muted);margin-bottom:1rem;padding:0.8rem;background:var(--bg3);border-radius:4px;">
+      <span>🔔 Napi kvíz értesítés a böngészőben<br><small style="color:var(--text-dim);">Minden nap 17:00-kor szólunk</small></span>
+      <input type="checkbox" id="prof-push" style="cursor:pointer;accent-color:var(--red);width:18px;height:18px;" onchange="togglePush(this.checked)">
+    </label>
     <button class="btn-p" style="width:100%" onclick="closePov()">Bezár</button>
   </div>
 </div>
@@ -1352,7 +1378,7 @@ async function init(){
 
   // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();loadUnreadCount();subscribeInbox();}
+  if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();loadUnreadCount();subscribeInbox();withOneSignal(os=>os.login(CU.id));}
   else{claimLocalDataFor('guest');navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
   checkCookieConsent();
@@ -1394,7 +1420,7 @@ async function init(){
     if(event==='PASSWORD_RECOVERY'){showReset();return;}
     if(event==='SIGNED_IN'&&ses?.user){
       const newLogin=!CU||CU.id!==ses.user.id; // token-frissítés NEM új login
-      CU=ses.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();
+      CU=ses.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();withOneSignal(os=>os.login(CU.id));
       if(newLogin){ // csak valódi belépéskor indítsuk újra a napi kvízt
         di=0;ds=0;clearDailyState();
         document.getElementById('dqa').style.display='block';document.getElementById('dqr').className='qr';dLoad();
@@ -1402,7 +1428,7 @@ async function init(){
       }
       checkFriendRequests();loadUnreadCount();subscribeInbox();
     }
-    else if(event==='SIGNED_OUT'){CU=null;CP=null;resetLocalPlayData();localStorage.setItem('qh_owner','guest');navGuest();renderStreak();renderTopics();loadLB();unsubscribeInbox();unreadMsgCount=0;pendingReqCount=0;renderNavBadge();}
+    else if(event==='SIGNED_OUT'){CU=null;CP=null;resetLocalPlayData();localStorage.setItem('qh_owner','guest');navGuest();renderStreak();renderTopics();loadLB();unsubscribeInbox();unreadMsgCount=0;pendingReqCount=0;renderNavBadge();withOneSignal(os=>os.logout());}
   });
 }
 
@@ -1634,6 +1660,8 @@ async function openProfile(){
   // Email emlékeztető kapcsoló állapota
   const remCb=document.getElementById('prof-reminders');
   if(remCb)remCb.checked=CP?.email_reminders===true;
+  // Böngésző-push kapcsoló: az aktuális eszköz feliratkozási állapotát tükrözi.
+  withOneSignal(os=>{const pc=document.getElementById('prof-push');if(pc)pc.checked=!!os.User.PushSubscription.optedIn;});
   try{
     const{data}=await sb.from('scores').select('topic,points').eq('user_id',CU.id);
     if(data&&data.length){
@@ -2711,6 +2739,30 @@ async function toggleReminders(enabled){
   await sb.from('profiles').update({email_reminders:enabled}).eq('id',CU.id);
   if(CP)CP.email_reminders=enabled;
   toast(enabled?'Emlékeztetők bekapcsolva 📧':'Emlékeztetők kikapcsolva','ok');
+}
+
+// Böngésző-push a napi kvízről (OneSignal). Csak bejelentkezve; a feliratkozás eszközönként külön.
+async function togglePush(enabled){
+  const cb=document.getElementById('prof-push');
+  if(!CU){if(cb)cb.checked=false;toast('Előbb jelentkezz be a push értesítéshez.','err');return;}
+  if(!window.QH_ONESIGNAL_APP_ID){if(cb)cb.checked=false;toast('A push értesítés még nincs beállítva.','err');return;}
+  withOneSignal(async(OneSignal)=>{
+    try{
+      if(enabled){
+        // Böngésző engedélykérés → feliratkozás → cimke, hogy a napi küldés célozni tudja.
+        await OneSignal.Notifications.requestPermission();
+        if(OneSignal.Notifications.permission!==true){if(cb)cb.checked=false;toast('Az értesítés engedélyezése nélkül nem tudunk szólni.','err');return;}
+        await OneSignal.User.PushSubscription.optIn();
+        await OneSignal.login(CU.id);
+        OneSignal.User.addTag('daily_quiz','on');
+        toast('Napi kvíz értesítés bekapcsolva 🔔','ok');
+      }else{
+        await OneSignal.User.PushSubscription.optOut();
+        OneSignal.User.addTag('daily_quiz','off');
+        toast('Napi kvíz értesítés kikapcsolva','ok');
+      }
+    }catch(e){if(cb)cb.checked=!enabled;toast('Nem sikerült módosítani az értesítést.','err');}
+  });
 }
 
 // A védett API-khoz a bejelentkezett munkamenet access tokenjét küldjük –

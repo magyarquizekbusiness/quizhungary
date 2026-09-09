@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EWMBSSWMEH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EWMBSSWMEH');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Átirányítás – QuizHungary</title>
+<title>ÃtirÃ¡nyÃ­tÃ¡s â€“ QuizHungary</title>
 <meta name="robots" content="noindex, follow">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body style="background:#0a0a0a;color:#f0ede8;font-family:sans-serif;text-align:center;padding-top:4rem;">
-<p>Átirányítás…</p>
+<p>ÃtirÃ¡nyÃ­tÃ¡sâ€¦</p>
 <script>
-// Régi ?id= linkek átirányítása az új, statikus kategóriaoldalakra.
+// RÃ©gi ?id= linkek Ã¡tirÃ¡nyÃ­tÃ¡sa az Ãºj, statikus kategÃ³riaoldalakra.
 (function(){
   var id=new URLSearchParams(location.search).get('id');
   var valid=['foldrajz','tortenelem','tudomany','sport','film','zene','irodalom','gasztro','termeszet','technika'];
   location.replace(valid.indexOf(id)>=0 ? 'kategoria-'+id : 'kategoriak');
 })();
 </script>
-<noscript><a href="kategoriak" style="color:#e8192c;">Tovább a kategóriákhoz</a></noscript>
+<noscript><a href="kategoriak" style="color:#e8192c;">TovÃ¡bb a kategÃ³riÃ¡khoz</a></noscript>
 </body>
 </html>

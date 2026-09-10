@@ -44,18 +44,20 @@ export default async function handler(req, res) {
   };
 
   try {
-    const resp = await fetch('https://onesignal.com/api/v1/notifications', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': `Basic ${API_KEY}`
-      },
-      body: JSON.stringify(payload)
-    });
+    // Modern OneSignal API: `Authorization: Key <API kulcs>` az api.onesignal.com-on.
+    // Ha a kulcs mégis régi típusú (401/403), tartalékként a régi `Basic` sémát próbáljuk.
+    let resp = await postNotification('Key', API_KEY, payload);
+    if (resp.status === 401 || resp.status === 403) {
+      resp = await postNotification('Basic', API_KEY, payload);
+    }
 
-    const data = await resp.json();
+    const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {
-      return res.status(502).json({ error: 'OneSignal hiba', detail: data });
+      return res.status(502).json({ error: 'OneSignal hiba', status: resp.status, detail: data });
+    }
+    // A OneSignal 200-at ad akkor is, ha nincs címzett — ilyenkor errors tömböt küld.
+    if (Array.isArray(data.errors) && data.errors.length) {
+      return res.status(200).json({ ok: false, warning: 'Nincs feliratkozott címzett', detail: data.errors });
     }
     return res.status(200).json({
       ok: true,
@@ -66,6 +68,18 @@ export default async function handler(req, res) {
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
+}
+
+// Egy értesítés POST-olása a modern OneSignal végpontra, adott auth-sémával.
+async function postNotification(scheme, apiKey, payload) {
+  return fetch('https://api.onesignal.com/notifications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization': `${scheme} ${apiKey}`
+    },
+    body: JSON.stringify(payload)
+  });
 }
 
 // Europe/Budapest UTC-eltolása percben, adott időpontra (60 = tél/CET, 120 = nyár/CEST).

@@ -2309,7 +2309,8 @@ function shareMarathon(){
 
 // ── RANDOM QUIZ ───────────────────────────────────────────────────────────────
 function openRandom(){
-  if(!checkGuestGate())return;
+  // A kaput az openTQ ellenőrzi (dupla számlálás elkerülése végett itt nem).
+  if(!CU&&getGuestPlays()>=GUEST_FREE_PLAYS){checkGuestGate();return;}
   const c=QH_CATALOG[Math.floor(Math.random()*QH_CATALOG.length)];
   const diffs=['easy','medium','hard'];
   const d=diffs[Math.floor(Math.random()*diffs.length)];
@@ -3364,7 +3365,8 @@ async function sendDuelInvite(friendId,btn){
 
 
 // ── VENDÉG JÁTÉK SZÁMLÁLÓ (puha regisztrációs fal) ────────────────────────────
-const GUEST_FREE_PLAYS=3;
+// Bejelentkezés nélkül ennyi szintet lehet lejátszani, utána jön a reg. fal.
+const GUEST_FREE_PLAYS=5;
 
 function getGuestPlays(){
   return parseInt(localStorage.getItem('qh_guest_plays')||'0',10);
@@ -3375,13 +3377,18 @@ function incrementGuestPlays(){
   return n;
 }
 // Ellenőrzi: játszhat-e a felhasználó. A napi kvíz és a főoldali minta kvíz
-// kivételével minden játékmódhoz regisztráció szükséges.
+// kivételével minden játékmódhoz regisztráció szükséges — de vendégként az
+// első GUEST_FREE_PLAYS szint ingyen játszható.
 // true = folytathatja, false = megállítottuk és feldobtuk a regisztrációt
 function checkGuestGate(){
   if(CU)return true; // bejelentkezett user mindig játszhat
-  toast('🔒 A játékhoz ingyenes regisztráció szükséges!','info');
-  openAuth('reg');
-  return false;
+  if(getGuestPlays()>=GUEST_FREE_PLAYS){
+    toast('🔒 Elhasználtad az '+GUEST_FREE_PLAYS+' ingyenes szintedet! Regisztrálj a folytatáshoz.','info');
+    openAuth('reg');
+    return false;
+  }
+  incrementGuestPlays();
+  return true;
 }
 
 // ── REFERRAL ──────────────────────────────────────────────────────────────────

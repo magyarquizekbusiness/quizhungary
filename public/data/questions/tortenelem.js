@@ -5,9 +5,9 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 [ // 1
 {q:'Ki volt Magyarország első királya?',o:['Géza fejedelem','Szent István','Szent László'],a:1},
 {q:'Melyik évben volt a honfoglalás?',o:['795','895','995'],a:1},
-{q:'Melyik forradalom kezdődött 1848. március 15-én?',o:['A magyar szabadságharc','Az őszirózsás forradalom','Az 1956-os forradalom'],a:0},
+{q:'Melyik forradalom kezdődött 1848. március 15-én?',o:['A magyar szabadságharc','Az őszirózsás forradalom','A polgári átalakulás mozgalma.'],a:0},
 {q:'Ki írta a Nemzeti dalt?',o:['Arany János','Petőfi Sándor','Vörösmarty Mihály'],a:1},
-{q:'Mi Magyarország nemzeti ünnepe augusztusban?',o:['Aug. 15.','Aug. 20.','Aug. 23.'],a:1},
+{q:'Melyik napon van Magyarország nemzeti ünnepe augusztusban?',o:['Aug. 15.','Aug. 20.','Aug. 23.'],a:1},
 ],
 [ // 2
 {q:'Melyik évben koronázták királlyá Szent Istvánt?',o:['1000','1100','1200'],a:0},
@@ -20,7 +20,7 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 {q:'Ki győzött a nándorfehérvári csatában 1456-ban?',o:['Hunyadi Mátyás','Hunyadi János','Kinizsi Pál'],a:1},
 {q:'Melyik királyunk alapította a visegrádi királytalálkozót 1335-ben?',o:['Károly Róbert','Nagy Lajos','Zsigmond'],a:0},
 {q:'Miért szólnak délben a harangok?',o:['A mohácsi vészért','A nándorfehérvári diadalért','Szent István emlékére'],a:1},
-{q:'Ki volt az "igazságos" király?',o:['Mátyás','Nagy Lajos','Szent László'],a:0},
+{q:'Ki volt az "igazságos" király?',o:['Hunyadi Mátyás','Nagy Lajos','Szent László'],a:0},
 {q:'Melyik évben volt a kiegyezés?',o:['1848','1867','1896'],a:1},
 ],
 [ // 4
@@ -35,7 +35,7 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 {q:'Hol végezték ki az aradi vértanúkat?',o:['Aradon','Pesten','Szegeden'],a:0},
 {q:'Hány aradi vértanú volt?',o:['12','13','14'],a:1},
 {q:'Ki volt az első felelős magyar kormány miniszterelnöke?',o:['Batthyány Lajos','Kossuth Lajos','Szemere Bertalan'],a:0},
-{q:'Melyik dinasztia uralkodott Magyarországon 1526 után?',o:['Jagelló','Habsburg','Anjou'],a:1},
+{q:'Melyik dinasztia uralkodott Magyarországon 1526-tól 1918-ig?',o:['Jagelló','Habsburg','Anjou'],a:1},
 ],
 [ // 6
 {q:'Melyik békeszerződés zárta le Magyarország számára az I. világháborút?',o:['Versailles-i','Trianoni','Saint-germaini'],a:1},
@@ -45,9 +45,9 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 {q:'Melyik évben lett Magyarország az EU tagja?',o:['1999','2004','2007'],a:1},
 ],
 [ // 7
-{q:'Ki alapította a turini (torinói) emigrációjáról híres politikus a Védegyletet?',o:['Kossuth Lajos','Széchenyi István','Deák Ferenc'],a:0},
-{q:'Melyik királyunk uralkodott a leghosszabb ideig?',o:['I. Ferenc József','Zsigmond','Mátyás'],a:0},
-{q:'Melyik évben szűnt meg a Magyar Királyság (kikiáltották a köztársaságot)?',o:['1946','1949','1956'],a:0},
+{q:'Ki alapította a Védegyletet?',o:['Kossuth Lajos','Széchenyi István','Deák Ferenc'],a:0},
+{q:'Melyik magyar király uralkodott a leghosszabb ideig?',o:['I. Ferenc József','Zsigmond','Mátyás'],a:0},
+{q:'Melyik évben szűnt meg a Magyar Királyság?',o:['1946','1949','1956'],a:0},
 {q:'Ki volt Magyarország sztálinista diktátora az 1950-es évek elején?',o:['Rákosi Mátyás','Gerő Ernő','Kádár János'],a:0},
 {q:'Melyik évben vonultak ki a szovjet csapatok Magyarországról?',o:['1989','1991','1994'],a:1},
 ],
@@ -62,8 +62,8 @@ QH_QUESTIONS['tortenelem-magyar'] = [
 {q:'Melyik évben született Szent István feltehetően?',o:['Kb. 975','Kb. 1000','Kb. 950'],a:0},
 {q:'Ki volt az utolsó Árpád-házi király?',o:['III. András','IV. László','V. István'],a:0},
 {q:'Melyik évben halt ki az Árpád-ház?',o:['1290','1301','1310'],a:1},
-{q:'Ki nyerte el a magyar trónt az Árpád-ház kihalása után tartósan?',o:['Károly Róbert','Vencel','Ottó'],a:0},
-{q:'Melyik magyar király volt egyben német-római császár is?',o:['Zsigmond','Mátyás','Nagy Lajos'],a:0},
+{q:'Ki nyerte el a magyar trónt az Árpád-ház kihalása után tartósan?',o:['Károly Róbert','III. Vencel','III. Ottó'],a:0},
+{q:'Melyik magyar királyt választották német-római császárrá is?',o:['Zsigmond','Mátyás','Nagy Lajos'],a:0},
 ],
 [ // 10
 {q:'Melyik évben avatták szentté István királyt?',o:['1083','1183','1000'],a:0},
@@ -79,7 +79,7 @@ QH_QUESTIONS['tortenelem-okor'] = [
 {q:'Melyik országban épültek a gízai piramisok?',o:['Görögország','Egyiptom','Irak'],a:1},
 {q:'Melyik itáliai város volt az ókor legnagyobb birodalmának központja?',o:['Athén','Róma','Konstantinápoly'],a:1},
 {q:'Hogy hívták az egyiptomi uralkodókat?',o:['Császár','Fáraó','Szultán'],a:1},
-{q:'Melyik népről kapta nevét a görög főváros, Athén védőistennője?',o:['Athéné istennőről','Zeuszról','Apollónról'],a:0},
+{q:'Kiről kapta nevét Athén városa?',o:['Athéné istennőről','Zeuszról','Apollónról'],a:0},
 {q:'Milyen írást használtak az ókori egyiptomiak?',o:['Rovásírást','Hieroglifákat','Cirill betűket'],a:1},
 ],
 [ // 2
@@ -97,7 +97,7 @@ QH_QUESTIONS['tortenelem-okor'] = [
 {q:'Ki volt a híres egyiptomi királynő, Caesar szövetségese?',o:['Nofretete','Kleopátra','Hatsepszut'],a:1},
 ],
 [ // 4
-{q:'Melyik két város vívta a peloponnészoszi háborút?',o:['Athén és Spárta','Róma és Karthágó','Théba és Korinthosz'],a:0},
+{q:'Melyik két városállam vívta a peloponnészoszi háborút?',o:['Athén és Spárta','Róma és Karthágó','Théba és Korinthosz'],a:0},
 {q:'Ki volt Szókratész leghíresebb tanítványa?',o:['Arisztotelész','Platón','Epikurosz'],a:1},
 {q:'Melyik birodalom fővárosa volt Babilon?',o:['Perzsa','Babiloni','Asszír'],a:1},
 {q:'Melyik hadvezér kelt át elefántokkal az Alpokon?',o:['Hannibál','Scipio','Nagy Sándor'],a:0},
@@ -112,7 +112,7 @@ QH_QUESTIONS['tortenelem-okor'] = [
 ],
 [ // 6
 {q:'Melyik évben bukott el a Nyugatrómai Birodalom?',o:['410','476','529'],a:1},
-{q:'Ki építtette a Colosseumot (megkezdte)?',o:['Vespasianus','Nero','Traianus'],a:0},
+{q:'Ki építtette a Colosseumot?',o:['Vespasianus','Nero','Traianus'],a:0},
 {q:'Mi volt a spártai nevelés neve?',o:['Agógé','Gimnázium','Akadémia'],a:0},
 {q:'Ki volt a perzsa király a thermopülai csatában?',o:['Dareiosz','Xerxész','Kürosz'],a:1},
 {q:'Melyik ókori csoda volt Alexandriában?',o:['A pharoszi világítótorony','A függőkertek','A kolosszus'],a:0},
@@ -121,29 +121,29 @@ QH_QUESTIONS['tortenelem-okor'] = [
 {q:'Hány csodája volt az ókori világnak?',o:['5','7','9'],a:1},
 {q:'Melyik uralkodóhoz kötik Babilon függőkertjeit?',o:['Hammurapi','II. Nabú-kudurri-uszur','Sargon'],a:1},
 {q:'Ki írta az első ismert törvénykönyvek egyikét Babilonban?',o:['Hammurapi','Gilgames','Assurbanipal'],a:0},
-{q:'Melyik nép találta fel az ábécé ősét?',o:['Egyiptomiak','Föníciaiak','Sumérok'],a:1},
+{q:'Melyik nép találta fel az abc ősét?',o:['Egyiptomiak','Föníciaiak','Sumérok'],a:1},
 {q:'Melyik római császár alatt érte el a birodalom legnagyobb kiterjedését?',o:['Augustus','Traianus','Hadrianus'],a:1},
 ],
 [ // 8
 {q:'Melyik évben alapították Rómát a hagyomány szerint?',o:['Kr. e. 753','Kr. e. 653','Kr. e. 853'],a:0},
-{q:'Ki volt Tutanhamon sírjának felfedezője (1922)?',o:['Howard Carter','Heinrich Schliemann','Arthur Evans'],a:0},
+{q:'Ki volt Tutanhamon sírjának felfedezője?',o:['Howard Carter','Heinrich Schliemann','Arthur Evans'],a:0},
 {q:'Melyik civilizáció épített zikkuratokat?',o:['Egyiptomi','Mezopotámiai','Minószi'],a:1},
 {q:'Melyik szigeten virágzott a minószi kultúra?',o:['Ciprus','Kréta','Rodosz'],a:1},
 {q:'Ki fedezte fel Tróját?',o:['Howard Carter','Heinrich Schliemann','Flinders Petrie'],a:1},
 ],
 [ // 9
-{q:'Melyik csatában győzte le Octavianus Antoniust és Kleopátrát?',o:['Actiumi csata','Philippi csata','Pharszaloszi csata'],a:0},
-{q:'Mi volt a római légió alapegysége?',o:['Falanx','Cohors','Hoplita'],a:1},
+{q:'Octavianus melyik csatában győzte le Antoniust és Kleopátrát?',o:['Actiumi csata','Philippi csata','Pharszaloszi csata'],a:0},
+{q:'Mi volt a római légió egyik fő alegysége?',o:['Falanx','Cohors','Hoplita'],a:1},
 {q:'Melyik kő segített megfejteni a hieroglifákat?',o:['A rosette-i kő','A moábi kő','A behisztuni felirat'],a:0},
 {q:'Ki fejtette meg a hieroglifákat 1822-ben?',o:['Jean-François Champollion','Howard Carter','Thomas Young'],a:0},
 {q:'Melyik római császár tette államvallássá a kereszténységet?',o:['Constantinus','Theodosius','Diocletianus'],a:1},
 ],
 [ // 10
-{q:'Melyik egyiptomi fáraó uralkodott a leghosszabb ideig (kb. 66 év)?',o:['II. Ramszesz','Tutanhamon','Ehnaton'],a:0},
+{q:'Melyik egyiptomi fáraó uralkodott a leghosszabb ideig?',o:['II. Ramszesz','Tutanhamon','Ehnaton'],a:0},
 {q:'Melyik ókori könyvtár volt a leghíresebb?',o:['Alexandriai','Pergamoni','Ninivei'],a:0},
 {q:'Ki volt az athéni demokrácia "aranykorának" vezetője?',o:['Periklész','Szolón','Kleiszthenész'],a:0},
 {q:'Melyik évben kezdődött az első ismert ókori olimpia?',o:['Kr. e. 776','Kr. e. 676','Kr. e. 876'],a:0},
-{q:'Melyik nép használta a quipu (csomóírás) rendszert? (Ókorin túli, de klasszikus)',o:['Az inkák','A maják','Az aztékok'],a:0},
+{q:'Melyik nép használta a quipu (csomóírás) rendszert?',o:['Az inkák','A maják','Az aztékok'],a:0},
 ],
 ];
 

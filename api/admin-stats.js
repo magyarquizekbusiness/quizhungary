@@ -43,10 +43,22 @@ export default async function handler(req, res) {
     const emailMap = {};
     (authData?.users || []).forEach(u => { emailMap[u.id] = u.email; });
 
-    // Scores összesítés
-    const { data: scores } = await supabase
-      .from('scores')
-      .select('user_id, topic, points, created_at');
+    // Scores összesítés — LAPOZVA, mert a Supabase alapból max 1000 sort ad
+    // vissza. E nélkül az 1000. sor után játszott meccsek nem számítanak bele,
+    // így a per-user pont/játékszám befagy (a scores tábla >1000 sor).
+    const scores = [];
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data: page, error: scErr } = await supabase
+        .from('scores')
+        .select('user_id, topic, points, created_at')
+        .order('created_at', { ascending: true })
+        .range(from, from + PAGE - 1);
+      if (scErr) throw scErr;
+      if (!page || page.length === 0) break;
+      scores.push(...page);
+      if (page.length < PAGE) break;
+    }
 
     // Statisztikák számítása
     const totalUsers = profiles?.length || 0;

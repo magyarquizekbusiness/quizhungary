@@ -8,8 +8,9 @@ const supabase = createClient(
 export default async function handler(req, res) {
   const token = req.query.token || (req.body && req.body.token);
 
-  if (!token) {
-    return res.status(400).send('Hiányzó token.');
+  // A token UUID; minden mást eleve elutasítunk (nem megy tovább a DB-be).
+  if (typeof token !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)) {
+    return res.status(400).send('Hiányzó vagy érvénytelen token.');
   }
 
   try {
@@ -56,6 +57,7 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.status(200).send(html);
   } catch (err) {
-    return res.status(500).send('Hiba történt: ' + err.message);
+    console.error('Unsubscribe error:', err.message);
+    return res.status(500).send('Hiba történt, próbáld újra később.');
   }
 }

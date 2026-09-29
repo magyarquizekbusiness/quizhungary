@@ -356,7 +356,9 @@ let winnerId=null, spinVal=0, roundOutcome=null;
 let selectedTopics=new Set();
 let incomingCode=null;
 
-function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+// Csak érvényes hex színt engedünk CSS-be — a DB-ből vagy más klienstől jövő érték nem megbízható.
+function safeColor(c){return /^#[0-9a-fA-F]{3,8}$/.test(c||'')?c:'#e8192c';}
 function show(id,on){const el=document.getElementById(id);if(el)el.style.display=on?'block':'none';}
 function showScreen(n){['login','setup','wait','game'].forEach(s=>{const el=document.getElementById('iv-'+s+'-screen');if(el)el.style.display=(s===n)?'block':'none';});}
 function send(event,payload){try{chan&&chan.send({type:'broadcast',event,payload});}catch(e){}}
@@ -424,7 +426,8 @@ function subscribeRoom(code){
 
 function onJoin(p){
   if(!p||!p.userId)return;
-  if(!players[p.userId])players[p.userId]={name:p.name,color:p.color,drinks:0,wins:0};
+  if(typeof p.userId!=='string')return;
+  if(!players[p.userId])players[p.userId]={name:String(p.name||'Játékos').slice(0,30),color:safeColor(p.color),drinks:0,wins:0};
   renderLobby(); renderScoreboard();
   if(isHost)setTimeout(()=>send('state',{players,topics,maxFeles,timeLimit,round,phase,hostId}),150);
 }
@@ -449,7 +452,7 @@ function renderLobby(){
   const codeEl=document.getElementById('iv-room-code'); if(codeEl)codeEl.textContent=room||'------';
   const badge=document.getElementById('iv-host-badge'); if(badge)badge.textContent=isHost?'Te vagy a host 👑':'Vendég';
   const el=document.getElementById('iv-lobby-players'); const ids=Object.keys(players);
-  if(el)el.innerHTML=ids.map(id=>{const p=players[id];return `<div class="iv-lobby-row"><div class="iv-av" style="background:${p.color||'#e8192c'}">${escapeHtml((p.name||'?').slice(0,2).toUpperCase())}</div><span class="nm">${escapeHtml(p.name||'')}${id===CU.id?' (te)':''}${id===hostId?' 👑':''}</span></div>`;}).join('');
+  if(el)el.innerHTML=ids.map(id=>{const p=players[id];return `<div class="iv-lobby-row"><div class="iv-av" style="background:${safeColor(p.color)}">${escapeHtml((p.name||'?').slice(0,2).toUpperCase())}</div><span class="nm">${escapeHtml(p.name||'')}${id===CU.id?' (te)':''}${id===hostId?' 👑':''}</span></div>`;}).join('');
   const cnt=document.getElementById('iv-lobby-count'); if(cnt)cnt.textContent='('+ids.length+')';
   const hc=document.getElementById('iv-host-controls'); if(hc)hc.style.display=isHost?'block':'none';
   const startBtn=document.getElementById('iv-start-btn2'); if(startBtn)startBtn.style.display=(isHost&&ids.length>=2)?'block':'none';
@@ -487,7 +490,7 @@ async function openInvite(){
   const{data:profs}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',ids);
   el.innerHTML=(profs||[]).map(p=>`
     <div class="iv-invite-row">
-      <div class="iv-av" style="background:${p.avatar_color||'#e8192c'}">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <div class="iv-av" style="background:${safeColor(p.avatar_color)}">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <span class="nm">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</span>
       <button class="iv-add" id="ivinv-${p.id}" onclick="inviteFriend('${p.id}',this)">🍻 Meghívás</button>
     </div>`).join('')||'<div class="lbempty">Nincs megjeleníthető barát.</div>';

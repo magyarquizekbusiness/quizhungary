@@ -1434,7 +1434,14 @@ async function init(){
 }
 
 async function loadP(){
-  try{const{data}=await sb.from('profiles').select('*').eq('id',CU.id).single();CP=data;}
+  // A saját profil minden mezőjét szerver függvény adja vissza; a profiles táblából
+  // kliensről csak a nyilvános oszlopok olvashatók.
+  // (Tartalék: ha a függvény még nincs telepítve, a régi közvetlen lekérdezés.)
+  try{
+    let{data,error}=await sb.rpc('get_my_profile').single();
+    if(error)({data}=await sb.from('profiles').select('*').eq('id',CU.id).single());
+    CP=data||null;
+  }
   catch(e){CP=null;}
 }
 
@@ -1811,7 +1818,7 @@ function dLoad(){
   document.getElementById('dpf').style.width=`${(di/DQ.length)*100}%`;
   document.getElementById('dqt').textContent=q.q;
   const c=document.getElementById('dqo');c.innerHTML='';
-  q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qo';b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;b.onclick=()=>dAns(i);c.appendChild(b);});
+  q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qo';b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${escapeHtml(o)}`;b.onclick=()=>dAns(i);c.appendChild(b);});
   document.getElementById('dfb').className='qfb';
   document.getElementById('dnxt').className='btn-p qnxt';
   // Ha erre a kérdésre már válaszolt (pl. app-váltás előtt), állítsuk vissza a válasz állapotát
@@ -1950,7 +1957,7 @@ function heroRender(){
   const box=document.getElementById('hqc-opts');box.innerHTML='';
   c.o.forEach((o,i)=>{
     const b=document.createElement('button');b.className='hqc-opt';
-    b.innerHTML=`<span class="l">${heroLetters[i]}</span>${o}`;
+    b.innerHTML=`<span class="l">${heroLetters[i]}</span>${escapeHtml(o)}`;
     b.onclick=()=>heroAnswer(i);box.appendChild(b);
   });
   const msg=document.getElementById('hqc-msg');msg.className='hqc-msg';msg.textContent='';
@@ -2013,7 +2020,7 @@ function tqLoad(){
   const _tqpf=document.getElementById('tqpf');if(_tqpf)_tqpf.style.width=`${(tqi/tql.length)*100}%`;
   document.getElementById('tqt').textContent=q.q;
   const c=document.getElementById('tqo');c.innerHTML='';
-  q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qo';b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;b.onclick=()=>tqAns(i);c.appendChild(b);});
+  q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qo';b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${escapeHtml(o)}`;b.onclick=()=>tqAns(i);c.appendChild(b);});
   document.getElementById('tqfb').className='qfb';
   document.getElementById('tqnxt').className='btn-p qnxt';
   startTQTimer();
@@ -2125,8 +2132,8 @@ async function loadLB(){
   const med=['🥇','🥈','🥉'];const rc=['g','s','b'];
   body.innerHTML=data.map((row,i)=>{
     const me=CU&&row.id===CU.id;
-    const init=row.username.slice(0,2).toUpperCase();
-    const bg=row.avatar_color||'#e8192c';
+    const init=escapeHtml(row.username.slice(0,2).toUpperCase());
+    const bg=safeColor(row.avatar_color);
     return `<div class="lbr${me?' me':''}" style="cursor:pointer" onclick="viewProfile('${row.id}')">
       <div class="lbrank ${rc[i]||'o'}">${med[i]||i+1}</div>
       <div class="lbav" style="background:${bg};color:#fff">${init}</div>
@@ -2135,7 +2142,7 @@ async function loadLB(){
     </div>`;
   }).join('');
 }
-async function loadPC(){const{count}=await sb.from('profiles').select('*',{count:'exact',head:true});if(count!=null)document.getElementById('pcnt').textContent=count;}
+async function loadPC(){const{count}=await sb.from('profiles').select('id',{count:'exact',head:true});if(count!=null)document.getElementById('pcnt').textContent=count;}
 function setLb(m,el){lbm=m;document.querySelectorAll('.lbtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');loadLB();}
 
 
@@ -2199,7 +2206,7 @@ function mqLoadQ(){
   const c=document.getElementById('mqo');c.innerHTML='';
   q.o.forEach((o,i)=>{
     const b=document.createElement('button');b.className='qo';
-    b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;
+    b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${escapeHtml(o)}`;
     b.onclick=()=>mqAns(i);c.appendChild(b);
   });
   document.getElementById('mqfb').className='qfb';
@@ -2464,7 +2471,8 @@ function subscribeRoom(code){
   mpChannel=sb.channel('room:'+code);
   mpChannel
     .on('broadcast',{event:'join'},({payload})=>{
-      if(!mpPlayers[payload.userId])mpPlayers[payload.userId]={name:payload.name,score:0};
+      if(!payload||typeof payload.userId!=='string')return;
+      if(!mpPlayers[payload.userId])mpPlayers[payload.userId]={name:String(payload.name||'Játékos').slice(0,30),score:0};
       renderMpPlayers();
       if(mpIsHost){
         setTimeout(()=>{
@@ -2561,8 +2569,8 @@ function renderMpPlayers(){
   const total=Object.keys(mpPlayers).length;
   el.innerHTML=Object.entries(mpPlayers).map(([id,p])=>`
     <div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);">
-      <span>${p.name}${id===CU?.id?' (te)':''}</span>
-      <span style="color:var(--red);font-family:'Bebas Neue',sans-serif;">${p.score} pont</span>
+      <span>${escapeHtml(p.name)}${id===CU?.id?' (te)':''}</span>
+      <span style="color:var(--red);font-family:'Bebas Neue',sans-serif;">${Number(p.score)||0} pont</span>
     </div>`).join('');
   // Update player count badge
   const badge=document.getElementById('mp-player-count');
@@ -2601,7 +2609,7 @@ function mpLoadQ(){
   const c=document.getElementById('mp-qo');c.innerHTML='';
   q.o.forEach((o,i)=>{
     const b=document.createElement('button');b.className='qo';
-    b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${o}`;
+    b.innerHTML=`<span class="ol">${['A','B','C'][i]}</span>${escapeHtml(o)}`;
     b.onclick=()=>mpAns(i);c.appendChild(b);
   });
   document.getElementById('mp-fb').className='qfb';
@@ -2668,13 +2676,13 @@ function mpAns(i){
 function mpNext(){mpI++;mpLoadQ();}
 
 function renderMpResultList(){
-  const sorted=Object.entries(mpPlayers).sort((a,b)=>b[1].score-a[1].score);
+  const sorted=Object.entries(mpPlayers).sort((a,b)=>(Number(b[1].score)||0)-(Number(a[1].score)||0));
   const medals=['🥇','🥈','🥉'];
   document.getElementById('mp-scores-list').innerHTML=sorted.map(([id,p],i)=>`
     <div style="display:flex;align-items:center;gap:1rem;padding:0.9rem 1rem;background:${id===CU?.id?'rgba(232,25,44,0.08)':'var(--bg3)'};border-radius:3px;margin-bottom:0.5rem;border:1px solid ${id===CU?.id?'var(--border-red)':'var(--border)'}">
       <span style="font-size:1.5rem">${medals[i]||i+1+'.'}</span>
-      <span style="flex:1;font-weight:600">${p.name}${id===CU?.id?' (te)':''}</span>
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--red)">${p.score}</span>
+      <span style="flex:1;font-weight:600">${escapeHtml(p.name)}${id===CU?.id?' (te)':''}</span>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--red)">${Number(p.score)||0}</span>
     </div>`).join('');
 }
 
@@ -2850,14 +2858,14 @@ async function openAdmin(){
     document.getElementById('adm-new').textContent=data.stats.newThisWeek;
     // Top témák
     document.getElementById('adm-topics').innerHTML=data.topTopics.map(([t,c])=>
-      `<span style="background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:0.3rem 0.7rem;font-size:0.8rem;">${t} <span style="color:var(--red);font-weight:600;">${c}</span></span>`
+      `<span style="background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:0.3rem 0.7rem;font-size:0.8rem;">${escapeHtml(t)} <span style="color:var(--red);font-weight:600;">${Number(c)||0}</span></span>`
     ).join('')||'<span style="color:var(--text-dim)">Még nincs adat</span>';
     // Felhasználók tábla
     document.getElementById('adm-user-count').textContent=data.users.length;
     document.getElementById('adm-users-table').innerHTML=data.users.map(u=>`
       <tr style="border-top:1px solid var(--border);">
         <td style="padding:0.6rem;font-weight:500;">${escapeHtml(u.username||'—')}</td>
-        <td style="padding:0.6rem;color:var(--text-muted);font-size:0.78rem;">${u.email}</td>
+        <td style="padding:0.6rem;color:var(--text-muted);font-size:0.78rem;">${escapeHtml(u.email)}</td>
         <td style="padding:0.6rem;">${u.is_premium?'<span style="color:var(--gold)">✨ Igen</span>':'<span style="color:var(--text-dim)">Nem</span>'}</td>
         <td style="padding:0.6rem;">${u.games}</td>
         <td style="padding:0.6rem;color:var(--red);font-weight:600;">${u.points.toLocaleString('hu-HU')}</td>
@@ -2984,12 +2992,12 @@ async function loadFriends(){
   friendsCache=profiles||[];
   el.innerHTML=(profiles||[]).map(p=>`
     <div class="friend-row">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <div class="friend-av" style="background:${safeColor(p.avatar_color)}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info" onclick="viewProfile('${p.id}')">
         <div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div>
         <div class="friend-meta">Barát</div>
       </div>
-      <button class="friend-btn fb-chat" onclick="openChat('${p.id}','${escapeHtml(p.username.replace(/['"<>\\]/g,''))}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>
+      <button class="friend-btn fb-chat" onclick="openChat('${p.id}','${escapeHtml(p.username.replace(/['"<>\\]/g,''))}','${safeColor(p.avatar_color)}')">💬 Csevegés</button>
     </div>`).join('');
 }
 
@@ -3011,7 +3019,7 @@ async function loadRequests(){
   el.innerHTML=data.map(f=>{
     const p=pmap[f.requester_id];if(!p)return'';
     return `<div class="friend-row">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <div class="friend-av" style="background:${safeColor(p.avatar_color)}">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info"><div class="friend-name">${escapeHtml(p.username)}</div><div class="friend-meta">Barátnak jelölt</div></div>
       <div style="display:flex;gap:0.4rem;">
         <button class="friend-btn fb-accept" onclick="respondRequest(${f.id},'accepted')">Elfogad</button>
@@ -3047,7 +3055,7 @@ async function searchUsers(){
     else if(rel&&rel.status==='pending')btn='<button class="friend-btn fb-pending">Függőben</button>';
     else btn=`<button class="friend-btn fb-add" onclick="addFriend('${p.id}',this)">+ Bejelölés</button>`;
     return `<div class="search-result">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <div class="friend-av" style="background:${safeColor(p.avatar_color)}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info" onclick="viewProfile('${p.id}')"><div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div></div>
       ${btn}
     </div>`;
@@ -3062,9 +3070,9 @@ async function addFriend(id,btn){
 }
 
 async function viewProfile(id){
-  const{data:p}=await sb.from('profiles').select('*').eq('id',id).single();
+  const{data:p}=await sb.from('profiles').select('id,username,avatar_color,is_premium').eq('id',id).single();
   if(!p)return;
-  document.getElementById('pv-avatar').style.background=p.avatar_color||'#e8192c';
+  document.getElementById('pv-avatar').style.background=safeColor(p.avatar_color);
   document.getElementById('pv-avatar').textContent=p.username.slice(0,2).toUpperCase();
   document.getElementById('pv-name').textContent=p.username;
   document.getElementById('pv-premium').style.display=p.is_premium?'block':'none';
@@ -3082,7 +3090,7 @@ async function viewProfile(id){
     const{data:existing}=await sb.from('friendships').select('*');
     const rel=(existing||[]).find(f=>(f.requester_id===CU.id&&f.addressee_id===id)||(f.addressee_id===CU.id&&f.requester_id===id));
     if(rel&&rel.status==='accepted'){
-      actEl.innerHTML=`<button class="btn-p" style="width:100%" onclick="closePV();openChat('${id}','${escapeHtml(p.username.replace(/['"<>\\]/g,''))}','${p.avatar_color||'#e8192c'}')">💬 Csevegés</button>`;
+      actEl.innerHTML=`<button class="btn-p" style="width:100%" onclick="closePV();openChat('${id}','${escapeHtml(p.username.replace(/['"<>\\]/g,''))}','${safeColor(p.avatar_color)}')">💬 Csevegés</button>`;
     } else if(rel&&rel.status==='pending'){
       actEl.innerHTML='<button class="btn-o" style="width:100%" disabled>Kérelem függőben</button>';
     } else {
@@ -3096,7 +3104,7 @@ function closePV(){document.getElementById('pvov').classList.remove('show');}
 async function openChat(partnerId,partnerName,partnerColor){
   chatPartner={id:partnerId,name:partnerName,color:partnerColor};
   document.getElementById('chat-name').textContent=partnerName;
-  document.getElementById('chat-av').style.background=partnerColor;
+  document.getElementById('chat-av').style.background=safeColor(partnerColor);
   document.getElementById('chat-av').textContent=partnerName.slice(0,2).toUpperCase();
   document.getElementById('chatov').classList.add('show');
   markInboxSeen(); // megnyitott beszélgetés = megtekintett üzenetek
@@ -3185,7 +3193,9 @@ function joinDuelFromChat(code){
   },300);
 }
 
-function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+// Csak érvényes hex színt engedünk HTML/CSS-be — a DB-ből vagy más klienstől jövő érték nem megbízható.
+function safeColor(c){return /^#[0-9a-fA-F]{3,8}$/.test(c||'')?c:'#e8192c';}
 
 // ── ÉRTESÍTÉSEK: bejövő üzenetek + párbaj meghívók ────────────────────────────
 // A nav "Barátok" gombján megjelenő piros badge két forrásból táplálkozik:
@@ -3345,7 +3355,7 @@ async function openInviteFriends(){
   const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',friendIds);
   el.innerHTML=(profiles||[]).map(p=>`
     <div class="friend-row">
-      <div class="friend-av" style="background:${p.avatar_color||'#e8192c'};cursor:default;">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
+      <div class="friend-av" style="background:${safeColor(p.avatar_color)};cursor:default;">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info" style="cursor:default;">
         <div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div>
       </div>
@@ -3417,11 +3427,8 @@ async function applyReferralOnSignup(newUserId){
   const ref=localStorage.getItem('qh_referral');
   if(!ref)return;
   try{
-    // Megkeressük ki a meghívó (referral_code alapján)
-    const{data:referrer}=await sb.from('profiles').select('id').eq('referral_code',ref).single();
-    if(referrer&&referrer.id!==newUserId){
-      await sb.from('profiles').update({referred_by:referrer.id}).eq('id',newUserId);
-    }
+    // A meghívó beállítását a szerver végzi (a referral_code és a referred_by kliensről nem olvasható/írható).
+    await sb.rpc('apply_referral',{code:ref});
     localStorage.removeItem('qh_referral');
   }catch(e){console.warn('Referral apply failed:',e);}
 }

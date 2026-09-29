@@ -3,18 +3,11 @@
 // 17:00 (Europe/Budapest) időpontjára ütemezzük a OneSignal `send_after` mezőjével.
 // Így DST-től függetlenül (nyári/téli időszámítás) pontosan 17:00-kor érkezik.
 
+import { checkCronAuth } from '../lib/auth.js';
+
 export default async function handler(req, res) {
   // Biztonság: csak a Vercel Cron hívhatja (ugyanaz a minta, mint a send-reminders.js-ben)
-  const authHeader = req.headers.authorization;
-  const isVercelCron = req.headers['x-vercel-cron'] === '1';
-  const hasValidSecret = process.env.CRON_SECRET && authHeader === `Bearer ${process.env.CRON_SECRET}`;
-
-  if (!process.env.CRON_SECRET) {
-    return res.status(500).json({ error: 'CRON_SECRET nincs beállítva' });
-  }
-  if (!isVercelCron && !hasValidSecret) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  if (!checkCronAuth(req, res)) return;
 
   const APP_ID = process.env.ONESIGNAL_APP_ID;
   const API_KEY = process.env.ONESIGNAL_REST_API_KEY;

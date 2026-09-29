@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { buildEmail, sendEmail } from '../lib/email.js';
+import { buildEmail, sendEmail, escapeHtml, plainLine } from '../lib/email.js';
+import { checkCronAuth } from '../lib/auth.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -9,18 +10,7 @@ const supabase = createClient(
 export default async function handler(req, res) {
   // Biztonság: csak a Vercel Cron hívhatja
   // A Vercel Cron automatikusan küldi az Authorization: Bearer <CRON_SECRET> headert
-  const authHeader = req.headers.authorization;
-  const isVercelCron = req.headers['x-vercel-cron'] === '1';
-  const hasValidSecret = process.env.CRON_SECRET && authHeader === `Bearer ${process.env.CRON_SECRET}`;
-
-  // Ha NINCS beállítva CRON_SECRET, az hiba - ne engedjük
-  if (!process.env.CRON_SECRET) {
-    return res.status(500).json({ error: 'CRON_SECRET nincs beállítva' });
-  }
-  // Csak a Vercel Cron VAGY a helyes secret engedélyezett
-  if (!isVercelCron && !hasValidSecret) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  if (!checkCronAuth(req, res)) return;
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -60,7 +50,7 @@ export default async function handler(req, res) {
       const name = p.username || 'Játékos';
 
       const { html, text } = buildEmail({
-        greeting: `Szia ${name}!`,
+        greeting: `Szia ${escapeHtml(name)}!`,
         paragraphs: [
           'Ma még nem játszottál a QuizHungary-n, és nem szeretném, ha megszakadna a sorozatod. Egy gyors kvíz mindössze pár perc.',
           'Ha most beugrasz egy körre, megmarad a sorozatod és gyűlnek a pontjaid.'
@@ -76,7 +66,7 @@ export default async function handler(req, res) {
       try {
         const resp = await sendEmail({
           to: email,
-          subject: `${name}, ma még nem játszottál – tartsd meg a sorozatod`,
+          subject: `${plainLine(name)}, ma még nem játszottál – tartsd meg a sorozatod`,
           html,
           text,
           unsubUrl
@@ -87,11 +77,14 @@ export default async function handler(req, res) {
           // Jelöljük hogy ma kapott emlékeztetőt
           await supabase.from('profiles').update({ reminder_sent_date: today }).eq('id', p.id);
         } else {
+          // Az e-mail címet csak a szerver logba írjuk, a válaszba nem.
           const errText = await resp.text();
-          errors.push({ email, error: errText });
+          console.error('Reminder email failed:', email, errText);
+          errors.push({ status: resp.status });
         }
       } catch (e) {
-        errors.push({ email, error: e.message });
+        console.error('Reminder email failed:', email, e.message);
+        errors.push({ error: 'send_failed' });
       }
     }
 

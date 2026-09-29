@@ -12,7 +12,7 @@
     try{return JSON.parse(localStorage.getItem(LS_KEY))||{};}catch(e){return {};}
   }
   function writeLocal(){localStorage.setItem(LS_KEY,JSON.stringify(prog));}
-  function esc(s){const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
   // A haladás/streak localStorage-ban él. Hogy egy böngészőn több fiók / vendég
   // ne örökölje egymás adatait, minden kulcshoz "tulajdonost" rendelünk; ha az
@@ -34,7 +34,9 @@
         if(session?.user){
           user=session.user;
           claimLocalDataFor(user.id);
-          const{data}=await sb.from('profiles').select('username,is_admin,is_premium,subscription_status,subscription_end').eq('id',user.id).single();
+          // A saját profil privát mezőit (admin, előfizetés) szerver függvény adja vissza.
+          let{data,error}=await sb.rpc('get_my_profile').single();
+          if(error)({data}=await sb.from('profiles').select('username,is_admin,is_premium,subscription_status,subscription_end').eq('id',user.id).single());
           profile=data;
           await syncFromServer();
         }else{

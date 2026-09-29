@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { buildEmail, sendEmail } from '../lib/email.js';
+import { buildEmail, sendEmail, escapeHtml, plainLine } from '../lib/email.js';
+import { checkCronAuth } from '../lib/auth.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -7,17 +8,8 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  // Biztonság: csak a Vercel Cron hívhatja
-  const authHeader = req.headers.authorization;
-  const isVercelCron = req.headers['x-vercel-cron'] === '1';
-  const hasValidSecret = process.env.CRON_SECRET && authHeader === `Bearer ${process.env.CRON_SECRET}`;
-
-  if (!process.env.CRON_SECRET) {
-    return res.status(500).json({ error: 'CRON_SECRET nincs beállítva' });
-  }
-  if (!isVercelCron && !hasValidSecret) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  // Biztonság: csak a Vercel Cron hívhatja (CRON_SECRET)
+  if (!checkCronAuth(req, res)) return;
 
   // Csak a 3 óránál régebbi kérelmekről küldünk (a frissen elfogadottakat kihagyja)
   // A cron naponta egyszer fut (Vercel Hobby limit), tehát ez napi összegző értesítő
@@ -74,12 +66,12 @@ export default async function handler(req, res) {
 
       const unsubUrl = `${process.env.SITE_URL}/api/unsubscribe?token=${addressee.unsubscribe_token}`;
       const playUrl = process.env.SITE_URL;
-      const name = addressee.username || 'Játékos';
+      const name = escapeHtml(addressee.username || 'Játékos');
 
       const { html, text } = buildEmail({
         greeting: `Szia ${name}!`,
         paragraphs: [
-          `<strong>${requester.username}</strong> barátnak jelölt téged a QuizHungary-n.`,
+          `<strong>${escapeHtml(requester.username)}</strong> barátnak jelölt téged a QuizHungary-n.`,
           'Ha elfogadod a kérelmet, cseveghettek egymással, és kihívhatjátok egymást egy párbajra.'
         ],
         ctaLabel: 'Kérelem megtekintése',
@@ -93,7 +85,7 @@ export default async function handler(req, res) {
       try {
         const resp = await sendEmail({
           to: email,
-          subject: `${requester.username} barátnak jelölt téged`,
+          subject: `${plainLine(requester.username)} barátnak jelölt téged`,
           html,
           text,
           unsubUrl
@@ -103,11 +95,14 @@ export default async function handler(req, res) {
           sentCount++;
           await supabase.from('friendships').update({ email_sent: true }).eq('id', reqRow.id);
         } else {
+          // Az e-mail címet csak a szerver logba írjuk, a válaszba nem.
           const errText = await resp.text();
-          errors.push({ email, error: errText });
+          console.error('Friend request email failed:', email, errText);
+          errors.push({ friendship: reqRow.id, status: resp.status });
         }
       } catch (e) {
-        errors.push({ email, error: e.message });
+        console.error('Friend request email failed:', email, e.message);
+        errors.push({ friendship: reqRow.id, error: 'send_failed' });
       }
     }
 

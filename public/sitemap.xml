@@ -85,6 +85,30 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://quizhungary.com/kategoria-nyelv</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/kategoria-retro</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/kategoria-mitologia</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://quizhungary.com/kategoria-muveszet</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://quizhungary.com/rolunk</loc>
     <lastmod>2026-08-03</lastmod>
     <changefreq>yearly</changefreq>

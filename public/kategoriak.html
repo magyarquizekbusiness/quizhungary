@@ -66,7 +66,11 @@
     { "@type": "ListItem", "position": 7, "name": "Irodalom", "url": "https://quizhungary.com/kategoria-irodalom" },
     { "@type": "ListItem", "position": 8, "name": "Gasztronómia", "url": "https://quizhungary.com/kategoria-gasztro" },
     { "@type": "ListItem", "position": 9, "name": "Természet és állatok", "url": "https://quizhungary.com/kategoria-termeszet" },
-    { "@type": "ListItem", "position": 10, "name": "Technika", "url": "https://quizhungary.com/kategoria-technika" }
+    { "@type": "ListItem", "position": 10, "name": "Technika", "url": "https://quizhungary.com/kategoria-technika" },
+    { "@type": "ListItem", "position": 11, "name": "Magyar nyelv és szólások", "url": "https://quizhungary.com/kategoria-nyelv" },
+    { "@type": "ListItem", "position": 12, "name": "Retró és nosztalgia", "url": "https://quizhungary.com/kategoria-retro" },
+    { "@type": "ListItem", "position": 13, "name": "Mitológia és vallás", "url": "https://quizhungary.com/kategoria-mitologia" },
+    { "@type": "ListItem", "position": 14, "name": "Művészet és építészet", "url": "https://quizhungary.com/kategoria-muveszet" }
     ]
   }
 }
@@ -171,6 +175,47 @@
     </a>
   </div>
 
+  <div class="slbl" style="margin-top:2.8rem;">👑 Prémium témakörök</div>
+  <p class="ssub" id="prem-intro" style="margin-bottom:1.4rem;">Új fő kategóriák és extra alkategóriák. Minden prémium alkategória <strong style="color:var(--text)">1. szintje ingyen</strong> kipróbálható, és nincs feloldási sorrend — bármelyikkel kezdhetsz.</p>
+  <div class="cat-grid" id="prem-grid">
+    <a class="cat-card premium" href="kategoria-nyelv">
+      <span class="prem-badge">👑 Prémium</span>
+      <span class="ci">🗣️</span>
+      <div class="cn">Magyar nyelv és szólások</div>
+      <div class="cd">Szólások, szavak eredete, helyesírás és nyelvi érdekességek. Alkategóriák: Szólások és közmondások, Szavak eredete, Helyesírás, Idegen szavak, Tájszavak és nyelvi érdekességek.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-nyelv" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-nyelv">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card premium" href="kategoria-retro">
+      <span class="prem-badge">👑 Prémium</span>
+      <span class="ci">📼</span>
+      <div class="cn">Retró és nosztalgia</div>
+      <div class="cd">A 80-as, 90-es évek, régi tévéműsorok, mesék és csemegék. Alkategóriák: 80-as évek, 90-es évek, Régi tévéműsorok és reklámok, Gyerekkori mesék és rajzfilmek, Játékok és csemegék.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-retro" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-retro">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card premium" href="kategoria-mitologia">
+      <span class="prem-badge">👑 Prémium</span>
+      <span class="ci">⚡</span>
+      <div class="cn">Mitológia és vallás</div>
+      <div class="cd">Görög, római, skandináv és egyiptomi istenek, magyar mondák. Alkategóriák: Görög mitológia, Római mitológia, Skandináv mitológia, Egyiptomi mitológia, Magyar mondák és regék.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-mitologia" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-mitologia">0 / 50 szint</span></div>
+    </a>
+    <a class="cat-card premium" href="kategoria-muveszet">
+      <span class="prem-badge">👑 Prémium</span>
+      <span class="ci">🎨</span>
+      <div class="cn">Művészet és építészet</div>
+      <div class="cd">Festmények, épületek, szobrok, divat és a világ nagy múzeumai. Alkategóriák: Festészet, Építészet, Szobrászat, Divat és design, Múzeumok és híres művek.</div>
+      <div class="cat-prog-bar"><div class="cat-prog-fill" id="pf-muveszet" style="width:0%"></div></div>
+      <div class="cat-prog-lbl"><span>5 alkategória · 50 szint</span><span id="pl-muveszet">0 / 50 szint</span></div>
+    </a>
+  </div>
+
+  <div class="slbl" style="margin-top:2.2rem;">👑 Extra prémium alkategóriák</div>
+  <p class="ssub" style="margin-bottom:1rem;">A meglévő kategóriák új, prémium alkategóriái — a kategória oldalán, a lista végén találod őket.</p>
+  <div class="prem-extra-list" id="prem-extra-list"></div>
+
   <div class="slbl" style="margin-top:2.8rem;">Extra játékmódok</div>
   <a class="cat-card" href="iqteszt" style="display:block;background:linear-gradient(135deg,rgba(232,25,44,0.13),rgba(10,10,10,0));border-color:var(--border-red);margin-bottom:1.6rem;">
     <span class="ci">🧠</span>
@@ -213,6 +258,25 @@
     const pl=document.getElementById('pl-'+c.id);
     if(pl){pl.textContent=p.done+' / '+p.total+' szint'; if(pct===100)pl.classList.add('done');}
   });
+  // Prémium kártyák: haladás + státusz (a meglévő haladás ugyanúgy mentődik)
+  QH_PREMIUM_CATALOG.forEach(c=>{
+    const p=QH.catProgress(c);
+    const pct=p.total?Math.round(p.done/p.total*100):0;
+    const pf=document.getElementById('pf-'+c.id); if(pf)pf.style.width=pct+'%';
+    const pl=document.getElementById('pl-'+c.id);
+    if(pl){pl.textContent=p.done+' / '+p.total+' szint'; if(pct===100)pl.classList.add('done');}
+  });
+  // Extra prémium alkategóriák listája (a kategória oldalára mutat)
+  let ex='';
+  QH_CATALOG.forEach(c=>(QH_PREMIUM_EXTRA_SUBS[c.id]||[]).forEach(s=>{
+    const L=qhLevels(s.id),lv=Math.min(QH.getLevel(s.id),L);
+    ex+='<a class="prem-extra" href="kategoria-'+c.id+'#subcard-'+s.id+'"><span class="pe-ico">'+s.icon+'</span><span class="pe-txt"><span class="pe-name">'+QH.esc(s.name)+'</span><span class="pe-cat">'+QH.esc(c.name)+' · '+lv+' / '+L+' szint</span></span></a>';
+  }));
+  document.getElementById('prem-extra-list').innerHTML=ex;
+  if(!QH.hasPremiumAccess()){
+    document.getElementById('prem-intro').insertAdjacentHTML('beforeend',
+      window.QH_PREMIUM_ENABLED?' A további szintekhez <a href="/#premium" style="color:var(--gold)">fizess elő a Prémiumra</a>.':' <span style="color:var(--gold)">A teljes Prémium csomag hamarosan érkezik!</span>');
+  }
 })();
 </script>
 </body>

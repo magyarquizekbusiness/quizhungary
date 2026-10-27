@@ -74,6 +74,13 @@
       Nem sikerült betölteni a kérdéseket. <a href="kategoriak" style="color:var(--red)">Vissza a kategóriákhoz</a>
     </div>
 
+    <div id="q-premium" style="display:none;text-align:center;padding:1.5rem 0;">
+      <div style="font-size:2.4rem;margin-bottom:0.6rem;">👑</div>
+      <div class="stit" style="font-size:1.6rem;">Prémium szint</div>
+      <p id="q-premium-txt" style="color:var(--text-muted);max-width:440px;margin:0.6rem auto 1.4rem;"></p>
+      <div class="ra" id="q-premium-ra"></div>
+    </div>
+
     <div id="q-gate" style="display:none;text-align:center;padding:1.5rem 0;">
       <div style="font-size:2.4rem;margin-bottom:0.6rem;">🔒</div>
       <div class="stit" style="font-size:1.6rem;">Regisztráció szükséges</div>
@@ -96,13 +103,14 @@ let SUB=null,CAT=null,LEVEL=1,QL=[],qi=0,score=0,timer=null,secs=10;
 async function boot(){
   const subId=QH.qs('sub');LEVEL=parseInt(QH.qs('szint'))||1;
   const catId=QH_SUB_TO_CAT[subId];
-  CAT=QH_CATALOG.find(c=>c.id===catId);
+  CAT=qhFindCat(catId);
   SUB=CAT?.subs.find(s=>s.id===subId);
   if(!SUB||LEVEL<1||LEVEL>qhLevels(SUB.id)){location.replace('kategoriak');return;}
 
   document.title=`${SUB.name} – ${LEVEL}. szint – QuizHungary`;
   document.getElementById('crumb-cat').textContent=CAT.name;
   document.getElementById('crumb-cat').href='kategoria-'+CAT.id;
+  if(SUB.premium)document.getElementById('q-title').insertAdjacentHTML('beforeend',' <span class="prem-badge" style="margin-left:0.5rem;vertical-align:middle;">👑 Prémium</span>');
   document.getElementById('crumb-sub').textContent=SUB.name;
   document.getElementById('q-title').textContent=`${SUB.icon} ${SUB.name}`;
   document.getElementById('q-lvl-badge').textContent=`${LEVEL}. szint / ${qhLevels(SUB.id)}`;
@@ -115,6 +123,13 @@ async function boot(){
   if(!QH.user && !guestTeaser){
     document.getElementById('quiz-content').style.display='none';
     document.getElementById('q-gate').style.display='block';
+    return;
+  }
+
+  // Prémium szint (2. szinttől) előfizetés nélkül: ajánlat / „hamarosan”
+  if(QH.isPremiumLocked(SUB.id,LEVEL)){
+    document.getElementById('quiz-content').style.display='none';
+    showPremiumGate();
     return;
   }
 
@@ -132,8 +147,7 @@ async function boot(){
   }
 
   try{
-    await QH.loadQuestions(CAT.id);
-    QL=(QH.getLevelQuestions(SUB.id,LEVEL)||[]).map(q=>shuffleOptions(q));
+    QL=((await QH.loadLevelQuestions(SUB.id,LEVEL))||[]).map(q=>shuffleOptions(q));
   }catch(e){QL=[];}
   if(!QL.length){
     document.getElementById('quiz-content').style.display='none';
@@ -141,6 +155,37 @@ async function boot(){
     return;
   }
   qi=0;score=0;loadQ();
+}
+
+// Prémium kapu: a szint a prémium része, előfizetés nélkül nem játszható.
+function showPremiumGate(){
+  const enabled=window.QH_PREMIUM_ENABLED===true;
+  document.getElementById('q-premium-txt').innerHTML=enabled
+    ?`A(z) <strong style="color:var(--text)">${QH.esc(SUB.name)}</strong> 1. szintje ingyenes kóstoló volt — a többi ${qhLevels(SUB.id)-1} szint a <strong style="color:var(--gold)">Prémium</strong> előfizetés része.`
+    :`A(z) <strong style="color:var(--text)">${QH.esc(SUB.name)}</strong> további szintjei a hamarosan induló <strong style="color:var(--gold)">Prémium</strong> csomag részei. Az 1. szint addig is ingyen játszható!`;
+  let b=enabled?`<a class="btn-gold" href="/#premium">👑 Prémium részletei →</a>`:'';
+  b+=`<a class="btn-o" href="kategoria-${CAT.id}">Szinttérkép</a>`;
+  document.getElementById('q-premium-ra').innerHTML=b;
+  document.getElementById('q-premium').style.display='block';
+}
+
+// Teljesítés utáni prémium ajánlat: a legjobb pillanat, amikor valaki végigvitt egy alkategóriát.
+function upsellHtml(){
+  const target=QH_UPSELL[SUB.id]||QH_UPSELL_DEFAULT;
+  const ps=qhFindSub(target);if(!ps)return '';
+  const pc=qhFindCat(QH_SUB_TO_CAT[target]);
+  const access=QH.hasPremiumAccess();
+  const sub=access?'Neked már elérhető — vágj bele!'
+    :(window.QH_PREMIUM_ENABLED?'Az 1. szint ingyen kipróbálható.':'Az 1. szint ingyen kipróbálható — a teljes csomag hamarosan.');
+  return `<a class="upsell" href="kviz?sub=${ps.id}&szint=1">
+    <span class="upsell-ico">${ps.icon}</span>
+    <span class="upsell-body">
+      <span class="prem-badge">👑 Prémium</span>
+      <span class="upsell-title">Következő kihívás: ${QH.esc(ps.name)}</span>
+      <span class="upsell-sub">${QH.esc(pc?.name||'')} · ${sub}</span>
+    </span>
+    <span class="upsell-go">→</span>
+  </a>`;
 }
 
 // Válaszok megkeverése kérdésenként, az 'a' index követésével
@@ -244,10 +289,11 @@ async function showResult(){
     document.getElementById('rm').textContent=score===QL.length?'Hibátlan! Zseniális!':'Szép munka!';
     const subIdx=CAT.subs.indexOf(SUB);
     let extra='';
-    if(advanced&&LEVEL===R.UNLOCK_AT_LEVEL&&subIdx<CAT.subs.length-1)
+    const nextSub=CAT.subs[subIdx+1];
+    if(advanced&&LEVEL===R.UNLOCK_AT_LEVEL&&nextSub&&!nextSub.premium&&!CAT.premium)
       extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🔓 Új alkategória feloldva: ${CAT.subs[subIdx+1].icon} ${CAT.subs[subIdx+1].name}!</div>`;
     if(advanced&&LEVEL===qhLevels(SUB.id))
-      extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🏆 Az egész alkategóriát teljesítetted!</div>`;
+      extra=`<div style="margin-top:0.8rem;color:var(--gold);font-size:0.9rem;">🏆 Az egész alkategóriát teljesítetted!</div>`+(SUB.premium?'':upsellHtml());
     rp.insertAdjacentHTML('afterend',extra);
     if(!QH.user){
       // Vendég kedvcsináló vége: a folytatáshoz regisztráció kell
@@ -255,7 +301,12 @@ async function showResult(){
       btns+=`<a class="btn-p" href="/#register">Ingyenes regisztráció →</a>`;
       btns+=`<a class="btn-o" href="kategoria-${CAT.id}">Szinttérkép</a>`;
     }else{
-      if(LEVEL<qhLevels(SUB.id))btns+=`<a class="btn-p" href="kviz?sub=${SUB.id}&szint=${LEVEL+1}">Következő szint →</a>`;
+      if(LEVEL<qhLevels(SUB.id)&&QH.isPremiumLocked(SUB.id,LEVEL+1)){
+        // Prémium kóstoló vége: a 2. szinttől előfizetés kell
+        rp.insertAdjacentHTML('afterend',`<div style="margin-top:0.8rem;color:var(--text-muted);font-size:0.92rem;">👑 A 2. szinttől ez az alkategória a <strong style="color:var(--gold)">Prémium</strong> része${window.QH_PREMIUM_ENABLED?'.':' — hamarosan érkezik!'}</div>`);
+        if(window.QH_PREMIUM_ENABLED)btns+=`<a class="btn-gold" href="/#premium">👑 Prémium részletei →</a>`;
+      }
+      else if(LEVEL<qhLevels(SUB.id))btns+=`<a class="btn-p" href="kviz?sub=${SUB.id}&szint=${LEVEL+1}">Következő szint →</a>`;
       btns+=`<a class="btn-o" href="kategoria-${CAT.id}">Szinttérkép</a>`;
     }
   }else{

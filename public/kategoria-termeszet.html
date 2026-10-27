@@ -137,6 +137,22 @@
         <div class="sub-lock-info" id="substat-termeszet-novenyek"></div>
       </div>
       <div class="lvl-row" id="sublvl-termeszet-novenyek"><noscript>A szinttérképhez JavaScript szükséges.</noscript></div>
+    </div>
+    <div class="sub-card unlocked premium" id="subcard-termeszet-dinoszauruszok">
+      <div class="sub-head">
+        <span class="sub-icon">🦖</span>
+        <div class="sub-name">Dinoszauruszok<small>Az őskor óriásai. 10 szint, szintenként 5 kérdés — az 1. szint ingyenes.</small></div>
+        <div class="sub-lock-info" id="substat-termeszet-dinoszauruszok"></div>
+      </div>
+      <div class="lvl-row" id="sublvl-termeszet-dinoszauruszok"><noscript>A szinttérképhez JavaScript szükséges.</noscript></div>
+    </div>
+    <div class="sub-card unlocked premium" id="subcard-termeszet-veszelyes">
+      <div class="sub-head">
+        <span class="sub-icon">🐍</span>
+        <div class="sub-name">Veszélyes állatok<small>Mérgek, fogak, karmok. 10 szint, szintenként 5 kérdés — az 1. szint ingyenes.</small></div>
+        <div class="sub-lock-info" id="substat-termeszet-veszelyes"></div>
+      </div>
+      <div class="lvl-row" id="sublvl-termeszet-veszelyes"><noscript>A szinttérképhez JavaScript szükséges.</noscript></div>
     </div></div>
 </div>
 
@@ -159,28 +175,8 @@
 <script src="js/qh.js"></script>
 <script>
 (async function(){
-  const cat=QH_CATALOG.find(c=>c.id==='termeszet');
   await QH.init();
-  cat.subs.forEach((s,idx)=>{
-    const unlocked=QH.isSubUnlocked(cat,idx);
-    const lvl=QH.getLevel(s.id);
-    const L=qhLevels(s.id);
-    const card=document.getElementById('subcard-'+s.id);
-    const stat=document.getElementById('substat-'+s.id);
-    if(!unlocked){
-      card.classList.remove('unlocked');card.classList.add('locked');
-      stat.innerHTML='🔒 Feloldás: „'+cat.subs[idx-1].name+'" '+QH_RULES.UNLOCK_AT_LEVEL+'. szint';
-    }else if(lvl>=L){ stat.outerHTML='<div class="sub-done-badge">✓ Teljesítve</div>'; }
-    else{ stat.textContent=lvl+' / '+L+' szint'; stat.style.color='var(--text-muted)'; }
-    let h='';
-    for(let n=1;n<=L;n++){
-      if(!unlocked){h+='<span class="lvl lock">🔒</span>';continue;}
-      if(n<=lvl)h+='<a class="lvl done" href="kviz?sub='+s.id+'&szint='+n+'">'+n+'<span class="lico">✓</span></a>';
-      else if(n===lvl+1)h+='<a class="lvl next" href="kviz?sub='+s.id+'&szint='+n+'">'+n+'</a>';
-      else h+='<span class="lvl lock">'+n+'</span>';
-    }
-    document.getElementById('sublvl-'+s.id).innerHTML=h;
-  });
+  QH.renderLevelMap('termeszet');
 })();
 </script>
 </body>

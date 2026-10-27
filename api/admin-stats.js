@@ -95,9 +95,9 @@ export default async function handler(req, res) {
       created_at: p.created_at
     }));
 
-    // Becsült havi bevétel (aktív előfizetők × 2499 Ft)
+    // Becsült havi bevétel (aktív előfizetők × 1300 Ft)
     const activeSubzz = profiles?.filter(p => p.is_premium && p.subscription_status === 'active').length || 0;
-    const monthlyRevenue = activeSubzz * 2499;
+    const monthlyRevenue = activeSubzz * 1300;
 
     return res.status(200).json({
       stats: {

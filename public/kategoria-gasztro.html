@@ -137,6 +137,22 @@
         <div class="sub-lock-info" id="substat-gasztro-alapanyagok"></div>
       </div>
       <div class="lvl-row" id="sublvl-gasztro-alapanyagok"><noscript>A szinttérképhez JavaScript szükséges.</noscript></div>
+    </div>
+    <div class="sub-card unlocked premium" id="subcard-gasztro-fuszerek">
+      <div class="sub-head">
+        <span class="sub-icon">🌶️</span>
+        <div class="sub-name">Fűszerek és hozzávalók<small>Ízek, illatok, eredetük. 10 szint, szintenként 5 kérdés — az 1. szint ingyenes.</small></div>
+        <div class="sub-lock-info" id="substat-gasztro-fuszerek"></div>
+      </div>
+      <div class="lvl-row" id="sublvl-gasztro-fuszerek"><noscript>A szinttérképhez JavaScript szükséges.</noscript></div>
+    </div>
+    <div class="sub-card unlocked premium" id="subcard-gasztro-utcai">
+      <div class="sub-head">
+        <span class="sub-icon">🌯</span>
+        <div class="sub-name">A világ utcai ételei<small>Taco, kebab, lángos és társaik. 10 szint, szintenként 5 kérdés — az 1. szint ingyenes.</small></div>
+        <div class="sub-lock-info" id="substat-gasztro-utcai"></div>
+      </div>
+      <div class="lvl-row" id="sublvl-gasztro-utcai"><noscript>A szinttérképhez JavaScript szükséges.</noscript></div>
     </div></div>
 </div>
 
@@ -159,28 +175,8 @@
 <script src="js/qh.js"></script>
 <script>
 (async function(){
-  const cat=QH_CATALOG.find(c=>c.id==='gasztro');
   await QH.init();
-  cat.subs.forEach((s,idx)=>{
-    const unlocked=QH.isSubUnlocked(cat,idx);
-    const lvl=QH.getLevel(s.id);
-    const L=qhLevels(s.id);
-    const card=document.getElementById('subcard-'+s.id);
-    const stat=document.getElementById('substat-'+s.id);
-    if(!unlocked){
-      card.classList.remove('unlocked');card.classList.add('locked');
-      stat.innerHTML='🔒 Feloldás: „'+cat.subs[idx-1].name+'" '+QH_RULES.UNLOCK_AT_LEVEL+'. szint';
-    }else if(lvl>=L){ stat.outerHTML='<div class="sub-done-badge">✓ Teljesítve</div>'; }
-    else{ stat.textContent=lvl+' / '+L+' szint'; stat.style.color='var(--text-muted)'; }
-    let h='';
-    for(let n=1;n<=L;n++){
-      if(!unlocked){h+='<span class="lvl lock">🔒</span>';continue;}
-      if(n<=lvl)h+='<a class="lvl done" href="kviz?sub='+s.id+'&szint='+n+'">'+n+'<span class="lico">✓</span></a>';
-      else if(n===lvl+1)h+='<a class="lvl next" href="kviz?sub='+s.id+'&szint='+n+'">'+n+'</a>';
-      else h+='<span class="lvl lock">'+n+'</span>';
-    }
-    document.getElementById('sublvl-'+s.id).innerHTML=h;
-  });
+  QH.renderLevelMap('gasztro');
 })();
 </script>
 </body>

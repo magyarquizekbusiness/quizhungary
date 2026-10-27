@@ -67,8 +67,54 @@ window.QH_SUB_LEVELS = {
   'technika-jatekok': 10
 };
 
+// Prémium alkategóriák szintszáma. Külön objektum, hogy a sync-levels szkript
+// (ami a QH_SUB_LEVELS-t a nyilvános kérdésfájlokból írja) ne írja felül:
+// a prémium kérdések 2. szinttől nem nyilvánosak, a szerver adja őket (api/premium-questions).
+window.QH_PREMIUM_LEVELS = {
+  'foldrajz-zaszlok': 10,
+  'tudomany-matematika': 10,
+  'tudomany-foldtudomany': 10,
+  'termeszet-dinoszauruszok': 10,
+  'termeszet-veszelyes': 10,
+  'tortenelem-hadtortenet': 10,
+  'tortenelem-uralkodok': 10,
+  'sport-forma1': 10,
+  'sport-vilagbajnoksagok': 10,
+  'film-szuperhosok': 10,
+  'film-szineszek': 10,
+  'zene-filmzenek': 10,
+  'zene-eurovizio': 10,
+  'irodalom-krimi': 10,
+  'irodalom-mesek': 10,
+  'technika-ai': 10,
+  'technika-repules': 10,
+  'foldrajz-telepulesek': 10,
+  'gasztro-fuszerek': 10,
+  'gasztro-utcai': 10,
+  'mitologia-gorog': 10,
+  'mitologia-romai': 10,
+  'mitologia-skandinav': 10,
+  'mitologia-egyiptomi': 10,
+  'mitologia-magyar': 10,
+  'muveszet-festeszet': 10,
+  'muveszet-epiteszet': 10,
+  'muveszet-szobraszat': 10,
+  'muveszet-divat': 10,
+  'muveszet-muzeumok': 10,
+  'nyelv-szolasok': 10,
+  'nyelv-eredet': 10,
+  'nyelv-helyesiras': 10,
+  'nyelv-idegen': 10,
+  'nyelv-tajszavak': 10,
+  'retro-80as': 10,
+  'retro-90es': 10,
+  'retro-teve': 10,
+  'retro-mesek': 10,
+  'retro-jatekok': 10
+};
+
 // Egy alkategória tényleges szintszáma (ennyi van kész kérdésekkel).
-window.qhLevels = function(subId){ return window.QH_SUB_LEVELS[subId] || 0; };
+window.qhLevels = function(subId){ return window.QH_PREMIUM_LEVELS[subId] || window.QH_SUB_LEVELS[subId] || 0; };
 
 window.QH_CATALOG = [
   {id:'foldrajz', name:'Földrajz', icon:'🌍', desc:'Országok, óceánok, hegyek és városok a nagyvilágból.', subs:[
@@ -143,6 +189,153 @@ window.QH_CATALOG = [
   ]}
 ];
 
-// Segéd: alkategória-id → fő kategória
+// ── PRÉMIUM ─────────────────────────────────────────────────────────────────
+// ⚠️ PRÉMIUM KAPCSOLÓ: false = a prémium tartalom „Hamarosan” jelzéssel látszik,
+// csak az 1. szintek játszhatók (a meglévő prémium/admin fiókok mindent elérnek).
+// true = élesben megvásárolható. Ezt használja a főoldal is.
+window.QH_PREMIUM_ENABLED = true;
+
+// FONTOS: a QH_CATALOG szándékosan csak az ingyenes tartalmat tartalmazza —
+// a napi kvíz, párbaj, ivós kvíz stb. innen húz kérdéseket, oda prémium nem kerülhet.
+// Prémium fő kategóriák (saját kategóriaoldal, nincs feloldási lánc):
+window.QH_PREMIUM_CATALOG = [
+  {id:'nyelv', name:'Magyar nyelv és szólások', icon:'🗣️', premium:true, desc:'Szólások, szavak eredete, helyesírás és nyelvi érdekességek.', subs:[
+    {id:'nyelv-szolasok', name:'Szólások és közmondások', icon:'💬', premium:true, desc:'Mit jelent, hogyan folytatódik?'},
+    {id:'nyelv-eredet', name:'Szavak eredete', icon:'📜', premium:true, desc:'Honnan jöttek a szavaink?'},
+    {id:'nyelv-helyesiras', name:'Helyesírás', icon:'✍️', premium:true, desc:'Egybe vagy külön, j vagy ly?'},
+    {id:'nyelv-idegen', name:'Idegen szavak', icon:'🌐', premium:true, desc:'Mit jelent magyarul?'},
+    {id:'nyelv-tajszavak', name:'Tájszavak és nyelvi érdekességek', icon:'🧺', premium:true, desc:'Krumpli vagy pityóka?'}
+  ]},
+  {id:'retro', name:'Retró és nosztalgia', icon:'📼', premium:true, desc:'A 80-as, 90-es évek, régi tévéműsorok, mesék és csemegék.', subs:[
+    {id:'retro-80as', name:'80-as évek', icon:'🕹️', premium:true, desc:'Rubik-kocka, walkman, Commodore.'},
+    {id:'retro-90es', name:'90-es évek', icon:'💾', premium:true, desc:'Tamagocsi, Nokia, Spice Girls.'},
+    {id:'retro-teve', name:'Régi tévéműsorok és reklámok', icon:'📺', premium:true, desc:'A képernyő régi kedvencei.'},
+    {id:'retro-mesek', name:'Gyerekkori mesék és rajzfilmek', icon:'🧸', premium:true, desc:'Esti mese és szombati rajzfilm.'},
+    {id:'retro-jatekok', name:'Játékok és csemegék', icon:'🍬', premium:true, desc:'Ami a gyerekszobában és a zsebben volt.'}
+  ]},
+  {id:'mitologia', name:'Mitológia és vallás', icon:'⚡', premium:true, desc:'Görög, római, skandináv és egyiptomi istenek, magyar mondák.', subs:[
+    {id:'mitologia-gorog', name:'Görög mitológia', icon:'🏛️', premium:true, desc:'Az Olümposz istenei és hősei.'},
+    {id:'mitologia-romai', name:'Római mitológia', icon:'🦅', premium:true, desc:'Jupitertől Romulusig.'},
+    {id:'mitologia-skandinav', name:'Skandináv mitológia', icon:'🔨', premium:true, desc:'Odin, Thor és Asgard.'},
+    {id:'mitologia-egyiptomi', name:'Egyiptomi mitológia', icon:'☀️', premium:true, desc:'Ré, Ozirisz és a piramisok istenei.'},
+    {id:'mitologia-magyar', name:'Magyar mondák és regék', icon:'🦌', premium:true, desc:'Csodaszarvas, turul és Csaba királyfi.'}
+  ]},
+  {id:'muveszet', name:'Művészet és építészet', icon:'🎨', premium:true, desc:'Festmények, épületek, szobrok, divat és a világ nagy múzeumai.', subs:[
+    {id:'muveszet-festeszet', name:'Festészet', icon:'🖼️', premium:true, desc:'Mesterművek és festők.'},
+    {id:'muveszet-epiteszet', name:'Építészet', icon:'🏰', premium:true, desc:'Stílusok és híres épületek.'},
+    {id:'muveszet-szobraszat', name:'Szobrászat', icon:'🗿', premium:true, desc:'Márványtól a bronzig.'},
+    {id:'muveszet-divat', name:'Divat és design', icon:'👗', premium:true, desc:'Divatházak, tervezők, ikonikus tárgyak.'},
+    {id:'muveszet-muzeumok', name:'Múzeumok és híres művek', icon:'🏛️', premium:true, desc:'Hol látható a Mona Lisa?'}
+  ]}
+];
+// Prémium alkategóriák a meglévő (ingyenes) fő kategóriákon belül — a lista végére kerülnek,
+// és nem részei a feloldási láncnak.
+window.QH_PREMIUM_EXTRA_SUBS = {
+  foldrajz: [
+    {id:'foldrajz-zaszlok', name:'Zászlók és címerek', icon:'🚩', premium:true, desc:'Országok zászlói és címerei.'},
+    {id:'foldrajz-telepulesek', name:'Magyar települések', icon:'🏘️', premium:true, desc:'Városok, falvak és nevük titkai.'}
+  ],
+  tortenelem: [
+    {id:'tortenelem-hadtortenet', name:'Hadtörténet', icon:'🛡️', premium:true, desc:'Csaták, hadvezérek, fegyverek.'},
+    {id:'tortenelem-uralkodok', name:'Híres uralkodók és vezetők', icon:'👑', premium:true, desc:'Királyok, császárok, államférfiak.'}
+  ],
+  tudomany: [
+    {id:'tudomany-matematika', name:'Matematika', icon:'📐', premium:true, desc:'Számok, alakzatok, matematikusok.'},
+    {id:'tudomany-foldtudomany', name:'Földtudomány és időjárás', icon:'🌦️', premium:true, desc:'Vulkánok, kőzetek, felhők és viharok.'}
+  ],
+  sport: [
+    {id:'sport-forma1', name:'Forma-1 és motorsport', icon:'🏎️', premium:true, desc:'Pilóták, csapatok, pályák.'},
+    {id:'sport-vilagbajnoksagok', name:'Világbajnokságok', icon:'🏆', premium:true, desc:'A nagy tornák legendás pillanatai.'}
+  ],
+  film: [
+    {id:'film-szuperhosok', name:'Szuperhősök és sci-fi', icon:'🦸', premium:true, desc:'Marvel, DC és a galaxis távoli vidékei.'},
+    {id:'film-szineszek', name:'Híres színészek és rendezők', icon:'🎭', premium:true, desc:'Sztárok és alkotók.'}
+  ],
+  zene: [
+    {id:'zene-filmzenek', name:'Filmzenék és musicalek', icon:'🎼', premium:true, desc:'A vászon és a színpad dallamai.'},
+    {id:'zene-eurovizio', name:'Eurovízió', icon:'🎙️', premium:true, desc:'Győztesek, dalok és rekordok.'}
+  ],
+  irodalom: [
+    {id:'irodalom-krimi', name:'Krimi', icon:'🔍', premium:true, desc:'Detektívek, rejtélyek, szerzők.'},
+    {id:'irodalom-mesek', name:'Mesék', icon:'🧚', premium:true, desc:'Népmesék és klasszikus mesék.'}
+  ],
+  gasztro: [
+    {id:'gasztro-fuszerek', name:'Fűszerek és hozzávalók', icon:'🌶️', premium:true, desc:'Ízek, illatok, eredetük.'},
+    {id:'gasztro-utcai', name:'A világ utcai ételei', icon:'🌯', premium:true, desc:'Taco, kebab, lángos és társaik.'}
+  ],
+  termeszet: [
+    {id:'termeszet-dinoszauruszok', name:'Dinoszauruszok', icon:'🦖', premium:true, desc:'Az őskor óriásai.'},
+    {id:'termeszet-veszelyes', name:'Veszélyes állatok', icon:'🐍', premium:true, desc:'Mérgek, fogak, karmok.'}
+  ],
+  technika: [
+    {id:'technika-ai', name:'Mesterséges intelligencia', icon:'🤖', premium:true, desc:'Gépi tanulástól a chatbotokig.'},
+    {id:'technika-repules', name:'Repülés', icon:'✈️', premium:true, desc:'Repülőgépek, pilóták, rekordok.'}
+  ]
+};
+
+// Teljes nézet (ingyenes + prémium): a kategóriaoldalak és a kvízoldal ezt használja.
+window.QH_ALL_CATS = QH_CATALOG.map(c => Object.assign({}, c, {
+  subs: c.subs.concat(QH_PREMIUM_EXTRA_SUBS[c.id] || [])
+})).concat(QH_PREMIUM_CATALOG);
+window.qhFindCat = function(catId){ return QH_ALL_CATS.find(c => c.id === catId) || null; };
+window.qhIsPremiumSub = function(subId){ return Object.prototype.hasOwnProperty.call(QH_PREMIUM_LEVELS, subId); };
+
+// Teljesítés utáni ajánlat: melyik ingyenes alkategória után melyik prémiumot kínáljuk.
+window.QH_UPSELL_DEFAULT = 'nyelv-szolasok';
+window.QH_UPSELL = {
+  'foldrajz-magyarorszag':'foldrajz-telepulesek',
+  'foldrajz-europa':'foldrajz-zaszlok',
+  'foldrajz-fovarosok':'foldrajz-zaszlok',
+  'foldrajz-oceanok':'tudomany-foldtudomany',
+  'foldrajz-vilag':'tudomany-foldtudomany',
+  'tortenelem-magyar':'tortenelem-uralkodok',
+  'tortenelem-okor':'mitologia-gorog',
+  'tortenelem-kozepkor':'tortenelem-hadtortenet',
+  'tortenelem-ujkor':'tortenelem-uralkodok',
+  'tortenelem-20szazad':'tortenelem-hadtortenet',
+  'tudomany-emberitest':'termeszet-veszelyes',
+  'tudomany-biologia':'termeszet-dinoszauruszok',
+  'tudomany-kemia':'gasztro-fuszerek',
+  'tudomany-fizika':'tudomany-matematika',
+  'tudomany-csillagaszat':'tudomany-foldtudomany',
+  'sport-labdarugas':'sport-vilagbajnoksagok',
+  'sport-olimpia':'sport-vilagbajnoksagok',
+  'sport-magyar':'sport-vilagbajnoksagok',
+  'sport-csapat':'sport-vilagbajnoksagok',
+  'sport-egyeni':'sport-forma1',
+  'film-klasszikus':'film-szineszek',
+  'film-modern':'film-szuperhosok',
+  'film-animacios':'retro-mesek',
+  'film-sorozatok':'retro-teve',
+  'film-magyar':'film-szineszek',
+  'zene-pop':'zene-eurovizio',
+  'zene-rock':'retro-80as',
+  'zene-magyar':'zene-eurovizio',
+  'zene-klasszikus':'zene-filmzenek',
+  'zene-hangszerek':'zene-filmzenek',
+  'irodalom-magyar':'mitologia-magyar',
+  'irodalom-vilag':'irodalom-krimi',
+  'irodalom-kolteszet':'nyelv-szolasok',
+  'irodalom-ifjusagi':'irodalom-mesek',
+  'irodalom-drama':'mitologia-gorog',
+  'gasztro-magyar':'gasztro-fuszerek',
+  'gasztro-vilag':'gasztro-utcai',
+  'gasztro-edessegek':'retro-jatekok',
+  'gasztro-italok':'gasztro-fuszerek',
+  'gasztro-alapanyagok':'gasztro-fuszerek',
+  'termeszet-emlosok':'termeszet-veszelyes',
+  'termeszet-madarak':'nyelv-szolasok',
+  'termeszet-tenger':'termeszet-veszelyes',
+  'termeszet-hullok':'termeszet-dinoszauruszok',
+  'termeszet-novenyek':'nyelv-tajszavak',
+  'technika-szamitastechnika':'technika-ai',
+  'technika-talalmanyok':'technika-repules',
+  'technika-autok':'sport-forma1',
+  'technika-urkutatas':'technika-repules',
+  'technika-jatekok':'retro-jatekok'
+};
+
+// Segéd: alkategória-id → fő kategória (ingyenes + prémium)
 window.QH_SUB_TO_CAT = {};
-QH_CATALOG.forEach(c => c.subs.forEach(s => { QH_SUB_TO_CAT[s.id] = c.id; }));
+QH_ALL_CATS.forEach(c => c.subs.forEach(s => { QH_SUB_TO_CAT[s.id] = c.id; }));
+window.qhFindSub = function(subId){ const c = qhFindCat(QH_SUB_TO_CAT[subId]); return c ? c.subs.find(s => s.id === subId) : null; };

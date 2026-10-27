@@ -1085,12 +1085,13 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     <div class="premium-hero">
       <div style="font-size:2.5rem;margin-bottom:0.5rem;">✨</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;">QuizHungary Premium</div>
-      <div style="margin:1rem 0;"><span class="premium-price">2 499 Ft</span><span style="color:var(--text-muted);font-size:0.9rem;">/hó</span></div>
+      <div style="margin:1rem 0;"><span class="premium-price">1 300 Ft</span><span style="color:var(--text-muted);font-size:0.9rem;">/hó</span></div>
     </div>
     <div style="margin-bottom:1.5rem;">
-      <div class="premium-feat">✅ <span>20 extra prémium témakör feloldása</span></div>
-      <div class="premium-feat">✅ <span>Több mint 1000 új kérdés</span></div>
-      <div class="premium-feat">✅ <span>Hozzáférés minden jövőbeli témához</span></div>
+      <div class="premium-feat">👑 <span>4 új fő kategória: Magyar nyelv, Retró, Mitológia, Művészet</span></div>
+      <div class="premium-feat">👑 <span>20 extra alkategória (pl. Dinoszauruszok, Forma-1, Eurovízió)</span></div>
+      <div class="premium-feat">✅ <span>2000 új, ellenőrzött kérdés — feloldási sorrend nélkül, azonnal</span></div>
+      <div class="premium-feat">✅ <span>Hozzáférés minden jövőbeli prémium témához</span></div>
       <div class="premium-feat">✅ <span>Bármikor lemondható</span></div>
     </div>
     <div class="aerr" id="prem-err"></div>
@@ -1302,8 +1303,8 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
 const SURL='https://biooqabaubndamtnprha.supabase.co';
 const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpb29xYWJhdWJuZGFtdG5wcmhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTA5MzcsImV4cCI6MjA5NjQyNjkzN30.7yjkyPrOOo70ZkAUZkkvf0duTDe_y4zJj2x4r7pydzU';
 const sb=supabase.createClient(SURL,SKEY);
-// ⚠️ PRÉMIUM KAPCSOLÓ: false = kikapcsolva (teszteléshez), true = élesben
-const PREMIUM_ENABLED=false;
+// ⚠️ PRÉMIUM KAPCSOLÓ: a data/catalog.js-ben (QH_PREMIUM_ENABLED), hogy minden oldal ugyanazt lássa.
+const PREMIUM_ENABLED=window.QH_PREMIUM_ENABLED===true;
 // OpenAI kérések a Vercel proxy-n keresztül mennek — nincs szükség kulcsra itt
 
 // ── KÉRDÉSPOOL — az előre megírt szintek kérdéseiből (data/questions/*.js) ──
@@ -1895,6 +1896,17 @@ function renderTopics(){
       <div class="tn">${c.name}</div>
       <div class="tc2" style="margin-top:0.3rem;">${c.subs.length} alkategória · ${total} szint</div>
       <div style="margin-top:0.7rem;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${Math.round(done/total*100)}%;background:var(--red);"></div></div>
+      <div style="margin-top:0.35rem;font-size:0.72rem;color:${done>=total?'var(--green)':'var(--text-dim)'};letter-spacing:1px;">${done} / ${total}</div>
+    </div>`;
+  }).join('')+(window.QH_PREMIUM_CATALOG||[]).map(c=>{
+    // Prémium fő kategóriák: korona jelzés (nem lakat), az 1. szintek ingyen játszhatók
+    let done=0,total=0;c.subs.forEach(s=>{const L=qhLevels(s.id);done+=Math.min(prog[s.id]||0,L);total+=L;});
+    return `<div class="tc" onclick="location.href='kategoria-${c.id}'" style="border-color:rgba(245,197,24,0.3);">
+      <span class="premium-badge" style="position:absolute;top:0.7rem;right:0.7rem;">👑 Prémium</span>
+      <span class="ti">${c.icon}</span>
+      <div class="tn">${c.name}</div>
+      <div class="tc2" style="margin-top:0.3rem;">${c.subs.length} alkategória · ${total} szint</div>
+      <div style="margin-top:0.7rem;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;width:${Math.round(done/total*100)}%;background:var(--gold);"></div></div>
       <div style="margin-top:0.35rem;font-size:0.72rem;color:${done>=total?'var(--green)':'var(--text-dim)'};letter-spacing:1px;">${done} / ${total}</div>
     </div>`;
   }).join('');
@@ -2823,7 +2835,7 @@ async function startCheckout(){
 function checkPaymentRedirect(){
   const params=new URLSearchParams(window.location.search);
   if(params.get('payment')==='success'){
-    toast('🎉 Sikeres előfizetés! A prémium témák hamarosan elérhetők.','ok');
+    toast('🎉 Sikeres előfizetés! A prémium témák már elérhetők.','ok');
     // Reload profile after a moment to get updated premium status
     setTimeout(async()=>{if(CU){await loadP();renderTopics();navUser();}},2000);
     window.history.replaceState({},'',window.location.pathname);
@@ -2894,7 +2906,7 @@ const INFO_CONTENT={
     <p><strong>Ingyenes a játék?</strong><br>Igen, a legtöbb témakör teljesen ingyenesen játszható regisztráció után. A prémium előfizetés további 20 témakört old fel.</p>
     <p style="margin-top:1rem;"><strong>Miért kell regisztrálni?</strong><br>A regisztráció lehetővé teszi a pontjaid mentését, a ranglistára kerülést és a streakek követését.</p>
     <p style="margin-top:1rem;"><strong>Hogyan működik a pontozás?</strong><br>A pontok a nehézségi szinttől függenek: könnyű 60, közepes 100, nehéz 160 pont kérdésenként. Ha minden kérdést eltalálsz, +10% bónuszt kapsz!</p>
-    <p style="margin-top:1rem;"><strong>Mi a prémium előfizetés?</strong><br>Havi 2 499 Ft-ért feloldhatsz 20 extra témakört és több mint 1000 új kérdést. Bármikor lemondható.</p>
+    <p style="margin-top:1rem;"><strong>Mi a prémium előfizetés?</strong><br>Havi 1 300 Ft-ért feloldhatsz 4 új fő kategóriát, 20 extra alkategóriát és 2000 új kérdést. Bármikor lemondható.</p>
     <p style="margin-top:1rem;"><strong>Hogyan mondhatom le az előfizetést?</strong><br>A profilodban az "Előfizetés kezelése" gombra kattintva bármikor lemondhatod. A hozzáférés a fizetési időszak végéig megmarad.</p>
     <p style="margin-top:1rem;"><strong>Honnan származnak a kérdések?</strong><br>A kérdéseket mesterséges intelligencia generálja, így minden játék egyedi és változatos.</p>
   `},

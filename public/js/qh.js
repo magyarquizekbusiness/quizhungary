@@ -141,7 +141,7 @@
     if(user&&sb){
       try{
         if(advanced)await sb.from('level_progress').upsert({user_id:user.id,sub_id:subId,completed_level:prog[subId]},{onConflict:'user_id,sub_id'});
-        const cat=QH_CATALOG.find(c=>c.id===QH_SUB_TO_CAT[subId]);
+        const cat=qhFindCat(QH_SUB_TO_CAT[subId]);
         const sub=cat?.subs.find(s=>s.id===subId);
         await sb.from('scores').insert({user_id:user.id,topic:(cat?.name||'Kvíz')+' – '+(sub?.name||subId),points:pts});
         await sb.from('profiles').update({last_played_date:new Date().toISOString().split('T')[0]}).eq('id',user.id);
@@ -155,9 +155,17 @@
   // ── Feloldási szabályok ────────────────────────────────────────────────────
   function isSubUnlocked(cat,subIndex){
     if(subIndex===0)return true;
+    // A prémium tartalom nincs a feloldási lánc mögött: aki fizet, azonnal elérje.
+    if(cat.premium||cat.subs[subIndex]?.premium)return true;
     return getLevel(cat.subs[subIndex-1].id)>=QH_RULES.UNLOCK_AT_LEVEL;
   }
   function isLevelUnlocked(subId,level){return level<=getLevel(subId)+1;}
+  // Prémium szint: prémium alkategória 2. szinttől. Az 1. szint ingyenes kóstoló.
+  function isPremiumLevel(subId,level){return qhIsPremiumSub(subId)&&level>1;}
+  // Elérheti-e a prémium szinteket (előfizető, meghívásért kapott prémium vagy admin).
+  function hasPremiumAccess(){return isPremium()||profile?.is_admin===true;}
+  function isPremiumLocked(subId,level){return isPremiumLevel(subId,level)&&!hasPremiumAccess();}
+
   function catProgress(cat){ // teljesített szintek / összes
     let done=0,total=0;cat.subs.forEach(s=>{const L=qhLevels(s.id);done+=Math.min(getLevel(s.id),L);total+=L;});
     return {done,total};
@@ -181,6 +189,74 @@
     const bank=(window.QH_QUESTIONS||{})[subId];
     if(!bank)return null;
     return bank[level-1]||null;
+  }
+
+  // Egy szint kérdései, bárhonnan: ingyenes → nyilvános fájl; prémium 1. szint →
+  // nyilvános előnézet (premium-preview.js); prémium 2+. szint → védett szerver végpont.
+  async function loadLevelQuestions(subId,level){
+    if(!qhIsPremiumSub(subId)){
+      await loadQuestions(QH_SUB_TO_CAT[subId]);
+      return getLevelQuestions(subId,level);
+    }
+    if(level===1){
+      await loadQuestions('premium-preview');
+      return getLevelQuestions(subId,1);
+    }
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session?.access_token)throw new Error('Bejelentkezés szükséges');
+    const r=await fetch('/api/premium-questions?sub='+encodeURIComponent(subId)+'&level='+level,{
+      headers:{Authorization:'Bearer '+session.access_token}
+    });
+    if(!r.ok)throw new Error('premium '+r.status);
+    const j=await r.json();
+    return Array.isArray(j.questions)?j.questions:null;
+  }
+
+  // ── Prémium jelzés (korona, NEM lakat — a lakat a haladással feloldható tartalomé) ──
+  function premiumBadge(){return '<span class="prem-badge">👑 Prémium</span>';}
+  function premiumStatusText(){
+    if(hasPremiumAccess())return 'Neked elérhető';
+    return window.QH_PREMIUM_ENABLED?'1. szint ingyen':'1. szint ingyen · hamarosan';
+  }
+
+  // ── Szinttérkép egy kategóriaoldalon (a statikus sub-card-ok kitöltése) ──────
+  function renderLevelMap(catId){
+    const cat=qhFindCat(catId);if(!cat)return;
+    const access=hasPremiumAccess();
+    const banner=document.getElementById('prem-banner');
+    if(banner&&!access)banner.style.display='block';
+    cat.subs.forEach((s,idx)=>{
+      const card=document.getElementById('subcard-'+s.id);
+      const stat=document.getElementById('substat-'+s.id);
+      const row=document.getElementById('sublvl-'+s.id);
+      if(!card||!stat||!row)return;
+      const unlocked=isSubUnlocked(cat,idx);
+      const lvl=getLevel(s.id);
+      const L=qhLevels(s.id);
+      if(s.premium)card.classList.add('premium');
+      if(!unlocked){
+        card.classList.remove('unlocked');card.classList.add('locked');
+        stat.innerHTML='🔒 Feloldás: „'+esc(cat.subs[idx-1].name)+'" '+QH_RULES.UNLOCK_AT_LEVEL+'. szint';
+      }else if(lvl>=L){ stat.outerHTML='<div class="sub-done-badge">✓ Teljesítve</div>'; }
+      else if(s.premium){
+        stat.innerHTML=premiumBadge()+'<span>'+(access?lvl+' / '+L+' szint':premiumStatusText())+'</span>';
+      }else{ stat.textContent=lvl+' / '+L+' szint'; stat.style.color='var(--text-muted)'; }
+      let h='';
+      for(let n=1;n<=L;n++){
+        if(!unlocked){h+='<span class="lvl lock">🔒</span>';continue;}
+        if(s.premium&&n>1&&!access){
+          // Prémium szint: korona, és ha már megvásárolható, a prémium ajánlatra visz
+          h+=window.QH_PREMIUM_ENABLED
+            ?'<a class="lvl prem" href="/#premium" title="Prémium szint">'+n+'<span class="lico">👑</span></a>'
+            :'<span class="lvl prem" title="Prémium szint — hamarosan">'+n+'<span class="lico">👑</span></span>';
+          continue;
+        }
+        if(n<=lvl)h+='<a class="lvl done" href="kviz?sub='+s.id+'&szint='+n+'">'+n+'<span class="lico">✓</span></a>';
+        else if(n===lvl+1)h+='<a class="lvl next" href="kviz?sub='+s.id+'&szint='+n+'">'+n+'</a>';
+        else h+='<span class="lvl lock">'+n+'</span>';
+      }
+      row.innerHTML=h;
+    });
   }
 
   // ── Nav / UI ───────────────────────────────────────────────────────────────
@@ -265,6 +341,7 @@
   }
 
   window.QH={init,getLevel,completeLevel,isSubUnlocked,isLevelUnlocked,catProgress,
-    loadQuestions,loadAllQuestions,getLevelQuestions,toast,qs,markStreak,
+    loadQuestions,loadAllQuestions,getLevelQuestions,loadLevelQuestions,toast,qs,markStreak,
+    isPremiumLevel,isPremiumLocked,hasPremiumAccess,premiumBadge,premiumStatusText,renderLevelMap,esc,
     get user(){return user;},get sb(){return sb;}};
 })();

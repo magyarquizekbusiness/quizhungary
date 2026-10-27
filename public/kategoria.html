@@ -24,7 +24,7 @@
 // Régi ?id= linkek átirányítása az új, statikus kategóriaoldalakra.
 (function(){
   var id=new URLSearchParams(location.search).get('id');
-  var valid=['foldrajz','tortenelem','tudomany','sport','film','zene','irodalom','gasztro','termeszet','technika'];
+  var valid=['foldrajz','tortenelem','tudomany','sport','film','zene','irodalom','gasztro','termeszet','technika','nyelv','retro','mitologia','muveszet'];
   location.replace(valid.indexOf(id)>=0 ? 'kategoria-'+id : 'kategoriak');
 })();
 </script>

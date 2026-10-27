@@ -1094,6 +1094,10 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
       <div class="premium-feat">✅ <span>Hozzáférés minden jövőbeli prémium témához</span></div>
       <div class="premium-feat">✅ <span>Bármikor lemondható</span></div>
     </div>
+    <label style="display:flex;gap:0.6rem;align-items:flex-start;font-size:0.8rem;line-height:1.45;color:var(--text-muted);margin-bottom:1rem;cursor:pointer;text-align:left;">
+      <input type="checkbox" id="prem-consent" style="margin-top:0.15rem;accent-color:var(--gold);width:16px;height:16px;flex-shrink:0;cursor:pointer;">
+      <span>Elfogadom a <a href="feltetelek" target="_blank" style="color:var(--gold)">Felhasználási feltételeket</a>, kérem a prémium szolgáltatás azonnali megkezdését, és tudomásul veszem, hogy ezzel elveszítem a 14 napos elállási jogomat. A kifizetett díj nem visszatéríthető.</span>
+    </label>
     <div class="aerr" id="prem-err"></div>
     <button class="btn-gold" onclick="startCheckout()" id="prem-btn">Előfizetek →</button>
     <div style="text-align:center;font-size:0.75rem;color:var(--text-dim);margin-top:1rem;">Biztonságos fizetés Stripe-on keresztül 🔒</div>
@@ -2813,19 +2817,23 @@ async function openCustomerPortal(){
 async function startCheckout(){
   if(!PREMIUM_ENABLED){toast('A prémium még nem elérhető.','info');return;}
   if(!CU){openAuth();return;}
+  const err=document.getElementById('prem-err');
+  if(!document.getElementById('prem-consent')?.checked){
+    err.textContent='A folytatáshoz pipáld be a feltételek elfogadását.';err.className='aerr show';return;
+  }
+  err.className='aerr';
   const btn=document.getElementById('prem-btn');
   btn.disabled=true;btn.textContent='Átirányítás...';
   try{
     const res=await fetch('/api/create-checkout',{
       method:'POST',
       headers:await authHeaders(),
-      body:JSON.stringify({})
+      body:JSON.stringify({consent:true})
     });
     const data=await res.json();
     if(data.url){window.location.href=data.url;}
     else throw new Error(data.error||'Hiba');
   }catch(e){
-    const err=document.getElementById('prem-err');
     err.textContent='Hiba történt: '+e.message;err.className='aerr show';
     btn.disabled=false;btn.textContent='Előfizetek →';
   }
@@ -2906,7 +2914,7 @@ const INFO_CONTENT={
     <p><strong>Ingyenes a játék?</strong><br>Igen, a legtöbb témakör teljesen ingyenesen játszható regisztráció után. A prémium előfizetés további 20 témakört old fel.</p>
     <p style="margin-top:1rem;"><strong>Miért kell regisztrálni?</strong><br>A regisztráció lehetővé teszi a pontjaid mentését, a ranglistára kerülést és a streakek követését.</p>
     <p style="margin-top:1rem;"><strong>Hogyan működik a pontozás?</strong><br>A pontok a nehézségi szinttől függenek: könnyű 60, közepes 100, nehéz 160 pont kérdésenként. Ha minden kérdést eltalálsz, +10% bónuszt kapsz!</p>
-    <p style="margin-top:1rem;"><strong>Mi a prémium előfizetés?</strong><br>Havi 1 300 Ft-ért feloldhatsz 4 új fő kategóriát, 20 extra alkategóriát és 2000 új kérdést. Bármikor lemondható.</p>
+    <p style="margin-top:1rem;"><strong>Mi a prémium előfizetés?</strong><br>Havi 1 300 Ft-ért feloldhatsz 4 új fő kategóriát, 20 extra alkategóriát és 2000 új kérdést. Bármikor lemondható. A már kifizetett díjat nem térítjük vissza, mert a hozzáférés a fizetés után azonnal megnyílik.</p>
     <p style="margin-top:1rem;"><strong>Hogyan mondhatom le az előfizetést?</strong><br>A profilodban az "Előfizetés kezelése" gombra kattintva bármikor lemondhatod. A hozzáférés a fizetési időszak végéig megmarad.</p>
     <p style="margin-top:1rem;"><strong>Honnan származnak a kérdések?</strong><br>A kérdéseket mesterséges intelligencia generálja, így minden játék egyedi és változatos.</p>
   `},

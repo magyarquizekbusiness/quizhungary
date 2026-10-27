@@ -16,6 +16,14 @@ export default async function handler(req, res) {
   const userId = authUser.id;
   const email = authUser.email;
 
+  // Azonnali teljesítés + elállási jog elvesztésének elfogadása nélkül nem indítunk fizetést.
+  let body = req.body;
+  if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
+  if (body?.consent !== true) {
+    return res.status(400).json({ error: 'A feltételek elfogadása szükséges.' });
+  }
+  const consentAt = new Date().toISOString();
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -25,8 +33,13 @@ export default async function handler(req, res) {
       cancel_url: `${process.env.SITE_URL}/?payment=cancel`,
       client_reference_id: userId,
       customer_email: email || undefined,
-      metadata: { userId },
-      subscription_data: { metadata: { userId } },
+      metadata: { userId, consent_immediate_start: 'true', consent_at: consentAt },
+      subscription_data: { metadata: { userId, consent_immediate_start: 'true', consent_at: consentAt } },
+      custom_text: {
+        submit: {
+          message: 'A fizetéssel kéred a prémium szolgáltatás azonnali megkezdését, és tudomásul veszed, hogy ezzel elveszíted a 14 napos elállási jogodat. A kifizetett díj nem visszatéríthető. Az előfizetés bármikor lemondható a következő hónapokra.',
+        },
+      },
       allow_promotion_codes: true,
     });
     return res.status(200).json({ url: session.url });

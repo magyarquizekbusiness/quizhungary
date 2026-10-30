@@ -109,8 +109,6 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
       <input type="text" id="street1" autocomplete="address-line1" maxlength="100">
       <label class="l" for="street2">Emelet, ajtó, egyéb (nem kötelező)</label>
       <input type="text" id="street2" autocomplete="address-line2" maxlength="100">
-      <label class="l" for="note">Megjegyzés a futárnak (nem kötelező)</label>
-      <textarea id="note" maxlength="300"></textarea>
 
       <h3>Számlázási adatok</h3>
       <label class="chk"><input type="checkbox" id="same" checked><span>A számlázási adatok megegyeznek a szállításiéval</span></label>
@@ -171,7 +169,7 @@ const val=id=>$(id).value.trim();
 function payload(){
   return{
     quantity:$('q').value,country:$('c').value,postcode:val('zip'),city:val('city'),state:'',
-    name:val('name'),email:val('email'),phone:val('phone'),street1:val('street1'),street2:val('street2'),note:val('note'),
+    name:val('name'),email:val('email'),phone:val('phone'),street1:val('street1'),street2:val('street2'),
     billingSame:$('same').checked,billName:val('billName'),billPostcode:val('billZip'),billCity:val('billCity'),billStreet:val('billStreet'),
     company:$('company').checked,taxNumber:val('tax')
   };

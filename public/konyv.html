@@ -29,22 +29,29 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/qh.css">
 <style>
-.bk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2.5rem;align-items:start;}
-@media(max-width:760px){.bk{grid-template-columns:1fr;}}
+.bk{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:2.5rem;align-items:start;}
+@media(max-width:860px){.bk{grid-template-columns:1fr;}}
 .bk p,.bk li{color:var(--text-muted);line-height:1.7;margin-top:.8rem;}
 .bk ul{margin-left:1.2rem;}
 .bk strong{color:var(--text);}
 .bkbox{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1.5rem;}
-.bkbox label{display:block;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:.8rem;color:var(--text-muted);margin:.9rem 0 .3rem;}
-.bkbox input,.bkbox select{width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:3px;padding:.65rem .8rem;font:inherit;}
+.bkbox h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1.5px;margin:1.6rem 0 .2rem;color:var(--text);}
+.bkbox h3:first-child{margin-top:0;}
+.bkbox label.l{display:block;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;font-size:.8rem;color:var(--text-muted);margin:.9rem 0 .3rem;}
+.bkbox input[type=text],.bkbox input[type=email],.bkbox input[type=tel],.bkbox select,.bkbox textarea{width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:3px;padding:.65rem .8rem;font:inherit;}
+.bkbox input:focus,.bkbox select:focus,.bkbox textarea:focus{outline:none;border-color:var(--border-red);}
+.bkbox textarea{resize:vertical;min-height:70px;}
 .bkbox .row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
-.sum{margin-top:1.2rem;border-top:1px solid var(--border);padding-top:1rem;}
+@media(max-width:480px){.bkbox .row{grid-template-columns:1fr;}}
+.sum{margin-top:1.4rem;border-top:1px solid var(--border);padding-top:1rem;}
 .sum div{display:flex;justify-content:space-between;color:var(--text-muted);padding:.2rem 0;}
 .sum .tot{color:var(--text);font-weight:600;font-size:1.15rem;}
 .bkerr{color:var(--red);margin-top:.8rem;min-height:1.2em;font-size:.9rem;}
-.consent{display:flex;gap:.6rem;align-items:flex-start;margin-top:1rem;color:var(--text-muted);font-size:.85rem;line-height:1.5;}
-.consent input{width:auto;margin-top:.25rem;}
-.consent a{color:var(--red);}
+.chk{display:flex;gap:.7rem;align-items:flex-start;margin-top:.9rem;color:var(--text-muted);font-size:.85rem;line-height:1.5;cursor:pointer;}
+.chk input{flex:0 0 auto;width:18px;height:18px;margin-top:.15rem;accent-color:var(--red);}
+.chk a{color:var(--red);}
+.hint{color:var(--text-dim);font-size:.78rem;margin-top:.25rem;}
+.sub{display:none;border-left:2px solid var(--border-red);padding-left:1rem;margin-top:.4rem;}
 </style>
 </head>
 <body>
@@ -80,23 +87,59 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
       <p><strong>17 € / db</strong>, a szállítási díjat a címed alapján számoljuk ki.</p>
     </div>
     <div class="bkbox">
-      <label for="q">Darabszám</label>
+      <h3>Rendelés</h3>
+      <label class="l" for="q">Darabszám</label>
       <select id="q"></select>
-      <label for="c">Ország</label>
+
+      <h3>Szállítási adatok</h3>
+      <label class="l" for="name">Teljes név</label>
+      <input type="text" id="name" autocomplete="name" maxlength="100">
+      <div class="row">
+        <div><label class="l" for="email">E-mail</label><input type="email" id="email" autocomplete="email" maxlength="120"></div>
+        <div><label class="l" for="phone">Telefonszám</label><input type="tel" id="phone" autocomplete="tel" placeholder="+36 30 123 4567" maxlength="25"></div>
+      </div>
+      <div class="hint">A visszaigazolást az e-mail címre küldjük, a telefonszámot a futár használja.</div>
+      <label class="l" for="c">Ország</label>
       <select id="c"></select>
       <div class="row">
-        <div><label for="zip">Irányítószám</label><input id="zip" autocomplete="postal-code"></div>
-        <div><label for="city">Város</label><input id="city" autocomplete="address-level2"></div>
+        <div><label class="l" for="zip">Irányítószám</label><input type="text" id="zip" autocomplete="postal-code" inputmode="numeric" maxlength="12"></div>
+        <div><label class="l" for="city">Város</label><input type="text" id="city" autocomplete="address-level2" maxlength="80"></div>
       </div>
-      <div id="stw" style="display:none"><label for="st">Tartomány kódja (pl. Madrid: M, Milano: MI)</label><input id="st" maxlength="3"></div>
+      <label class="l" for="street1">Utca, házszám</label>
+      <input type="text" id="street1" autocomplete="address-line1" maxlength="100">
+      <label class="l" for="street2">Emelet, ajtó, egyéb (nem kötelező)</label>
+      <input type="text" id="street2" autocomplete="address-line2" maxlength="100">
+      <label class="l" for="note">Megjegyzés a futárnak (nem kötelező)</label>
+      <textarea id="note" maxlength="300"></textarea>
+
+      <h3>Számlázási adatok</h3>
+      <label class="chk"><input type="checkbox" id="same" checked><span>A számlázási adatok megegyeznek a szállításiéval</span></label>
+      <div class="sub" id="billbox">
+        <label class="l" for="billName">Számlázási név</label>
+        <input type="text" id="billName" autocomplete="billing name" maxlength="120">
+        <div class="row">
+          <div><label class="l" for="billZip">Irányítószám</label><input type="text" id="billZip" inputmode="numeric" maxlength="12"></div>
+          <div><label class="l" for="billCity">Város</label><input type="text" id="billCity" maxlength="80"></div>
+        </div>
+        <label class="l" for="billStreet">Utca, házszám</label>
+        <input type="text" id="billStreet" maxlength="100">
+      </div>
+      <label class="chk"><input type="checkbox" id="company"><span>Cégként (adószámmal) kérem a számlát</span></label>
+      <div class="sub" id="taxbox">
+        <label class="l" for="tax">Adószám</label>
+        <input type="text" id="tax" placeholder="12345678-1-23" maxlength="20">
+      </div>
+
       <div class="sum">
         <div><span>Könyv</span><span id="s1">–</span></div>
         <div><span>Szállítás</span><span id="s2">–</span></div>
         <div class="tot"><span>Összesen</span><span id="s3">–</span></div>
       </div>
-      <label class="consent"><input type="checkbox" id="cons"><span>Elfogadom a <a href="feltetelek">feltételeket</a>, és tudomásul veszem, hogy a könyv rendelésre készül, a nyomtatott termékre a 14 napos elállási jog az ott leírtak szerint vonatkozik.</span></label>
+      <label class="chk"><input type="checkbox" id="cons"><span>Elfogadom a <a href="feltetelek" target="_blank">felhasználási feltételeket</a>, és tudomásul veszem, hogy a könyv rendelésre készül, a nyomtatott termékre a 14 napos elállási jog az ott leírtak szerint vonatkozik.</span></label>
+      <label class="chk"><input type="checkbox" id="priv"><span>Megismertem és elfogadom az <a href="adatvedelem" target="_blank">adatkezelési tájékoztatót</a>.</span></label>
       <div class="bkerr" id="err"></div>
       <button class="btn-p" id="buy" style="margin-top:.6rem;width:100%" disabled>Tovább a fizetéshez →</button>
+      <div class="hint" style="text-align:center;margin-top:.6rem">A fizetés a Stripe biztonságos oldalán történik, a kártyaadataidat mi nem látjuk.</div>
     </div>
   </div>
 </div>
@@ -117,22 +160,29 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
 
 <script>
 const COUNTRIES={HU:'Magyarország'};
-const NEED_STATE=['ES','IT'];
+const NEED_STATE=[];
 const $=id=>document.getElementById(id);
 const eur=c=>(c/100).toFixed(2).replace('.',',')+' €';
 $('q').innerHTML=[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join('');
-$('c').innerHTML=Object.entries(COUNTRIES).sort((a,b)=>a[1].localeCompare(b[1],'hu')).map(([k,v])=>`<option value="${k}"${k==='HU'?' selected':''}>${v}</option>`).join('');
+$('c').innerHTML=Object.entries(COUNTRIES).map(([k,v])=>`<option value="${k}" selected>${v}</option>`).join('');
 if(new URLSearchParams(location.search).get('payment')==='success'){$('okmsg').style.display='block';history.replaceState({},'',location.pathname);}
 let quote=null,t=null;
-function payload(){return{quantity:$('q').value,country:$('c').value,postcode:$('zip').value,city:$('city').value,state:$('st').value};}
+const val=id=>$(id).value.trim();
+function payload(){
+  return{
+    quantity:$('q').value,country:$('c').value,postcode:val('zip'),city:val('city'),state:'',
+    name:val('name'),email:val('email'),phone:val('phone'),street1:val('street1'),street2:val('street2'),note:val('note'),
+    billingSame:$('same').checked,billName:val('billName'),billPostcode:val('billZip'),billCity:val('billCity'),billStreet:val('billStreet'),
+    company:$('company').checked,taxNumber:val('tax')
+  };
+}
 async function requote(){
-  $('stw').style.display=NEED_STATE.includes($('c').value)?'block':'none';
   quote=null;$('buy').disabled=true;$('err').textContent='';
   const p=payload();
-  if(!p.postcode.trim()||!p.city.trim()||(NEED_STATE.includes(p.country)&&!p.state.trim())){$('s1').textContent=$('s2').textContent=$('s3').textContent='–';return;}
+  if(!p.postcode||!p.city){$('s1').textContent=$('s2').textContent=$('s3').textContent='–';return;}
   $('s2').textContent='számolás…';
   try{
-    const r=await fetch('/api/book-quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});
+    const r=await fetch('/api/book-quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({quantity:p.quantity,country:p.country,postcode:p.postcode,city:p.city,state:p.state})});
     const j=await r.json();
     if(!r.ok)throw new Error(j.error||'Hiba');
     quote=j;
@@ -143,14 +193,21 @@ async function requote(){
   }catch(e){$('s2').textContent=$('s3').textContent='–';$('err').textContent=e.message;}
 }
 function later(){clearTimeout(t);t=setTimeout(requote,500);}
-function upd(){$('buy').disabled=!(quote&&$('cons').checked);}
+function upd(){$('buy').disabled=!(quote&&$('cons').checked&&$('priv').checked);}
+function toggles(){
+  $('billbox').style.display=$('same').checked?'none':'block';
+  $('taxbox').style.display=$('company').checked?'block':'none';
+}
 ['q','c'].forEach(i=>$(i).addEventListener('change',requote));
-['zip','city','st'].forEach(i=>$(i).addEventListener('input',later));
-$('cons').addEventListener('change',upd);
+['zip','city'].forEach(i=>$(i).addEventListener('input',later));
+['cons','priv'].forEach(i=>$(i).addEventListener('change',upd));
+['same','company'].forEach(i=>$(i).addEventListener('change',toggles));
+toggles();
 $('buy').addEventListener('click',async()=>{
+  $('err').textContent='';
   $('buy').disabled=true;$('buy').textContent='Átirányítás…';
   try{
-    const r=await fetch('/api/book-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload(),consent:true})});
+    const r=await fetch('/api/book-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload(),consent:true,privacy:true})});
     const j=await r.json();
     if(!j.url)throw new Error(j.error||'Hiba');
     location.href=j.url;

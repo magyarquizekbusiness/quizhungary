@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { computePricing } from '../lib/book-pricing.js';
+import { computePricing, validateDetails } from '../lib/book-pricing.js';
 import { BOOK, ordersEnabled } from '../lib/lulu.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -19,39 +19,44 @@ export default async function handler(req, res) {
   if (!ordersEnabled()) return res.status(503).json({ error: 'A könyv rendelése hamarosan elérhető lesz.' });
   // Nyomtatott termék: elállási jog 14 nap (személyre szabott nem), ezt a feltételek tartalmazzák – elfogadás kötelező.
   if (body.consent !== true) return res.status(400).json({ error: 'A feltételek elfogadása szükséges.' });
+  if (body.privacy !== true) return res.status(400).json({ error: 'Az adatkezelési tájékoztató elfogadása szükséges.' });
 
   try {
     // Az árat MINDIG a szerver számolja újra, a kliens adatainak nem hiszünk.
     const p = await computePricing(body);
+    const d = validateDetails(body, p.country);
+    // Az árazás és a cím ugyanazt a várost/irányítószámot használja.
+    if (d.shipping.postcode !== p.postcode || d.shipping.city.toLowerCase() !== p.city.toLowerCase()) {
+      return res.status(400).json({ error: 'A szállítási cím nem egyezik az árkalkulációhoz megadott adatokkal. Frissítsd az oldalt.' });
+    }
 
     const { data: order, error: insErr } = await supabase.from('book_orders').insert({
       quantity: p.quantity, country: p.country, unit_cents: p.unitCents,
       shipping_cents: p.shippingCents, total_cents: p.totalCents,
       lulu_env: process.env.LULU_ENV === 'production' ? 'production' : 'sandbox',
-      consent_at: new Date().toISOString(),
+      email: d.email, shipping_address: d.shipping, billing: d.billing, note: d.note || null,
+      consent_at: new Date().toISOString(), privacy_consent_at: new Date().toISOString(),
     }).select('id').single();
     if (insErr) throw insErr;
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      line_items: [{
-        quantity: p.quantity,
-        price_data: {
-          currency: 'eur',
-          unit_amount: p.unitCents,
-          product_data: { name: 'A Nagy Kvízgyűjtemény – nyomtatott könyv', description: '300 kvízkérdés, 10 fejezet, 6×9 hüvelyk, puhafedeles' },
+      customer_email: d.email,
+      billing_address_collection: 'auto',
+      line_items: [
+        {
+          quantity: p.quantity,
+          price_data: {
+            currency: 'eur',
+            unit_amount: p.unitCents,
+            product_data: { name: 'A Nagy Kvízgyűjtemény – nyomtatott könyv', description: '300 kvízkérdés, 10 fejezet, 6×9 hüvelyk, puhafedeles' },
+          },
         },
-      }],
-      shipping_address_collection: { allowed_countries: [p.country] },
-      phone_number_collection: { enabled: true },
-      shipping_options: [{
-        shipping_rate_data: {
-          type: 'fixed_amount',
-          fixed_amount: { amount: p.shippingCents, currency: 'eur' },
-          display_name: p.shippingCents === 0 ? 'Ingyenes szállítás (2+ könyv)' : 'Szállítás (postai)',
-          delivery_estimate: { minimum: { unit: 'business_day', value: 7 }, maximum: { unit: 'business_day', value: 20 } },
-        },
-      }],
+        ...(p.shippingCents > 0 ? [{
+          quantity: 1,
+          price_data: { currency: 'eur', unit_amount: p.shippingCents, product_data: { name: 'Szállítás (postai csomag)' } },
+        }] : []),
+      ],
       success_url: `${process.env.SITE_URL}/konyv?payment=success`,
       cancel_url: `${process.env.SITE_URL}/konyv?payment=cancel`,
       client_reference_id: order.id,

@@ -52,6 +52,22 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
 .chk a{color:var(--red);}
 .hint{color:var(--text-dim);font-size:.78rem;margin-top:.25rem;}
 .sub{display:none;border-left:2px solid var(--border-red);padding-left:1rem;margin-top:.4rem;}
+.cover{width:min(240px,60%);aspect-ratio:2/3;object-fit:cover;border:1px solid var(--border-red);border-radius:3px;box-shadow:0 14px 40px rgba(0,0,0,.6);display:block;margin-bottom:1.2rem;background:var(--bg3);}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;}
+.chips span{border:1px solid var(--border-red);color:var(--text-muted);border-radius:20px;padding:.2rem .7rem;font-size:.8rem;}
+.pv{margin-top:3.5rem;}
+.pv h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;margin-bottom:.4rem;}
+.pages{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.2rem;}
+@media(max-width:700px){.pages{grid-template-columns:1fr;max-width:380px;}}
+.pages figure{margin:0;}
+.pages img{width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:3px;background:#fff;}
+.pages figcaption{color:var(--text-muted);font-size:.8rem;margin-top:.4rem;text-align:center;}
+.mq{margin-top:2rem;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1.4rem;max-width:560px;}
+.mq .opt{display:block;width:100%;text-align:left;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:3px;padding:.65rem .9rem;margin-top:.5rem;font:inherit;cursor:pointer;}
+.mq .opt:hover{border-color:var(--border-red);}
+.mq .opt.ok{border-color:var(--green);color:var(--green);}
+.mq .opt.no{border-color:var(--red);color:var(--red);}
+.mq .ff{color:var(--text-muted);font-style:italic;margin-top:.8rem;min-height:1.4em;}
 </style>
 </head>
 <body>
@@ -77,6 +93,7 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
   <div id="okmsg" class="ssub" style="display:none;color:var(--green)">Köszönjük a rendelésed! Visszaigazolást küldtünk e-mailben. A könyvet legyártjuk és postán küldjük (általában 1–3 hét).</div>
   <div class="bk">
     <div>
+      <img class="cover" src="konyv/boritok.jpg" alt="A Nagy Kvízgyűjtemény borítója" onerror="this.style.display='none'">
       <p>300 kvízkérdés 10 fejezetben (földrajz, tudomány, irodalom, történelem, ételek, állatvilág, csillagászat, italok, sport, technológia). Fejezetenként három szint: könnyű, közepes és lehetetlen. Minden kérdéshez tartozik egy érdekesség, a végén pedig megoldókulcs és pontozás.</p>
       <ul>
         <li>Puhafedeles, 6×9 inch (15×23 cm), 98 oldal</li>
@@ -85,6 +102,7 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
         <li>2 vagy több könyvnél a szállítás ingyenes</li>
       </ul>
       <p><strong>17 € / db</strong>, a szállítási díjat a címed alapján számoljuk ki.</p>
+      <div class="chips"><span>Földrajz</span><span>Tudomány</span><span>Irodalom</span><span>Történelem</span><span>Ételek</span><span>Állatvilág</span><span>Csillagászat</span><span>Italok</span><span>Sport</span><span>Technológia</span></div>
     </div>
     <div class="bkbox">
       <h3>Rendelés</h3>
@@ -138,6 +156,22 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
       <div class="bkerr" id="err"></div>
       <button class="btn-p" id="buy" style="margin-top:.6rem;width:100%" disabled>Tovább a fizetéshez →</button>
       <div class="hint" style="text-align:center;margin-top:.6rem">A fizetés a Stripe biztonságos oldalán történik, a kártyaadataidat mi nem látjuk.</div>
+    </div>
+  </div>
+  <div class="pv">
+    <h2>Lapozz bele</h2>
+    <p style="color:var(--text-muted);max-width:620px">Így néz ki a könyv belül: tartalomjegyzék, kérdések három válaszlehetőséggel, és minden kérdés után egy érdekesség. A megoldások a fejezetek végén vannak.</p>
+    <div class="pages">
+      <figure><img src="konyv/tartalom.jpg" alt="Tartalomjegyzék" loading="lazy"><figcaption>Tartalomjegyzék</figcaption></figure>
+      <figure><img src="konyv/kerdesek.jpg" alt="Földrajz, könnyű kérdések" loading="lazy"><figcaption>Könnyű kérdések</figcaption></figure>
+      <figure><img src="konyv/erdekessegek.jpg" alt="Kérdések érdekességekkel" loading="lazy"><figcaption>Érdekesség minden kérdés után</figcaption></figure>
+    </div>
+    <div class="mq" id="mq">
+      <div class="slbl">Próbáld ki</div>
+      <div id="mqq" style="font-weight:600;font-size:1.05rem"></div>
+      <div id="mqo"></div>
+      <div class="ff" id="mqf"></div>
+      <button class="btn-o" id="mqn" style="display:none;margin-top:.8rem">Következő kérdés →</button>
     </div>
   </div>
 </div>
@@ -211,6 +245,24 @@ $('buy').addEventListener('click',async()=>{
     location.href=j.url;
   }catch(e){$('err').textContent=e.message;$('buy').textContent='Tovább a fizetéshez →';upd();}
 });
+const MQ=[
+ {q:'Melyik a Föld legnagyobb óceánja?',o:['Atlanti-óceán','Csendes-óceán','Indiai-óceán'],a:1,f:'Tudtad, hogy a Csendes-óceán nagyobb, mint az összes szárazföld együttvéve?'},
+ {q:'Hol található a Szahara?',o:['Ázsiában','Afrikában','Dél-Amerikában'],a:1,f:'Képzeld el, hogy a Szahara nagyjából akkora, mint az Egyesült Államok.'},
+ {q:'Melyik hegységben található a Mount Everest?',o:['Alpok','Himalája','Kaukázus'],a:1,f:'Képzeld el, hogy a Mount Everest csúcsán a hőmérséklet akár –60 °C-ra is lehűlhet.'}
+];
+let mi=0;
+function mqShow(){
+  const x=MQ[mi];$('mqq').textContent=(mi+1)+'. '+x.q;$('mqf').textContent='';$('mqn').style.display='none';
+  $('mqo').innerHTML=x.o.map((t,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}) ${t}</button>`).join('');
+  $('mqo').querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.i;
+    $('mqo').querySelectorAll('.opt').forEach(o=>{o.disabled=true;if(+o.dataset.i===x.a)o.classList.add('ok');});
+    if(i!==x.a)b.classList.add('no');
+    $('mqf').textContent=x.f;$('mqn').style.display='inline-flex';$('mqn').textContent=mi<MQ.length-1?'Következő kérdés →':'Újra az elejéről';
+  }));
+}
+$('mqn').addEventListener('click',()=>{mi=(mi+1)%MQ.length;mqShow();});
+mqShow();
 requote();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

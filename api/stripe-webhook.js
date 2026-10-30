@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { fulfilBookOrder } from '../lib/book-fulfil.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -38,6 +39,11 @@ export default async function handler(req, res) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
+        // Nyomtatott könyv rendelése (nem előfizetés)
+        if (session.metadata?.product === 'book') {
+          if (session.payment_status === 'paid') await fulfilBookOrder(session);
+          break;
+        }
         const userId = session.metadata?.userId || session.client_reference_id;
         if (userId) {
           await supabase.from('profiles').update({

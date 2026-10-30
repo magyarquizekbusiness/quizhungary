@@ -465,7 +465,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     <a href="iqteszt" class="hmob">IQ teszt</a>
     <a href="ivos" class="hmob">Ivós kvíz</a>
     <a onclick="goTo('napi-kviz')" class="hmob">Napi kvíz</a>
-    <a onclick="goTo('konyv')" class="hmob">Könyv</a>
+    <a href="konyv" class="hmob">Könyv</a>
     <a onclick="goTo('rangsor')" class="hmob">Rangsor</a>
     <div id="nav-guest"><button class="btn-nav" onclick="openAuth()">Bejelentkezés</button></div>
     <div id="nav-user" style="display:flex;align-items:center;gap:0.9rem;">
@@ -506,7 +506,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     <a class="mnav-link" href="iqteszt">IQ teszt</a>
     <a class="mnav-link" href="ivos">Ivós kvíz</a>
     <a class="mnav-link" data-go="napi-kviz">Napi kvíz</a>
-    <a class="mnav-link" data-go="konyv">Könyv</a>
+    <a class="mnav-link" href="konyv">Könyv</a>
     <a class="mnav-link" data-go="rangsor">Rangsor</a>
     <a class="mnav-link" href="https://www.facebook.com/profile.php?id=61566558176381" target="_blank" style="color:var(--red)">Facebook</a>
     <div id="mnav-user-actions"></div>
@@ -692,8 +692,9 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
         <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:2px;line-height:1;margin-bottom:1rem;">A Nagy Kvízgyűjtemény</h2>
         <p style="color:var(--text-muted);font-size:1rem;line-height:1.7;margin-bottom:1.5rem;max-width:500px;">Több száz izgalmas kvízkérdés egy kötetben — történelemtől a filmekig, földrajztól a tudományig. Tökéletes ajándék kvízrajongóknak!</p>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a href="konyv" class="btn-p" style="display:inline-flex;align-items:center;gap:0.6rem;">📖 Megrendelem a könyvet</a>
           <a href="https://www.amazon.de/-/en/dp/B0GJ13R2N4/" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;background:#FF9900;color:#111;padding:0.85rem 1.8rem;font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;text-decoration:none;font-weight:700;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">📦 Megveszem Amazonon</a>
-          <span style="font-size:0.78rem;color:var(--text-dim);letter-spacing:1px;">Elérhető az Amazon.de-n</span>
+          <span style="font-size:0.78rem;color:var(--text-dim);letter-spacing:1px;">Amazon.de-n is elérhető</span>
         </div>
       </div>
     </div>

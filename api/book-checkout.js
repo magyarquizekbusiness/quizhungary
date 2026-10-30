@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { computePricing } from '../lib/book-pricing.js';
-import { BOOK } from '../lib/lulu.js';
+import { BOOK, ordersEnabled } from '../lib/lulu.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -16,6 +16,7 @@ export default async function handler(req, res) {
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
   body = body || {};
+  if (!ordersEnabled()) return res.status(503).json({ error: 'A könyv rendelése hamarosan elérhető lesz.' });
   // Nyomtatott termék: elállási jog 14 nap (személyre szabott nem), ezt a feltételek tartalmazzák – elfogadás kötelező.
   if (body.consent !== true) return res.status(400).json({ error: 'A feltételek elfogadása szükséges.' });
 

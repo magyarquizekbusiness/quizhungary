@@ -68,6 +68,13 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
 .mq .opt.ok{border-color:var(--green);color:var(--green);}
 .mq .opt.no{border-color:var(--red);color:var(--red);}
 .mq .ff{color:var(--text-muted);font-style:italic;margin-top:.8rem;min-height:1.4em;}
+.promo{display:flex;align-items:center;gap:.8rem;background:rgba(46,204,113,.1);border:1px solid var(--green);border-radius:4px;padding:.8rem 1.1rem;margin:0 0 1.8rem;max-width:620px;}
+.promo b{color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;letter-spacing:1px;text-transform:uppercase;display:block;}
+.promo span{color:var(--text-muted);font-size:.9rem;}
+.promo .ic{font-size:1.8rem;}
+.free{color:var(--green)!important;font-weight:600;}
+.nudge{display:none;margin-top:.9rem;background:rgba(46,204,113,.1);border:1px solid var(--green);border-radius:3px;padding:.7rem .9rem;color:var(--text);font-size:.9rem;line-height:1.5;}
+.nudge button{background:none;border:none;color:var(--green);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer;padding:0;}
 </style>
 </head>
 <body>
@@ -91,6 +98,7 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
   <div class="slbl">QuizHungary könyv</div>
   <h1 class="stit">A Nagy Kvízgyűjtemény</h1>
   <div id="okmsg" class="ssub" style="display:none;color:var(--green)">Köszönjük a rendelésed! Visszaigazolást küldtünk e-mailben. A könyvet legyártjuk és postán küldjük (általában 1–3 hét).</div>
+  <div class="promo"><div class="ic">🚚</div><div><b>Ingyenes szállítás 2 könyvtől!</b><span>Rendelj két vagy több könyvet, és a postaköltséget mi álljuk. Ajándékba is tökéletes.</span></div></div>
   <div class="bk">
     <div>
       <img class="cover" src="konyv/boritok.jpg" alt="A Nagy Kvízgyűjtemény borítója" onerror="this.style.display='none'">
@@ -101,7 +109,7 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
         <li>Rendelésre gyártva, szállítás Magyarország egész területére</li>
         <li>2 vagy több könyvnél a szállítás ingyenes</li>
       </ul>
-      <p><strong>17 € / db</strong>, a szállítási díjat a címed alapján számoljuk ki.</p>
+      <p><strong>17 € / db</strong>. 1 könyvnél a szállítási díjat a címed alapján számoljuk ki, <strong style="color:var(--green)">2 vagy több könyvnél a szállítás ingyenes</strong>.</p>
       <div class="chips"><span>Földrajz</span><span>Tudomány</span><span>Irodalom</span><span>Történelem</span><span>Ételek</span><span>Állatvilág</span><span>Csillagászat</span><span>Italok</span><span>Sport</span><span>Technológia</span></div>
     </div>
     <div class="bkbox">
@@ -151,6 +159,7 @@ X0 kvízkérdés 10 fejezetben, mindegyikhez érdekesség. Nyomtatott könyv, sz
         <div><span>Szállítás</span><span id="s2">–</span></div>
         <div class="tot"><span>Összesen</span><span id="s3">–</span></div>
       </div>
+      <div class="nudge" id="nudge"></div>
       <label class="chk"><input type="checkbox" id="cons"><span>Elfogadom a <a href="feltetelek" target="_blank">felhasználási feltételeket</a>, és tudomásul veszem, hogy a könyv rendelésre készül, a nyomtatott termékre a 14 napos elállási jog az ott leírtak szerint vonatkozik.</span></label>
       <label class="chk"><input type="checkbox" id="priv"><span>Megismertem és elfogadom az <a href="adatvedelem" target="_blank">adatkezelési tájékoztatót</a>.</span></label>
       <div class="bkerr" id="err"></div>
@@ -195,7 +204,7 @@ const COUNTRIES={HU:'Magyarország'};
 const NEED_STATE=[];
 const $=id=>document.getElementById(id);
 const eur=c=>(c/100).toFixed(2).replace('.',',')+' €';
-$('q').innerHTML=[1,2,3,4,5,6,7,8,9,10].map(n=>`<option>${n}</option>`).join('');
+$('q').innerHTML=[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}">${n} db${n>=2?' – ingyenes szállítás':''}</option>`).join('');
 $('c').innerHTML=Object.entries(COUNTRIES).map(([k,v])=>`<option value="${k}" selected>${v}</option>`).join('');
 if(new URLSearchParams(location.search).get('payment')==='success'){$('okmsg').style.display='block';history.replaceState({},'',location.pathname);}
 let quote=null,t=null;
@@ -209,7 +218,7 @@ function payload(){
   };
 }
 async function requote(){
-  quote=null;$('buy').disabled=true;$('err').textContent='';
+  quote=null;$('buy').disabled=true;$('err').textContent='';$('nudge').style.display='none';
   const p=payload();
   if(!p.postcode||!p.city){$('s1').textContent=$('s2').textContent=$('s3').textContent='–';return;}
   $('s2').textContent='számolás…';
@@ -220,6 +229,13 @@ async function requote(){
     quote=j;
     $('s1').textContent=eur(j.unitCents*p.quantity);
     $('s2').textContent=j.freeShipping?'ingyenes':eur(j.shippingCents);
+    $('s2').className=j.freeShipping?'free':'';
+    const nd=$('nudge');
+    if(!j.freeShipping&&+p.quantity===1){
+      nd.innerHTML='Rendelj <b>2 könyvet</b>, és <b>ingyenes a szállítás</b>: így '+eur(j.shippingCents)+' szállítási díjat spórolsz. <button type="button" id="nd2">Átállok 2 könyvre</button>';
+      nd.style.display='block';
+      $('nd2').addEventListener('click',()=>{$('q').value='2';requote();});
+    }else nd.style.display='none';
     $('s3').textContent=eur(j.totalCents);
     upd();
   }catch(e){$('s2').textContent=$('s3').textContent='–';$('err').textContent=e.message;}

@@ -1577,14 +1577,74 @@ async function doLogin(){
   closeAuth();toast('Sikeres bejelentkezés!','ok');
 }
 
+// ===== EMAIL ELLENŐRZÉS REGISZTRÁCIÓKOR =====
+// 1) formátum  2) elírás-felismerés ("Erre gondoltál: x@gmail.com?")  3) /api/check-email: létezik-e a domain levelezője
+const POPULAR_DOMAINS=['gmail.com','freemail.hu','citromail.hu','hotmail.com','outlook.com','outlook.hu','yahoo.com','icloud.com','live.com','t-online.hu','vipmail.hu','indamail.hu','protonmail.com','proton.me','me.com','hotmail.hu','gmx.com','gmx.net','aol.com'];
+const DIRECT_FIXES={'gmail.hu':'gmail.com','gmail.co':'gmail.com','gmail.cm':'gmail.com','gmail.om':'gmail.com','gmail.cmo':'gmail.com','gmail.comm':'gmail.com','googlemail.hu':'gmail.com','freemail.com':'freemail.hu','citromail.com':'citromail.hu','hotmail.co':'hotmail.com'};
+function editDistance(a,b){
+  const d=Array.from({length:a.length+1},(_,i)=>[i,...Array(b.length).fill(0)]);
+  for(let j=1;j<=b.length;j++)d[0][j]=j;
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){
+    const c=a[i-1]===b[j-1]?0:1;
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);
+    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
+  }
+  return d[a.length][b.length];
+}
+function suggestEmail(email){
+  const at=email.lastIndexOf('@');if(at<1)return null;
+  const local=email.slice(0,at),domain=email.slice(at+1).toLowerCase();
+  if(POPULAR_DOMAINS.includes(domain))return null;
+  if(DIRECT_FIXES[domain])return local+'@'+DIRECT_FIXES[domain];
+  let best=null,bd=99;
+  for(const p of POPULAR_DOMAINS){const x=editDistance(domain,p);if(x<bd){bd=x;best=p;}}
+  return bd>0&&bd<=(domain.length<=8?1:2)?local+'@'+best:null;
+}
+let _emailSuggestionShownFor=null;
+function showEmailSuggestion(sug){
+  const box=document.getElementById('aerr');
+  box.textContent='';
+  box.append('Erre gondoltál: ');
+  const a=document.createElement('a');
+  a.href='#';a.textContent=sug;a.style.cssText='color:inherit;text-decoration:underline;font-weight:600';
+  a.onclick=ev=>{ev.preventDefault();document.getElementById('re').value=sug;clearAF();};
+  box.append(a,'?');
+  const s=document.createElement('small');s.style.cssText='display:block;margin-top:0.3rem;opacity:0.8';
+  s.textContent='Ha biztosan jó, amit írtál, kattints újra a Regisztrációra.';
+  box.append(s);box.className='aerr show';
+}
+async function validateRegEmail(raw){
+  const email=raw.trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email))return{ok:false,msg:'Hibás email formátum. Példa: nev@gmail.com'};
+  const sug=suggestEmail(email);
+  if(sug&&_emailSuggestionShownFor!==email){_emailSuggestionShownFor=email;return{ok:false,suggestion:sug};}
+  try{
+    const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),4000);
+    const r=await fetch('/api/check-email?email='+encodeURIComponent(email),{signal:ctrl.signal});
+    clearTimeout(t);const j=await r.json();
+    if(!j.ok){
+      if(j.reason==='disposable')return{ok:false,msg:'Ideiglenes (eldobható) email címmel nem lehet regisztrálni.'};
+      return{ok:false,msg:'Ez az email cím nem létezik ('+email.split('@')[1]+'). Nézd meg, nincs-e elírva!'};
+    }
+  }catch(_){/* hálózati hiba -> nem blokkolunk */}
+  return{ok:true,email};
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp=document.getElementById('re');
+  if(inp)inp.addEventListener('blur',()=>{const v=inp.value.trim();if(!v)return;const s=suggestEmail(v.toLowerCase());if(s){_emailSuggestionShownFor=v.toLowerCase();showEmailSuggestion(s);}});
+});
+
 async function doReg(){
   clearAF();
   const u=document.getElementById('ru').value.trim();
-  const e=document.getElementById('re').value.trim();
+  let e=document.getElementById('re').value.trim();
   const p=document.getElementById('rp').value;
   if(!u||!e||!p){aErr('Töltsd ki az összes mezőt!');return;}
   if(!/^[\p{L}\p{N} _-]{3,20}$/u.test(u)){aErr('A becenév 3–20 karakter legyen, csak betű, szám, szóköz, _ és - megengedett.');return;}
   if(p.length<6){aErr('A jelszó legalább 6 karakter!');return;}
+  const ev=await validateRegEmail(e);
+  if(!ev.ok){if(ev.suggestion)showEmailSuggestion(ev.suggestion);else aErr(ev.msg);return;}
+  e=ev.email;
   const wantsReminders=document.getElementById('r-reminders')?.checked||false;
   const{data,error}=await sb.auth.signUp({email:e,password:p,options:{data:{username:u}}});
   if(error){aErr(error.message);return;}

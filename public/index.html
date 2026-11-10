@@ -346,12 +346,6 @@ footer a{color:var(--red);text-decoration:none;}
 .premium-active-badge{display:inline-flex;align-items:center;gap:0.4rem;background:linear-gradient(135deg,rgba(245,197,24,0.2),rgba(245,197,24,0.05));border:1px solid rgba(245,197,24,0.4);border-radius:2px;padding:0.2rem 0.6rem;font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--gold);}
 
 /* COOKIE BANNER */
-.cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:600;background:var(--bg2);border-top:1px solid var(--border-red);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;transform:translateY(100%);transition:transform 0.4s ease;box-shadow:0 -4px 20px rgba(0,0,0,0.4);}
-.cookie-banner.show{transform:translateY(0);}
-.cookie-text{font-size:0.85rem;color:var(--text-muted);flex:1;min-width:240px;line-height:1.5;}
-.cookie-text a{color:var(--red);cursor:pointer;text-decoration:underline;}
-.cookie-actions{display:flex;gap:0.6rem;flex-shrink:0;}
-@media(max-width:560px){.cookie-banner{flex-direction:column;align-items:stretch;}.cookie-actions{justify-content:stretch;}.cookie-actions button{flex:1;}}
 
 /* FRIENDS & CHAT */
 .friends-tabs{display:flex;gap:0.5rem;margin-bottom:1.2rem;border-bottom:1px solid var(--border);}
@@ -443,18 +437,6 @@ footer a{color:var(--red);text-decoration:none;}
 .resume-name{font-weight:600;font-size:1rem;}
 .resume-go{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;color:var(--green);white-space:nowrap;}
 </style>
-<!-- Google AdSense — csak cookie-hozzájárulás UTÁN töltődik be (GDPR) -->
-<meta name="google-adsense-account" content="ca-pub-2298331244671294">
-<script>
-function loadAdSense(){
-  if(document.getElementById('adsense-js'))return;
-  var s=document.createElement('script');
-  s.id='adsense-js';s.async=true;s.crossOrigin='anonymous';
-  s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2298331244671294';
-  document.head.appendChild(s);
-}
-try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }catch(e){}
-</script>
 </head>
 <body>
 
@@ -1138,15 +1120,6 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
   </div>
 </div>
 
-<!-- COOKIE BANNER -->
-<div class="cookie-banner" id="cookie-banner">
-  <div class="cookie-text">🍪 Az oldal sütiket használ a működéshez és a bejelentkezés fenntartásához. Hirdetési sütiket csak az „Elfogadom" gombra kattintva helyezünk el. <a href="adatvedelem" style="color:var(--red);">Részletek</a></div>
-  <div class="cookie-actions">
-    <button class="btn-o" style="padding:0.6rem 1.2rem;" onclick="declineCookies()">Csak a szükségesek</button>
-    <button class="btn-p" style="padding:0.6rem 1.4rem;" onclick="acceptCookies()">Elfogadom</button>
-  </div>
-</div>
-
 <!-- FRIENDS MODAL -->
 <div class="overlay" id="friendsov" onclick="if(event.target===this)closeFriends()">
   <div class="mbox" style="max-width:520px;max-height:88vh;">
@@ -1386,7 +1359,6 @@ async function init(){
   if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();checkPremiumGift();loadUnreadCount();subscribeInbox();withOneSignal(os=>os.login(CU.id));}
   else{claimLocalDataFor('guest');navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
-  checkCookieConsent();
   captureReferralCode();
 
   // Jelszó-visszaállító linkről érkezve (?recovery=1) kérjük az új jelszót.
@@ -3051,10 +3023,10 @@ const INFO_CONTENT={
     <p style="margin-top:1rem;">A QuizHungary ("mi") elkötelezett a felhasználók személyes adatainak védelme mellett. Ez a tájékoztató bemutatja, milyen adatokat gyűjtünk és hogyan kezeljük azokat.</p>
     <p style="margin-top:1rem;"><strong>Milyen adatokat gyűjtünk?</strong><br>Regisztrációkor a felhasználónevet, e-mail címet és jelszót tároljuk. A játék során keletkező pontszámokat és statisztikákat szintén rögzítjük a ranglista és a profil működéséhez.</p>
     <p style="margin-top:1rem;"><strong>Hogyan használjuk fel az adatokat?</strong><br>Az adatokat kizárólag a szolgáltatás működtetéséhez használjuk: bejelentkezés, pontkövetés, ranglista, előfizetés-kezelés. Az adataidat nem adjuk el harmadik félnek.</p>
-    <p style="margin-top:1rem;"><strong>Sütik (cookie-k)</strong><br>Az oldal sütiket használ a bejelentkezés fenntartásához és a felhasználói élmény javításához. Hirdetési partnereink (pl. Google AdSense) szintén használhatnak sütiket a releváns hirdetések megjelenítéséhez.</p>
+    <p style="margin-top:1rem;"><strong>Sütik (cookie-k)</strong><br>Az oldal sütiket használ a bejelentkezés fenntartásához és a felhasználói élmény javításához. Hirdetési vagy nyomkövető sütiket nem használunk.</p>
     <p style="margin-top:1rem;"><strong>Fizetési adatok</strong><br>Az előfizetések kezelését a Stripe biztosítja. Bankkártyaadataidat soha nem tároljuk, azokat közvetlenül a Stripe kezeli biztonságosan.</p>
     <p style="margin-top:1rem;"><strong>Adataid törlése</strong><br>Bármikor kérheted fiókod és adataid törlését a kapcsolati elérhetőségeinken keresztül.</p>
-    <p style="margin-top:1rem;"><strong>Harmadik felek</strong><br>Szolgáltatásunk a következő partnereket használja: Supabase (adattárolás), Stripe (fizetés), Google AdSense (hirdetések), OpenAI (kérdésgenerálás).</p>
+    <p style="margin-top:1rem;"><strong>Harmadik felek</strong><br>Szolgáltatásunk a következő partnereket használja: Supabase (adattárolás), Stripe (fizetés), OpenAI (kérdésgenerálás).</p>
   `},
   terms:{title:'Felhasználási feltételek',body:`
     <p>Utolsó frissítés: 2025</p>
@@ -3089,22 +3061,6 @@ function openInfo(key){
 }
 function closeInfo(){document.getElementById('infoov').classList.remove('show');}
 
-
-// ── COOKIE BANNER ─────────────────────────────────────────────────────────────
-function checkCookieConsent(){
-  if(!localStorage.getItem('qh_cookie_consent')){
-    setTimeout(()=>document.getElementById('cookie-banner').classList.add('show'),1000);
-  }
-}
-function acceptCookies(){
-  localStorage.setItem('qh_cookie_consent','accepted');
-  document.getElementById('cookie-banner').classList.remove('show');
-  loadAdSense(); // hirdetések csak hozzájárulás után
-}
-function declineCookies(){
-  localStorage.setItem('qh_cookie_consent','essential');
-  document.getElementById('cookie-banner').classList.remove('show');
-}
 
 
 // ── BARÁTOK & CHAT ────────────────────────────────────────────────────────────

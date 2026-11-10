@@ -2084,11 +2084,19 @@ async function checkPremiumGift(){
       const{data:sp}=await sb.from('profiles').select('username,avatar_color,is_owner').eq('id',pendingGift.sender_id).single();
       sender=sp||null;
     }
-    const name=sender?.username||'QuizHungary';
+    // Tulajdonosi ajándéknál mindkét tulajdonos szerepel küldőként.
+    let senders=sender?[sender]:[];
+    if(sender?.is_owner){
+      const{data:owners}=await sb.from('profiles').select('username,avatar_color,is_owner').eq('is_owner',true).order('username');
+      if(owners&&owners.length)senders=owners;
+    }
+    const name=senders[0]?.username||'QuizHungary';
     const av=document.getElementById('gift-from-av');
-    av.style.background=safeColor(sender?.avatar_color);
-    av.textContent=name.slice(0,2).toUpperCase();
-    document.getElementById('gift-from-name').innerHTML=escapeHtml(name)+ownerBadge(sender);
+    av.style.background=senders.length>1?'linear-gradient(135deg,var(--red),var(--gold))':safeColor(senders[0]?.avatar_color);
+    av.textContent=senders.length>1?'👑':name.slice(0,2).toUpperCase();
+    document.getElementById('gift-from-name').innerHTML=senders.length
+      ?senders.map(x=>escapeHtml(x.username)+ownerBadge(x)).join('<br>')
+      :'QuizHungary';
     const msgEl=document.getElementById('gift-msg');
     if(pendingGift.message){msgEl.textContent=pendingGift.message;msgEl.style.display='block';}else{msgEl.style.display='none';}
     document.getElementById('gift-days').textContent=pendingGift.days+' nap';

@@ -274,7 +274,7 @@
 
   function isPremium(){
     if(profile?.is_premium!==true)return false;
-    if(profile?.subscription_status==='referral_reward'&&profile?.subscription_end){
+    if((profile?.subscription_status==='referral_reward'||profile?.subscription_status==='gift')&&profile?.subscription_end){
       if(new Date(profile.subscription_end)<new Date())return false;
     }
     return true;

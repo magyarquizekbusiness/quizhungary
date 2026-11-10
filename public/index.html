@@ -342,6 +342,7 @@ footer a{color:var(--red);text-decoration:none;}
 .premium-feat{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0;font-size:0.95rem;color:var(--text-muted);text-align:left;}
 .btn-gold{background:linear-gradient(135deg,#f5c518,#e8a000);color:#000;border:none;padding:0.9rem 2rem;font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;font-weight:700;transition:transform 0.15s,box-shadow 0.2s;width:100%;}
 .btn-gold:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(245,197,24,0.3);}
+.owner-badge{display:inline-flex;align-items:center;gap:0.25rem;background:linear-gradient(135deg,rgba(232,25,44,0.25),rgba(245,197,24,0.12));border:1px solid rgba(245,197,24,0.55);border-radius:2px;padding:0.05rem 0.45rem;margin-left:0.35rem;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--gold);vertical-align:middle;white-space:nowrap;}
 .premium-active-badge{display:inline-flex;align-items:center;gap:0.4rem;background:linear-gradient(135deg,rgba(245,197,24,0.2),rgba(245,197,24,0.05));border:1px solid rgba(245,197,24,0.4);border-radius:2px;padding:0.2rem 0.6rem;font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--gold);}
 
 /* COOKIE BANNER */
@@ -1179,6 +1180,7 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     <div style="text-align:center;margin-bottom:1.5rem;">
       <div id="pv-avatar" style="width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#fff;margin:0 auto 1rem;"></div>
       <div class="mtit" id="pv-name" style="font-size:1.8rem;"></div>
+      <div id="pv-owner" style="display:none;margin-top:0.3rem;"><span class="owner-badge" style="margin-left:0;font-size:0.8rem;padding:0.2rem 0.7rem;">👑 Tulajdonos</span></div>
       <div id="pv-premium" style="display:none;margin-top:0.3rem;"><span class="premium-active-badge">✨ Premium</span></div>
     </div>
     <div class="profile-grid" id="pv-stats"></div>
@@ -1211,6 +1213,25 @@ try{ if(localStorage.getItem('qh_cookie_consent')==='accepted')loadAdSense(); }c
     <div class="mtit">👥 Barát meghívása</div>
     <div class="msub">Küldj párbaj meghívót a barátaidnak!</div>
     <div id="invite-friends-list" style="margin-top:1rem;"><div class="lbempty">Töltés...</div></div>
+  </div>
+</div>
+
+<!-- PRÉMIUM AJÁNDÉK FELUGRÓ -->
+<div class="overlay" id="giftov">
+  <div class="mbox" style="max-width:420px;text-align:center;">
+    <button class="mcl" onclick="laterPremiumGift()">×</button>
+    <div style="font-size:3rem;margin-bottom:0.4rem;">🎁</div>
+    <div class="mtit" style="font-size:1.7rem;">Ajándékot kaptál!</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:0.6rem;margin:1rem 0 0.4rem;">
+      <div id="gift-from-av" class="friend-av" style="cursor:default;"></div>
+      <div style="text-align:left;"><div style="font-size:0.75rem;color:var(--text-muted);">Küldte</div><div id="gift-from-name" style="font-weight:700;"></div></div>
+    </div>
+    <div id="gift-msg" style="background:var(--bg3);border-radius:4px;padding:0.9rem;margin:1rem 0;text-align:left;white-space:pre-line;line-height:1.45;display:none;"></div>
+    <div class="msub" style="margin-bottom:1.2rem;"><strong id="gift-days" style="color:var(--gold);">7 nap</strong> ingyenes <span style="color:var(--gold)">✨ Premium</span> — az elfogadás pillanatától számítva.</div>
+    <div style="display:flex;gap:0.6rem;">
+      <button class="btn-o" style="flex:1;" onclick="laterPremiumGift()">Később</button>
+      <button class="btn-p" id="gift-accept-btn" style="flex:1.4;" onclick="acceptPremiumGift()">🎁 Elfogadom</button>
+    </div>
   </div>
 </div>
 
@@ -1362,7 +1383,7 @@ async function init(){
 
   // ELŐSZÖR a session ellenőrzés — hogy a bejelentkezett user azonnal látsszon
   const{data:{session}}=await sb.auth.getSession();
-  if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();loadUnreadCount();subscribeInbox();withOneSignal(os=>os.login(CU.id));}
+  if(session?.user){CU=session.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkFriendRequests();loadReferralStats();checkPremiumGift();loadUnreadCount();subscribeInbox();withOneSignal(os=>os.login(CU.id));}
   else{claimLocalDataFor('guest');navGuest();loadLB();loadPC();}
   checkPaymentRedirect();
   checkCookieConsent();
@@ -1404,7 +1425,7 @@ async function init(){
     if(event==='PASSWORD_RECOVERY'){showReset();return;}
     if(event==='SIGNED_IN'&&ses?.user){
       const newLogin=!CU||CU.id!==ses.user.id; // token-frissítés NEM új login
-      CU=ses.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();withOneSignal(os=>os.login(CU.id));
+      CU=ses.user;claimLocalDataFor(CU.id);await loadP();navUser();loadLB();loadPC();renderTopics();checkPremiumGift();withOneSignal(os=>os.login(CU.id));
       if(newLogin){ // csak valódi belépéskor indítsuk újra a napi kvízt
         di=0;ds=0;clearDailyState();
         document.getElementById('dqa').style.display='block';document.getElementById('dqr').className='qr';dLoad();
@@ -1654,7 +1675,7 @@ async function doReg(){
     // Beleegyezés mentése
     if(wantsReminders){await sb.from('profiles').update({email_reminders:true}).eq('id',CU.id);}
     await applyReferralOnSignup(CU.id);
-    await loadP();navUser();closeAuth();loadLB();loadPC();
+    await loadP();navUser();closeAuth();loadLB();loadPC();checkPremiumGift();
     toast('Üdv, '+u+'! Sikeresen regisztráltál 🎉','ok');
   } else {
     aOK('Regisztrált! Erősítsd meg az emailt a belépéshez.');
@@ -1691,7 +1712,12 @@ async function openProfile(){
   if(isPremium()){
     document.getElementById('prof-premium-wrap').style.display='block';
     const portalBtn=document.querySelector('#prof-premium-wrap button');
-    if(CP?.subscription_status==='referral_reward'){
+    if(CP?.subscription_status==='gift'){
+      // Tulajdonostól kapott ajándék prémium - nincs lemondás, mutatjuk a lejáratot
+      const end=CP?.subscription_end?new Date(CP.subscription_end):null;
+      document.getElementById('prof-premium-end').innerHTML='🎁 Ajándék prémium'+(end?'<br>Lejár: '+end.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}):'');
+      if(portalBtn)portalBtn.style.display='none';
+    } else if(CP?.subscription_status==='referral_reward'){
       // Referral jutalom - nincs lemondás, mutatjuk a lejáratot
       const end=CP?.subscription_end?new Date(CP.subscription_end):null;
       document.getElementById('prof-premium-end').innerHTML='🎁 Meghívásért kapott prémium'+(end?'<br>Lejár: '+end.toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'}):'');
@@ -2034,10 +2060,66 @@ async function heroNext(){
 function isPremium(){
   if(CP?.is_premium!==true)return false;
   // Referral jutalom esetén ellenőrizzük a lejáratot
-  if(CP?.subscription_status==='referral_reward'&&CP?.subscription_end){
+  if((CP?.subscription_status==='referral_reward'||CP?.subscription_status==='gift')&&CP?.subscription_end){
     if(new Date(CP.subscription_end)<new Date())return false; // lejárt
   }
   return true;
+}
+
+// Tulajdonos jelvény (Balint, Ayaern) — ranglistán, profilon, barátlistán, csevegésben.
+function ownerBadge(p){return p?.is_owner===true?'<span class="owner-badge" title="A QuizHungary tulajdonosa">👑 Tulajdonos</span>':'';}
+
+// ── PRÉMIUM AJÁNDÉK ────────────────────────────────────────────────────────────
+// A tulajdonosok által adott ajándék prémium csak elfogadáskor indul.
+let pendingGift=null;
+async function checkPremiumGift(){
+  if(!CU)return;
+  try{
+    const{data,error}=await sb.from('premium_gifts').select('id,days,message,sender_id,created_at')
+      .eq('user_id',CU.id).is('claimed_at',null).order('created_at',{ascending:true}).limit(1);
+    if(error||!data||!data.length)return;
+    pendingGift=data[0];
+    let sender=null;
+    if(pendingGift.sender_id){
+      const{data:sp}=await sb.from('profiles').select('username,avatar_color,is_owner').eq('id',pendingGift.sender_id).single();
+      sender=sp||null;
+    }
+    const name=sender?.username||'QuizHungary';
+    const av=document.getElementById('gift-from-av');
+    av.style.background=safeColor(sender?.avatar_color);
+    av.textContent=name.slice(0,2).toUpperCase();
+    document.getElementById('gift-from-name').innerHTML=escapeHtml(name)+ownerBadge(sender);
+    const msgEl=document.getElementById('gift-msg');
+    if(pendingGift.message){msgEl.textContent=pendingGift.message;msgEl.style.display='block';}else{msgEl.style.display='none';}
+    document.getElementById('gift-days').textContent=pendingGift.days+' nap';
+    document.getElementById('gift-accept-btn').disabled=false;
+    document.getElementById('giftov').classList.add('show');
+  }catch(e){console.warn('Gift check:',e);}
+}
+function laterPremiumGift(){
+  document.getElementById('giftov').classList.remove('show');
+  toast('Az ajándék megvár — legközelebb is elfogadhatod. 🎁','info');
+}
+async function acceptPremiumGift(){
+  if(!pendingGift)return;
+  const btn=document.getElementById('gift-accept-btn');
+  btn.disabled=true;
+  const{data,error}=await sb.rpc('claim_premium_gift',{gift_id:pendingGift.id});
+  if(error||data?.error){
+    btn.disabled=false;
+    toast('Hiba az elfogadáskor: '+(error?.message||data.error),'err');
+    return;
+  }
+  document.getElementById('giftov').classList.remove('show');
+  pendingGift=null;
+  if(data?.granted){
+    await loadP();navUser();renderTopics();
+    const end=data.subscription_end?new Date(data.subscription_end).toLocaleDateString('hu-HU',{month:'long',day:'numeric'}):'';
+    toast('🎉 A Premium aktív'+(end?' '+end+'-ig':'')+'! Jó játékot!','ok');
+  } else if(data?.reason==='has_active_subscription'){
+    toast('Már van aktív előfizetésed — az ajándékot nem kellett felhasználni.','info');
+  }
+  checkPremiumGift(); // ha több ajándék várna
 }
 
 // ── GYORS KVÍZ MODAL (a kérdéspoolból — AI nélkül) ─────────────────────────────
@@ -2191,7 +2273,7 @@ async function loadLB(){
     return `<div class="lbr${me?' me':''}" style="cursor:pointer" onclick="viewProfile('${row.id}')">
       <div class="lbrank ${rc[i]||'o'}">${med[i]||i+1}</div>
       <div class="lbav" style="background:${bg};color:#fff">${init}</div>
-      <div class="lbname">${escapeHtml(row.username)}${me?' (te)':''}${row.is_premium?' ✨':''}</div>
+      <div class="lbname">${escapeHtml(row.username)}${ownerBadge(row)}${me?' (te)':''}${row.is_premium?' ✨':''}</div>
       <div style="text-align:right"><div class="lbsc">${row.total_points}</div><div class="lbpt">pont</div></div>
     </div>`;
   }).join('');
@@ -3046,13 +3128,13 @@ async function loadFriends(){
   if(!data||!data.length){el.innerHTML='<div class="lbempty">Még nincsenek barátaid. Keress játékosokat!</div>';return;}
   // Get friend profiles
   const friendIds=data.map(f=>f.requester_id===CU.id?f.addressee_id:f.requester_id);
-  const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',friendIds);
+  const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium,is_owner').in('id',friendIds);
   friendsCache=profiles||[];
   el.innerHTML=(profiles||[]).map(p=>`
     <div class="friend-row">
       <div class="friend-av" style="background:${safeColor(p.avatar_color)}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info" onclick="viewProfile('${p.id}')">
-        <div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div>
+        <div class="friend-name">${escapeHtml(p.username)}${ownerBadge(p)}${p.is_premium?' ✨':''}</div>
         <div class="friend-meta">Barát</div>
       </div>
       <button class="friend-btn fb-chat" onclick="openChat('${p.id}','${escapeHtml(p.username.replace(/['"<>\\]/g,''))}','${safeColor(p.avatar_color)}')">💬 Csevegés</button>
@@ -3101,7 +3183,7 @@ async function respondRequest(id,status){
 async function searchUsers(){
   const q=document.getElementById('friend-search-input').value.trim();
   if(!q){return;}
-  const{data}=await sb.from('profiles').select('id,username,avatar_color,is_premium').ilike('username','%'+q+'%').neq('id',CU.id).limit(20);
+  const{data}=await sb.from('profiles').select('id,username,avatar_color,is_premium,is_owner').ilike('username','%'+q+'%').neq('id',CU.id).limit(20);
   const el=document.getElementById('friends-search-results');
   if(!data||!data.length){el.innerHTML='<div class="lbempty">Nincs találat.</div>';return;}
   // Check existing friendships
@@ -3114,7 +3196,7 @@ async function searchUsers(){
     else btn=`<button class="friend-btn fb-add" onclick="addFriend('${p.id}',this)">+ Bejelölés</button>`;
     return `<div class="search-result">
       <div class="friend-av" style="background:${safeColor(p.avatar_color)}" onclick="viewProfile('${p.id}')">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
-      <div class="friend-info" onclick="viewProfile('${p.id}')"><div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div></div>
+      <div class="friend-info" onclick="viewProfile('${p.id}')"><div class="friend-name">${escapeHtml(p.username)}${ownerBadge(p)}${p.is_premium?' ✨':''}</div></div>
       ${btn}
     </div>`;
   }).join('');
@@ -3128,11 +3210,12 @@ async function addFriend(id,btn){
 }
 
 async function viewProfile(id){
-  const{data:p}=await sb.from('profiles').select('id,username,avatar_color,is_premium').eq('id',id).single();
+  const{data:p}=await sb.from('profiles').select('id,username,avatar_color,is_premium,is_owner').eq('id',id).single();
   if(!p)return;
   document.getElementById('pv-avatar').style.background=safeColor(p.avatar_color);
   document.getElementById('pv-avatar').textContent=p.username.slice(0,2).toUpperCase();
   document.getElementById('pv-name').textContent=p.username;
+  document.getElementById('pv-owner').style.display=p.is_owner?'block':'none';
   document.getElementById('pv-premium').style.display=p.is_premium?'block':'none';
   // Stats
   const{data:scores}=await sb.from('scores').select('points,topic').eq('user_id',id);
@@ -3162,6 +3245,10 @@ function closePV(){document.getElementById('pvov').classList.remove('show');}
 async function openChat(partnerId,partnerName,partnerColor){
   chatPartner={id:partnerId,name:partnerName,color:partnerColor};
   document.getElementById('chat-name').textContent=partnerName;
+  // Tulajdonos jelvény a csevegés fejlécében, hogy látszódjon: nem egy random ír.
+  sb.from('profiles').select('is_owner').eq('id',partnerId).single().then(({data})=>{
+    if(data?.is_owner&&chatPartner?.id===partnerId)document.getElementById('chat-name').insertAdjacentHTML('beforeend',ownerBadge(data));
+  });
   document.getElementById('chat-av').style.background=safeColor(partnerColor);
   document.getElementById('chat-av').textContent=partnerName.slice(0,2).toUpperCase();
   document.getElementById('chatov').classList.add('show');
@@ -3410,12 +3497,12 @@ async function openInviteFriends(){
   const{data}=await sb.from('friendships').select('*').eq('status','accepted');
   if(!data||!data.length){el.innerHTML='<div class="lbempty">Még nincsenek barátaid. Adj hozzá barátokat a 👥 menüből!</div>';return;}
   const friendIds=data.map(f=>f.requester_id===CU.id?f.addressee_id:f.requester_id);
-  const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium').in('id',friendIds);
+  const{data:profiles}=await sb.from('profiles').select('id,username,avatar_color,is_premium,is_owner').in('id',friendIds);
   el.innerHTML=(profiles||[]).map(p=>`
     <div class="friend-row">
       <div class="friend-av" style="background:${safeColor(p.avatar_color)};cursor:default;">${escapeHtml(p.username.slice(0,2).toUpperCase())}</div>
       <div class="friend-info" style="cursor:default;">
-        <div class="friend-name">${escapeHtml(p.username)}${p.is_premium?' ✨':''}</div>
+        <div class="friend-name">${escapeHtml(p.username)}${ownerBadge(p)}${p.is_premium?' ✨':''}</div>
       </div>
       <button class="friend-btn fb-add" id="inv-${p.id}" onclick="sendDuelInvite('${p.id}',this)">⚔️ Meghívás</button>
     </div>`).join('');

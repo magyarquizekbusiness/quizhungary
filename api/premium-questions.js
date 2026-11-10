@@ -29,7 +29,7 @@ function hasPremiumAccess(p) {
   if (!p) return false;
   if (p.is_admin === true) return true;
   if (p.is_premium !== true) return false;
-  if (p.subscription_status === 'referral_reward' && p.subscription_end &&
+  if ((p.subscription_status === 'referral_reward' || p.subscription_status === 'gift') && p.subscription_end &&
       new Date(p.subscription_end) < new Date()) return false;
   return true;
 }
